@@ -115,21 +115,9 @@ body {
   min-height: 0;
   overflow: hidden;
 
-  /* react-codemirror のラッパー div にも高さを伝える */
+  /* @monaco-editor/react のラッパーにも高さを伝える */
   & > div {
     height: 100%;
-  }
-
-  & .cm-editor {
-    height: 100%;
-    font-size: 13px;
-  }
-
-  & .cm-scroller {
-    overflow: auto;
-    /* macOS のオーバーレイ式でも常時見えるスクロールバーにする */
-    scrollbar-color: #a9b6c1 #f0f3f6;
-    scrollbar-width: thin;
   }
 }
 
@@ -172,6 +160,15 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   color: #1d7a35;
+}
+
+.pg-format {
+  font-weight: 700;
+  color: #157fcc;
+  background: color-mix(in srgb, #157fcc 10%, white);
+  padding: 1px 8px;
+  border-radius: 8px;
+  font-size: 11px;
 }
 
 .pg-status-error .pg-status-msg {

@@ -81,10 +81,15 @@ export { Foo } from './Foo'
 `apps/playground/src/samples.ts` の既存サンプルに組み込むか、新サンプルを追加する。
 新サンプルは `samples` 配列の末尾に `{ name: '...', code: ... }` を足す。
 
-### 6. ドキュメントを再生成
+### 6. メタデータとドキュメントを更新
+
+`packages/core/src/meta.ts` の `XTYPE_META` に新 xtype のメタデータ
+(description / aliases / defaults / props) を追加する。これがエディタ補完・
+スニペット・JSON Schema の供給源。レイアウトの場合は `LAYOUT_META`。
 
 ```bash
-npm run docs   # JSDoc から docs/components.md を再生成
+npm run docs     # JSDoc から docs/components.md を再生成
+npm run schema   # meta.ts から docs/dsl.schema.json を再生成
 ```
 
 README.md の対応コンポーネント表にも 1 行追加する。

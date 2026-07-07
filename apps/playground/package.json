@@ -10,10 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@codemirror/lang-javascript": "^6.2.2",
     "@fortawesome/fontawesome-free": "^7.3.0",
+    "@monaco-editor/react": "^4.6.0",
     "@similar-extjs/core": "*",
-    "@uiw/react-codemirror": "^4.23.0",
+    "monaco-editor": "^0.52.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

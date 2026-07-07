@@ -13,6 +13,13 @@ npm run dev   # Playground (エディタ + ライブプレビュー) が http://
 
 左ペインの DSL を編集すると右ペインのモックが即座に更新される。「AI 用にコピー」ボタンで、AI に実装を依頼するためのプロンプト付きで DSL をコピーできる。
 
+エディタは Monaco (VS Code と同じエンジン) で、**入力補完**に対応:
+
+- `xtype: ` / `layout: ` の値位置 → 候補一覧 (説明付き)
+- オブジェクトのキー位置 → 囲んでいる xtype に応じた config 名の補完
+- xtype 名を入力 → **基本プロパティ入りテンプレートを挿入** (Tab で入力箇所を移動)
+- 構文エラーはエディタ上に赤線 + ステータスバーに位置付きで表示
+
 ## プロジェクト構成
 
 ```
@@ -35,7 +42,21 @@ scripts/              — docs 生成スクリプト
 
 ## DSL の書き方
 
-JSON5 として解釈されるため、ExtJS の config をほぼそのままコピーできる(クォートなしキー / シングルクォート / 末尾カンマ / コメント OK)。
+**JSON5** と **YAML** の 2 記法に対応し、先頭の文字から自動判別される。
+
+- **JSON5**: ExtJS の config をほぼそのままコピーできる(クォートなしキー / シングルクォート / 末尾カンマ / コメント OK)。ExtJS 互換・AI 引き渡しの正準形式
+- **YAML**: 括弧・カンマ不要で手書きしやすい。Playground の「YAML へ変換 / JSON5 へ変換」ボタンで相互変換できる(コメントは保持されない)
+
+```yaml
+# YAML 記法の例
+xtype: panel
+title: 問い合わせフォーム
+items:
+  - xtype: textfield
+    fieldLabel: 件名
+  - xtype: textarea
+    fieldLabel: 内容
+```
 
 ```json5
 {
@@ -238,8 +259,13 @@ export default defineConfig({
 
 レイアウト側で `@similar-extjs/core/styles.css` (と必要なら Font Awesome) を読み込む。
 
+## JSON Schema
+
+`docs/dsl.schema.json` に DSL の JSON Schema がある (`npm run schema` で
+`packages/core/src/meta.ts` から自動生成)。AI が生成した DSL の検証や、
+VS Code の JSON エディタでの補完 (`$schema` 指定) に使える。
+
 ## 今後の構想
 
 - htmleditor / pagingtoolbar / ツリーグリッドなどのコンポーネント追加
 - VS Code 拡張やドキュメントサイトへの組み込み
-- DSL の JSON Schema 定義 (エディタ補完・AI 出力の検証用)

@@ -105,7 +105,25 @@ Markdown 内の ` ```extjs ` コードフェンスに ExtJS 互換 DSL を書く
 }
 ```
 
-## 3. AI への引き渡し
+## 3. 補足: YAML 記法
+
+DSL は JSON5 だけでなく **YAML** でも書ける (先頭の文字から自動判別)。
+手書きするならこちらの方が楽。
+
+```extjs height=260
+xtype: panel
+title: YAML で書いたモック
+bodyPadding: 12
+items:
+  - xtype: displayfield
+    fieldLabel: 同期状況
+    value: 最終同期 2026-07-07 12:00
+  - xtype: progressbar
+    value: 0.7
+    text: 同期中... 70%
+```
+
+## 4. AI への引き渡し
 
 上のコードフェンスの DSL をそのまま AI に渡せば、任意の UI ライブラリで本実装できる。
 仕様書 (この MDX) とモック定義 (DSL) が同一ソースで管理されるのがポイント。

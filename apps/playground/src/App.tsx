@@ -1,7 +1,16 @@
-import { javascript } from '@codemirror/lang-javascript'
-import { ExtMockup, parseDsl, type ComponentConfig, type ThemeName } from '@similar-extjs/core'
-import CodeMirror from '@uiw/react-codemirror'
+import Editor, { type OnMount } from '@monaco-editor/react'
+import {
+  ExtMockup,
+  detectFormat,
+  parseDsl,
+  stringifyDsl,
+  DslParseError,
+  type ComponentConfig,
+  type DslFormat,
+  type ThemeName,
+} from '@similar-extjs/core'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { monaco } from './monaco-setup'
 import { samples } from './samples'
 
 const THEMES: Array<{ value: ThemeName; label: string }> = [
@@ -10,6 +19,13 @@ const THEMES: Array<{ value: ThemeName; label: string }> = [
   { value: 'gray', label: 'Gray' },
   { value: 'dark', label: 'Dark' },
 ]
+
+interface ParseResult {
+  config: ComponentConfig | null
+  error: string | null
+  errorLine?: number
+  errorColumn?: number
+}
 
 /** config ツリー内のコンポーネント数を数える (items / tbar / bbar を再帰) */
 function countComponents(config: ComponentConfig): number {
@@ -36,19 +52,45 @@ export function App() {
   // エディタペインの幅 (%) — スプリットバーでドラッグ調整
   const [editorPct, setEditorPct] = useState(42)
   const mainRef = useRef<HTMLDivElement>(null)
+  const editorRef = useRef<Parameters<OnMount>[0] | null>(null)
+
+  const format: DslFormat = useMemo(() => detectFormat(code), [code])
 
   useEffect(() => {
     const timer = setTimeout(() => setPreviewCode(code), 250)
     return () => clearTimeout(timer)
   }, [code])
 
-  const parsed = useMemo(() => {
+  const parsed: ParseResult = useMemo(() => {
     try {
-      return { config: parseDsl(previewCode), error: null as string | null }
+      return { config: parseDsl(previewCode), error: null }
     } catch (e) {
-      return { config: null, error: (e as Error).message }
+      const err = e as DslParseError
+      return { config: null, error: err.message, errorLine: err.line, errorColumn: err.column }
     }
   }, [previewCode])
+
+  // 構文エラーはエディタ上のマーカーとしても表示
+  useEffect(() => {
+    const model = editorRef.current?.getModel()
+    if (!model) return
+    monaco.editor.setModelMarkers(
+      model,
+      'dsl',
+      parsed.error
+        ? [
+            {
+              severity: monaco.MarkerSeverity.Error,
+              message: parsed.error,
+              startLineNumber: parsed.errorLine ?? 1,
+              startColumn: parsed.errorColumn ?? 1,
+              endLineNumber: parsed.errorLine ?? 1,
+              endColumn: (parsed.errorColumn ?? 1) + 1,
+            },
+          ]
+        : [],
+    )
+  }, [parsed])
 
   // 構文エラー中は最後に成功した config を表示し続ける
   const lastGoodRef = useRef<ComponentConfig | null>(null)
@@ -62,10 +104,30 @@ export function App() {
 
   const copyForAi = async () => {
     await navigator.clipboard.writeText(
-      `以下は ExtJS 互換 DSL で記述した画面モックの定義です。この画面を実装してください。\n\n\`\`\`json5\n${code}\`\`\`\n`,
+      `以下は ExtJS 互換 DSL で記述した画面モックの定義です。この画面を実装してください。\n\n\`\`\`${format === 'yaml' ? 'yaml' : 'json5'}\n${code}\`\`\`\n`,
     )
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
+  }
+
+  const convertFormat = () => {
+    try {
+      const obj = parseDsl(code)
+      setCode(stringifyDsl(obj, format === 'json5' ? 'yaml' : 'json5'))
+    } catch {
+      // 構文エラー中は変換しない (ステータスバーにエラー表示済み)
+    }
+  }
+
+  const onEditorMount: OnMount = (editor) => {
+    editorRef.current = editor
+    editor.onDidChangeCursorPosition((e) => {
+      setCursor((prev) =>
+        prev.line === e.position.lineNumber && prev.col === e.position.column
+          ? prev
+          : { line: e.position.lineNumber, col: e.position.column },
+      )
+    })
   }
 
   const startResize = (e: React.PointerEvent) => {
@@ -116,6 +178,9 @@ export function App() {
             ))}
           </select>
         </label>
+        <button className="pg-btn" onClick={convertFormat} disabled={!!parsed.error}>
+          {format === 'json5' ? 'YAML へ変換' : 'JSON5 へ変換'}
+        </button>
         <span className="pg-tb-fill" />
         <button className="pg-btn pg-btn-primary" onClick={copyForAi}>
           {copied ? 'コピーしました ✓' : 'AI 用にコピー'}
@@ -127,20 +192,23 @@ export function App() {
         style={{ gridTemplateColumns: `${editorPct}% 6px 1fr` }}
       >
         <section className="pg-editor" aria-label="DSL エディタ">
-          <CodeMirror
+          <Editor
+            language={format === 'yaml' ? 'yaml' : 'javascript'}
             value={code}
-            height="100%"
-            extensions={[javascript()]}
-            onChange={setCode}
-            onUpdate={(vu) => {
-              const head = vu.state.selection.main.head
-              const line = vu.state.doc.lineAt(head)
-              const next = { line: line.number, col: head - line.from + 1 }
-              setCursor((prev) =>
-                prev.line === next.line && prev.col === next.col ? prev : next,
-              )
+            onChange={(v) => setCode(v ?? '')}
+            onMount={onEditorMount}
+            options={{
+              fontSize: 13,
+              tabSize: 2,
+              minimap: { enabled: false },
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              wordBasedSuggestions: 'off',
+              quickSuggestions: { other: true, comments: false, strings: true },
+              suggest: { showWords: false, snippetsPreventQuickSuggestions: false },
+              fixedOverflowWidgets: true,
+              scrollbar: { verticalScrollbarSize: 10 },
             }}
-            basicSetup={{ foldGutter: true, autocompletion: false }}
           />
         </section>
         <div
@@ -158,6 +226,7 @@ export function App() {
         <span className="pg-status-msg">
           {parsed.error ? `✕ 構文エラー: ${parsed.error}` : '✓ OK'}
         </span>
+        <span className="pg-format">{format === 'yaml' ? 'YAML' : 'JSON5'}</span>
         <span>コンポーネント: {shownConfig ? countComponents(shownConfig) : 0}</span>
         <span>
           {cursor.line} 行 {cursor.col} 列
