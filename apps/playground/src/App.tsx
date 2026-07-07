@@ -1,8 +1,15 @@
 import { javascript } from '@codemirror/lang-javascript'
-import { ExtMockup, parseDsl, type ComponentConfig } from '@similar-extjs/core'
+import { ExtMockup, parseDsl, type ComponentConfig, type ThemeName } from '@similar-extjs/core'
 import CodeMirror from '@uiw/react-codemirror'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { samples } from './samples'
+
+const THEMES: Array<{ value: ThemeName; label: string }> = [
+  { value: 'neptune', label: 'Neptune (既定)' },
+  { value: 'classic', label: 'Classic' },
+  { value: 'gray', label: 'Gray' },
+  { value: 'dark', label: 'Dark' },
+]
 
 /** config ツリー内のコンポーネント数を数える (items / tbar / bbar を再帰) */
 function countComponents(config: ComponentConfig): number {
@@ -25,6 +32,7 @@ export function App() {
   const [previewCode, setPreviewCode] = useState(code)
   const [copied, setCopied] = useState(false)
   const [cursor, setCursor] = useState({ line: 1, col: 1 })
+  const [theme, setTheme] = useState<ThemeName>('neptune')
   // エディタペインの幅 (%) — スプリットバーでドラッグ調整
   const [editorPct, setEditorPct] = useState(42)
   const mainRef = useRef<HTMLDivElement>(null)
@@ -98,6 +106,16 @@ export function App() {
         <button className="pg-btn" onClick={() => selectSample(sampleIndex)}>
           リセット
         </button>
+        <label className="pg-sample">
+          テーマ:
+          <select value={theme} onChange={(e) => setTheme(e.target.value as ThemeName)}>
+            {THEMES.map((t) => (
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <span className="pg-tb-fill" />
         <button className="pg-btn pg-btn-primary" onClick={copyForAi}>
           {copied ? 'コピーしました ✓' : 'AI 用にコピー'}
@@ -133,7 +151,7 @@ export function App() {
           onPointerDown={startResize}
         />
         <section className="pg-preview" aria-label="プレビュー">
-          {shownConfig && <ExtMockup config={shownConfig} height="100%" />}
+          {shownConfig && <ExtMockup config={shownConfig} height="100%" theme={theme} />}
         </section>
       </main>
       <footer className={`pg-status${parsed.error ? ' pg-status-error' : ''}`}>

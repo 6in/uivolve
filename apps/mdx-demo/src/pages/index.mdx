@@ -82,8 +82,10 @@ Markdown 内の ` ```extjs ` コードフェンスに ExtJS 互換 DSL を書く
 ## 2. 受注登録ダイアログ
 
 「新規作成」ボタン押下で表示されるモーダルダイアログ。
+フェンスの meta に `theme=dark` を指定してダークテーマで表示している
+(`neptune` / `classic` / `gray` / `dark` が指定可能)。
 
-```extjs height=380
+```extjs height=380 theme=dark
 {
   xtype: 'window',
   title: '受注登録',

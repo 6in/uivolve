@@ -2,7 +2,7 @@
 import './components'
 import './layouts'
 
-export { ExtMockup, type ExtMockupProps } from './ExtMockup'
+export { ExtMockup, type ExtMockupProps, type ThemeName } from './ExtMockup'
 export { XRender } from './XRender'
 export { parseDsl, DslParseError } from './parser'
 export { registerComponent, registeredXtypes, resolveComponent } from './registry'

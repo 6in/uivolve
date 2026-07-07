@@ -7,7 +7,8 @@
  * { xtype: 'panel', title: 'Hello' }
  * ```
  *
- * meta 部の height=<数値|CSS長さ> で表示高さを指定できる (省略時は defaultHeight)。
+ * meta 部の height=<数値|CSS長さ> で表示高さ、theme=<neptune|classic|gray|dark> で
+ * テーマを指定できる (height 省略時は defaultHeight)。
  * 必要な import (ExtMockup) は自動で注入される。
  *
  * @param {object} [options]
@@ -35,11 +36,15 @@ export default function remarkSimilarExtjs(options = {}) {
 
       const heightMatch = /height=(\S+)/.exec(node.meta ?? '')
       const height = normalizeHeight(heightMatch?.[1] ?? defaultHeight)
+      const themeMatch = /theme=(\S+)/.exec(node.meta ?? '')
 
       const attributes = [
         { type: 'mdxJsxAttribute', name: 'code', value: node.value },
         { type: 'mdxJsxAttribute', name: 'height', value: height },
       ]
+      if (themeMatch) {
+        attributes.push({ type: 'mdxJsxAttribute', name: 'theme', value: themeMatch[1] })
+      }
       if (clientLoad) {
         // Astro でのハイドレーション (折りたたみ・タブ切替などを有効化)
         attributes.push({ type: 'mdxJsxAttribute', name: 'client:load', value: null })
