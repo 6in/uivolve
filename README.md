@@ -33,21 +33,21 @@ packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンスをモッ
 apps/playground/      — エディタ + ビューア (Vite)
 apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
 reference/            — リファレンス (components.md は JSDoc から自動生成)
-docs/                 — GitHub Pages 用の Playground ビルド出力 (npm run pages で生成)
 scripts/              — reference 生成スクリプト
+.github/workflows/    — GitHub Pages への自動デプロイ (pages.yml)
 .claude/skills/       — 開発ワークフロースキル (add-component)
 ```
 
-## GitHub Pages (オンライン Playground)
+## GitHub Pages (オンラインデモ)
 
-`docs/` には Playground の静的ビルドが入っており、GitHub Pages で配信できる。
+main に push すると GitHub Actions (.github/workflows/pages.yml) が自動でビルド・デプロイする。
+
+- **Playground**: https://6in.github.io/uivolve/
+- **MDX デモ (画面仕様書の例)**: https://6in.github.io/uivolve/mdx/
 
 ```bash
-npm run pages   # Playground を docs/ にビルド (相対パスなのでどこでも配信可)
+npm run pages   # ローカルで同じビルドを実行 (site/ に出力、gitignore 対象)
 ```
-
-リポジトリの **Settings → Pages → Branch: main, フォルダ: /docs** を選ぶと
-`https://<user>.github.io/uivolve/` でモックツールがそのまま動く。
 
 ## ドキュメント
 

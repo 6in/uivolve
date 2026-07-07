@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "build:pages": "tsc --noEmit && vite build --base=./ --outDir ../../docs --emptyOutDir",
+    "build:pages": "tsc --noEmit && vite build --base=./ --outDir ../../site --emptyOutDir",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview"
   },

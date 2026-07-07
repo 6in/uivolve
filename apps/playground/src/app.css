@@ -45,6 +45,16 @@ body {
   margin-left: 8px;
 }
 
+.pg-headerlink {
+  color: #9ecdf2;
+  font-size: 13px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 /* ---------------------------------------------------------- ツールバー */
 
 .pg-toolbar {

@@ -32,9 +32,11 @@ apps/playground/        エディタ + ライブプレビュー (Vite + Monaco)
 apps/mdx-demo/          Astro + MDX 統合デモ (Markdown 仕様書にモック埋め込み)
 reference/components.md      コンポーネント/レイアウトのリファレンス — JSDoc から自動生成。直接編集禁止
 reference/extjs-layouts.md   ExtJS 7.9 全レイアウトの調査資料と対応状況
-docs/                   GitHub Pages 用 Playground ビルド出力 (npm run pages で生成、コミット対象)
+.github/workflows/pages.yml  main への push で Playground + MDX デモを GitHub Pages へ自動デプロイ
 scripts/gen-component-docs.mjs  reference/components.md の生成スクリプト
 ```
+
+公開 URL: https://6in.github.io/uivolve/ (Playground) と /mdx/ (MDX デモ)。
 
 ## コマンド
 
@@ -46,7 +48,7 @@ npm run docs        # JSDoc から reference/components.md を再生成
 npm run schema      # meta.ts から reference/dsl.schema.json を再生成
 npm run mdx:dev     # MDX デモを http://localhost:4321 で起動
 npm run mdx:build   # MDX デモの静的ビルド (remark プラグインの検証を兼ねる)
-npm run pages       # GitHub Pages 用に Playground を docs/ へビルド (コミットして公開)
+npm run pages       # Pages 用ビルドをローカル実行 (site/ へ出力。公開は main への push で Actions が自動実行)
 ```
 
 core はビルド不要 (exports が src/index.ts を直接指す。Vite が処理する)。
