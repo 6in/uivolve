@@ -1,0 +1,97 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+  color: #333c47;
+  background: #e9edf1;
+}
+
+.pg-app {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.pg-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 16px;
+  background: linear-gradient(to bottom, #2b3a4a, #22303e);
+  color: white;
+}
+
+.pg-title {
+  flex: 1;
+  margin: 0;
+  font-size: 16px;
+}
+
+.pg-sub {
+  font-size: 12px;
+  font-weight: normal;
+  opacity: 0.7;
+  margin-left: 8px;
+}
+
+.pg-sample {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+
+  & select {
+    font: inherit;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: none;
+  }
+}
+
+.pg-copy {
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  background: #157fcc;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, #157fcc 80%, black);
+  }
+}
+
+.pg-main {
+  display: grid;
+  grid-template-columns: minmax(320px, 42%) 1fr;
+  min-height: 0;
+}
+
+.pg-editor {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-right: 1px solid #cfd6dd;
+
+  & .cm-editor {
+    height: 100%;
+    font-size: 13px;
+  }
+}
+
+.pg-preview {
+  min-width: 0;
+  min-height: 0;
+  padding: 12px;
+}

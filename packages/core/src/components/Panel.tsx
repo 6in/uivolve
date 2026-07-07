@@ -1,0 +1,124 @@
+import { useState, type ReactNode } from 'react'
+import { LayoutBody } from '../layouts'
+import type { ComponentConfig, RendererProps } from '../types'
+import { cx, styleOf, toCssBox } from '../utils'
+import { Toolbar } from './Toolbar'
+
+function normalizeBar(
+  bar: ComponentConfig['tbar'],
+): ComponentConfig | undefined {
+  if (!bar) return undefined
+  if (Array.isArray(bar)) return { xtype: 'toolbar', items: bar }
+  return { xtype: 'toolbar', ...bar }
+}
+
+export interface PanelShellProps {
+  config: ComponentConfig
+  /** body の中身。省略時は items を layout で描画する */
+  children?: ReactNode
+  bodyClassName?: string
+}
+
+/**
+ * パネルの共通ガワ(ヘッダー + ツールバー + 折りたたみ可能な body)。
+ * gridpanel など Panel 派生コンポーネントからも再利用する。
+ */
+export function PanelShell({ config, children, bodyClassName }: PanelShellProps) {
+  const [collapsed, setCollapsed] = useState(!!config.collapsed)
+  const collapsible = !!config.collapsible
+  const hasHeader = config.title !== undefined || config.header === true || collapsible
+  const tbar = normalizeBar(config.tbar)
+  const bbar = normalizeBar(config.bbar)
+
+  const rootStyle = styleOf(config)
+  if (collapsed) {
+    // 折りたたみ時はヘッダーのみの高さへ
+    delete rootStyle.height
+    delete rootStyle.flex
+  }
+
+  return (
+    <section
+      className={cx(
+        'sx-panel',
+        config.frame && 'sx-panel-framed',
+        collapsed && 'sx-collapsed',
+        config.cls,
+      )}
+      style={rootStyle}
+      aria-expanded={collapsible ? !collapsed : undefined}
+    >
+      {hasHeader && (
+        <header
+          className={cx('sx-panel-header', collapsible && 'sx-clickable')}
+          onClick={collapsible ? () => setCollapsed((c) => !c) : undefined}
+        >
+          <span className="sx-panel-title">{config.title}</span>
+          {collapsible && (
+            <span className="sx-tool" aria-hidden>
+              {collapsed ? '▸' : '▾'}
+            </span>
+          )}
+        </header>
+      )}
+      <div className="sx-panel-bodywrap">
+        <div className="sx-panel-inner">
+          {tbar && <Toolbar config={tbar} />}
+          <div
+            className={cx('sx-panel-body', bodyClassName)}
+            style={{ padding: toCssBox(config.bodyPadding) }}
+          >
+            {children ?? (
+              <>
+                {typeof config.html === 'string' && (
+                  <div
+                    className="sx-html"
+                    dangerouslySetInnerHTML={{ __html: config.html }}
+                  />
+                )}
+                <LayoutBody config={config} />
+              </>
+            )}
+          </div>
+          {bbar && <Toolbar config={bbar} />}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/** xtype: 'panel' | 'form' */
+export function Panel({ config }: RendererProps) {
+  const isForm = config.xtype === 'form'
+  return (
+    <PanelShell
+      config={isForm && config.bodyPadding === undefined ? { ...config, bodyPadding: 12 } : config}
+      bodyClassName={isForm ? 'sx-form-body' : undefined}
+    />
+  )
+}
+
+/** xtype: 'container' — ヘッダーなしの汎用コンテナ */
+export function Container({ config }: RendererProps) {
+  return (
+    <div
+      className={cx('sx-container', config.cls)}
+      style={{ ...styleOf(config), padding: toCssBox(config.padding) }}
+    >
+      <LayoutBody config={config} />
+    </div>
+  )
+}
+
+/** xtype: 'component' | 'box' — html / text をそのまま描画 */
+export function RawComponent({ config }: RendererProps) {
+  return (
+    <div className={cx('sx-component', config.cls)} style={styleOf(config)}>
+      {typeof config.html === 'string' ? (
+        <span dangerouslySetInnerHTML={{ __html: config.html }} />
+      ) : (
+        <span>{config.text ?? (config.value as string | undefined)}</span>
+      )}
+    </div>
+  )
+}

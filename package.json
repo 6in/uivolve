@@ -1,0 +1,15 @@
+{
+  "name": "similar-extjs",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm -w apps/playground run dev",
+    "build": "npm -w apps/playground run build",
+    "typecheck": "npm -w apps/playground run typecheck"
+  }
+}
