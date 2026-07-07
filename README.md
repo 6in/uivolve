@@ -18,8 +18,18 @@ npm run dev   # Playground (エディタ + ライブプレビュー) が http://
 ```
 packages/core/     — @similar-extjs/core: DSL パーサー + レンダラー (React)
 apps/playground/   — エディタ + ビューア (Vite)
-docs/              — ExtJS レイアウト一覧などの参照資料
+docs/              — リファレンス (components.md は JSDoc から自動生成)
+scripts/           — docs 生成スクリプト
+.claude/skills/    — 開発ワークフロースキル (add-component)
 ```
+
+## ドキュメント
+
+- **[コンポーネント / レイアウト リファレンス](docs/components.md)** — ソースの JSDoc から `npm run docs` で自動生成
+- [ExtJS レイアウト一覧と対応状況](docs/extjs-layouts.md)
+
+コンポーネントの追加手順は Claude Code スキル **`/add-component`** にまとまっている
+(`.claude/skills/add-component/SKILL.md`)。
 
 ## DSL の書き方
 

@@ -49,7 +49,11 @@ function optionsOf(config: ComponentConfig): Option[] {
 
 // ---------------------------------------------------------------- 各フィールド
 
-/** xtype: 'textfield' | 'numberfield' | 'datefield' */
+/**
+ * xtype: 'textfield' | 'numberfield' | 'datefield' — 1 行テキスト入力。
+ * numberfield は数値入力、datefield は日付ピッカーになる。
+ * fieldLabel / value / emptyText / readOnly / disabled / inputType に対応。
+ */
 export function TextField({ config }: RendererProps) {
   const inputType =
     config.xtype === 'numberfield' ? 'number' : config.xtype === 'datefield' ? 'date' : (config.inputType as string | undefined) ?? 'text'
@@ -67,7 +71,7 @@ export function TextField({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'textarea' | 'textareafield' */
+/** xtype: 'textarea' | 'textareafield' — 複数行テキスト入力。rows で行数を指定。 */
 export function TextArea({ config }: RendererProps) {
   return (
     <FieldRow config={config}>
@@ -83,7 +87,10 @@ export function TextArea({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'checkbox' | 'checkboxfield' | 'radio' | 'radiofield' */
+/**
+ * xtype: 'checkbox' | 'checkboxfield' | 'radio' | 'radiofield' — 単体のチェックボックス / ラジオボタン。
+ * boxLabel / checked / name(ラジオのグループ化)に対応。
+ */
 export function CheckItem({ config }: RendererProps) {
   const isRadio = config.xtype === 'radio' || config.xtype === 'radiofield'
   return (
@@ -101,7 +108,7 @@ export function CheckItem({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'combobox' | 'combo' — ドロップダウン選択 */
+/** xtype: 'combobox' | 'combo' — ドロップダウン選択。options 配列または store.data から選択肢を生成。 */
 export function ComboBox({ config }: RendererProps) {
   const options = optionsOf(config)
   return (
@@ -122,7 +129,7 @@ export function ComboBox({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'listbox' | 'multiselect' — リストボックス */
+/** xtype: 'listbox' | 'multiselect' — リストボックス。multiSelect で複数選択、size で表示行数を指定。 */
 export function ListBox({ config }: RendererProps) {
   const options = optionsOf(config)
   const multiple = config.xtype === 'multiselect' ? config.multiSelect !== false : !!config.multiSelect
@@ -150,7 +157,7 @@ export function ListBox({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'displayfield' | 'label' — 静的テキスト */
+/** xtype: 'displayfield' | 'label' — 静的テキスト表示。value / text / html のいずれかを描画。 */
 export function DisplayField({ config }: RendererProps) {
   return (
     <FieldRow config={config}>

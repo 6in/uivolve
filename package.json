@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "npm -w apps/playground run dev",
     "build": "npm -w apps/playground run build",
-    "typecheck": "npm -w apps/playground run typecheck"
+    "typecheck": "npm -w apps/playground run typecheck",
+    "docs": "node scripts/gen-component-docs.mjs"
   }
 }

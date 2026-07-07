@@ -108,7 +108,11 @@ export function PanelShell({
   )
 }
 
-/** xtype: 'panel' | 'form' */
+/**
+ * xtype: 'panel' | 'form' — タイトルバー付きの基本パネル。
+ * collapsible / collapsed(折りたたみ)、tbar / bbar(ツールバー)、
+ * bodyPadding / html / iconCls に対応。form は body がフォームスタイルになる。
+ */
 export function Panel({ config }: RendererProps) {
   const isForm = config.xtype === 'form'
   return (
@@ -119,7 +123,7 @@ export function Panel({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'container' — ヘッダーなしの汎用コンテナ */
+/** xtype: 'container' | 'fieldcontainer' — ヘッダーなしの汎用コンテナ。layout と items で子を配置する。 */
 export function Container({ config }: RendererProps) {
   return (
     <div

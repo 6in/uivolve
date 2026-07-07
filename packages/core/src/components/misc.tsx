@@ -95,7 +95,7 @@ export function MenuTrigger({
 
 // ---------------------------------------------------------------- splitbutton
 
-/** xtype: 'splitbutton' — 本体と矢印部が分かれたボタン */
+/** xtype: 'splitbutton' — 本体と矢印部が分かれたボタン。menu でドロップダウンを表示。 */
 export function SplitButton({ config }: RendererProps) {
   const menu = normalizeMenu(config.menu)
   return (
@@ -124,7 +124,7 @@ export function SplitButton({ config }: RendererProps) {
 
 // ---------------------------------------------------------------- progressbar
 
-/** xtype: 'progressbar' — value は 0〜1 */
+/** xtype: 'progressbar' — 進捗バー。value(0〜1)で進捗、text でラベルを上書き。 */
 export function ProgressBar({ config }: RendererProps) {
   const value = Math.min(Math.max((config.value as number | undefined) ?? 0, 0), 1)
   return (
@@ -146,7 +146,7 @@ export function ProgressBar({ config }: RendererProps) {
 
 // ---------------------------------------------------------------- slider
 
-/** xtype: 'slider' | 'sliderfield' */
+/** xtype: 'slider' | 'sliderfield' — スライダー。value / minValue / maxValue / increment に対応。 */
 export function Slider({ config }: RendererProps) {
   const slider = (
     <input

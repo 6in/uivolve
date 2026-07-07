@@ -220,7 +220,7 @@ function packToCss(pack: string | undefined): React.CSSProperties['justifyConten
 }
 
 function makeBoxLayout(direction: 'row' | 'column'): LayoutComponent {
-  return function BoxLayout({ layout, items }: LayoutProps) {
+  return function Box({ layout, items }: LayoutProps) {
     return (
       <div
         className={cx('sx-layout-box', direction === 'row' ? 'sx-layout-hbox' : 'sx-layout-vbox')}
@@ -237,6 +237,12 @@ function makeBoxLayout(direction: 'row' | 'column'): LayoutComponent {
     )
   }
 }
+
+/** hbox: 子を水平方向に並べる Flexbox。align / pack、子の flex による比率分配に対応 */
+const HBoxLayout = makeBoxLayout('row')
+
+/** vbox: 子を垂直方向に並べる Flexbox。align / pack、子の flex による比率分配に対応 */
+const VBoxLayout = makeBoxLayout('column')
 
 // ---------------------------------------------------------------- card
 
@@ -312,8 +318,8 @@ registerLayout(['auto', 'anchor', 'form'], AutoLayout)
 registerLayout('fit', FitLayout)
 registerLayout('border', BorderLayout)
 registerLayout(['grid', 'table'], GridLayout)
-registerLayout('hbox', makeBoxLayout('row'))
-registerLayout('vbox', makeBoxLayout('column'))
+registerLayout('hbox', HBoxLayout)
+registerLayout('vbox', VBoxLayout)
 registerLayout('card', CardLayout)
 registerLayout('center', CenterLayout)
 registerLayout('column', ColumnLayout)
