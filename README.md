@@ -56,6 +56,11 @@ JSON5 として解釈されるため、ExtJS の config をほぼそのままコ
 | `fit` | 最初の子をコンテナ全面に拡大 |
 | `grid` | CSS Grid ベースの独自レイアウト。`{ type: 'grid', columns: 3, gap: 12 }`、子の `colspan` / `rowspan` 対応 (`table` も同じエンジン) |
 | `hbox` / `vbox` | Flexbox。`align` / `pack`、子の `flex` に対応 |
+| `card` | activeItem の 1 枚だけを表示 (tabpanel の基盤) |
+| `accordion` | 縦積みで一度に 1 つだけ展開 |
+| `center` | 単一の子を中央配置 |
+| `column` | `columnWidth`(0〜1 の割合)/ 固定 `width` の横並び・折り返し |
+| `absolute` | 子の `x` / `y` による絶対位置指定 |
 | `auto` / `anchor` / `form` | 縦フロー(デフォルト) |
 
 ExtJS の全レイアウト一覧と対応状況は [docs/extjs-layouts.md](docs/extjs-layouts.md) を参照。
@@ -77,6 +82,15 @@ ExtJS の全レイアウト一覧と対応状況は [docs/extjs-layouts.md](docs
 | `image` | `src` / `alt`。src 省略時はプレースホルダ表示 |
 | `displayfield` / `label` | 静的テキスト |
 | `component` / `box` | `html` / `text` をそのまま描画 |
+| `tabpanel` | タブ切替。`activeTab` / タブの `closable`(見た目) |
+| `fieldset` | グループ枠。`title` / `collapsible` / `checkboxToggle` |
+| `window` | ダイアログ。ルートに置くとモーダル風に中央表示。`closable` |
+| `treepanel` / `tree` | 階層ツリー。`root.children` のノード(`text` / `leaf` / `expanded` / `children`)、展開・折りたたみ可 |
+| `menu` | メニューリスト。button / splitbutton の `menu` config で Popover API によるドロップダウン表示 |
+| `splitbutton` | 本体と矢印部が分かれたボタン |
+| `progressbar` | 進捗バー。`value`(0〜1)/ `text` |
+| `slider` / `sliderfield` | スライダー。`value` / `minValue` / `maxValue` / `increment` |
+| `radiogroup` / `checkboxgroup` | `boxLabel` 付き項目を `columns` 列に並べる |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 
@@ -104,5 +118,5 @@ registerLayout('accordion', MyAccordionLayout)
 ## 今後の構想
 
 - Mermaid.js のように Markdown / MDX (Astro など) 内の DSL ブロックをモック描画するインテグレーション
-- レイアウト追加 (card / accordion / column / center など — docs/extjs-layouts.md 参照)
-- tabpanel / fieldset / menu などのコンポーネント追加
+- ドラッグでのリージョンリサイズ、タブの実クローズなどインタラクションの強化
+- datepicker / htmleditor / pagingtoolbar / ツリーグリッドなどのコンポーネント追加

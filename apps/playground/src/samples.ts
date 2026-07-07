@@ -166,9 +166,181 @@ const fitSample = `// Fit レイアウト + hbox/vbox の組み合わせ例
 }
 `
 
+const tabAccordionSample = `// タブパネル + アコーディオン + ツリーの例
+{
+  xtype: 'panel',
+  title: '顧客管理コンソール',
+  layout: 'border',
+  items: [
+    {
+      region: 'west',
+      xtype: 'container',
+      width: 220,
+      split: true,
+      layout: 'accordion',
+      items: [
+        {
+          title: 'フォルダ',
+          xtype: 'treepanel',
+          root: {
+            children: [
+              {
+                text: '営業部',
+                expanded: true,
+                children: [
+                  { text: '第一課', leaf: true },
+                  { text: '第二課', leaf: true },
+                ],
+              },
+              {
+                text: '開発部',
+                children: [{ text: 'プラットフォーム課', leaf: true }],
+              },
+              { text: 'アーカイブ', leaf: true },
+            ],
+          },
+        },
+        { title: '検索', bodyPadding: 8, items: [
+          { xtype: 'textfield', emptyText: 'キーワード' },
+          { xtype: 'button', text: '検索' },
+        ]},
+        { title: '設定', bodyPadding: 8, html: '各種設定がここに入ります' },
+      ],
+    },
+    {
+      region: 'center',
+      xtype: 'tabpanel',
+      activeTab: 0,
+      items: [
+        {
+          title: '一覧',
+          xtype: 'grid',
+          columns: [
+            { text: '顧客名', dataIndex: 'name', flex: 1 },
+            { text: '担当', dataIndex: 'rep', width: 100 },
+            { text: '電話', dataIndex: 'tel', width: 140 },
+          ],
+          store: {
+            data: [
+              { name: '山田商事', rep: '佐藤', tel: '03-1234-5678' },
+              { name: '鈴木工業', rep: '田中', tel: '06-9876-5432' },
+            ],
+          },
+        },
+        {
+          title: '詳細',
+          xtype: 'form',
+          bodyPadding: 12,
+          items: [
+            { xtype: 'textfield', fieldLabel: '顧客名', value: '山田商事' },
+            { xtype: 'combobox', fieldLabel: 'ランク', options: ['A', 'B', 'C'] },
+            { xtype: 'textarea', fieldLabel: 'メモ', rows: 4 },
+          ],
+        },
+        { title: '履歴', closable: true, bodyPadding: 12, html: '取引履歴タブ' },
+      ],
+    },
+  ],
+}
+`
+
+const windowSample = `// ウィンドウ (ダイアログ) の例 — ルートに置くとモーダル風に中央表示
+{
+  xtype: 'window',
+  title: 'ログイン',
+  width: 380,
+  closable: true,
+  bodyPadding: 16,
+  items: [
+    { xtype: 'textfield', fieldLabel: 'ユーザーID', labelWidth: 90 },
+    { xtype: 'textfield', fieldLabel: 'パスワード', labelWidth: 90, inputType: 'password' },
+    { xtype: 'checkbox', fieldLabel: '', labelWidth: 90, boxLabel: 'ログイン状態を保持' },
+  ],
+  bbar: ['->', { text: 'ログイン', ui: 'primary' }, { text: 'キャンセル' }],
+}
+`
+
+const miscSample = `// 小物コンポーネント + column レイアウトの例
+{
+  xtype: 'panel',
+  title: 'コンポーネントカタログ',
+  bodyPadding: 8,
+  layout: 'column',
+  items: [
+    {
+      columnWidth: 0.5,
+      xtype: 'fieldset',
+      title: '通知設定',
+      collapsible: true,
+      items: [
+        {
+          xtype: 'radiogroup',
+          fieldLabel: '頻度',
+          columns: 3,
+          items: [
+            { boxLabel: '毎日', name: 'freq', checked: true },
+            { boxLabel: '毎週', name: 'freq' },
+            { boxLabel: 'なし', name: 'freq' },
+          ],
+        },
+        {
+          xtype: 'checkboxgroup',
+          fieldLabel: 'チャネル',
+          columns: 2,
+          items: [
+            { boxLabel: 'メール', checked: true },
+            { boxLabel: 'Slack' },
+            { boxLabel: 'SMS' },
+            { boxLabel: 'アプリ内' },
+          ],
+        },
+        { xtype: 'slider', fieldLabel: '音量', value: 60 },
+      ],
+    },
+    {
+      columnWidth: 0.5,
+      xtype: 'fieldset',
+      title: 'ステータス',
+      items: [
+        { xtype: 'displayfield', fieldLabel: '同期状況', value: '最終同期 2026-07-07 12:00' },
+        { xtype: 'progressbar', value: 0.7, text: '同期中... 70%' },
+        {
+          xtype: 'toolbar',
+          margin: '8 0 0 0',
+          items: [
+            {
+              text: '操作',
+              menu: [
+                { text: '再同期', iconCls: 'refresh' },
+                { text: 'エクスポート' },
+                '-',
+                { text: '設定', menu: [] },
+              ],
+            },
+            { xtype: 'splitbutton', text: '保存', menu: [{ text: '名前を付けて保存' }, { text: 'テンプレート保存' }] },
+          ],
+        },
+      ],
+    },
+    {
+      columnWidth: 1,
+      xtype: 'panel',
+      title: 'center レイアウト',
+      height: 140,
+      layout: 'center',
+      margin: '4 0 0 0',
+      items: [{ xtype: 'button', text: '中央配置されたボタン', ui: 'primary' }],
+    },
+  ],
+}
+`
+
 export const samples: Sample[] = [
   { name: 'Border レイアウト', code: borderSample },
   { name: 'フォーム', code: formSample },
   { name: 'Grid レイアウト', code: gridLayoutSample },
   { name: 'Fit + Box レイアウト', code: fitSample },
+  { name: 'タブ + アコーディオン + ツリー', code: tabAccordionSample },
+  { name: 'ウィンドウ (ダイアログ)', code: windowSample },
+  { name: '小物カタログ (column)', code: miscSample },
 ]

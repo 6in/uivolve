@@ -470,6 +470,389 @@
     }
   }
 
+  /* ------------------------------------------------- 追加レイアウト */
+
+  .sx-layout-center {
+    display: grid;
+    place-items: center;
+    block-size: 100%;
+  }
+
+  .sx-layout-column {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .sx-column-item {
+    min-inline-size: 0;
+    padding: calc(var(--sx-gap) / 2);
+  }
+
+  .sx-layout-absolute {
+    position: relative;
+    block-size: 100%;
+    min-block-size: 120px;
+  }
+
+  .sx-absolute-item {
+    position: absolute;
+  }
+
+  .sx-layout-accordion {
+    display: flex;
+    flex-direction: column;
+    block-size: 100%;
+    gap: 2px;
+  }
+
+  .sx-accordion-item {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 0;
+
+    > .sx-panel {
+      flex: 1 1 auto;
+      min-block-size: 0;
+      border-radius: 0;
+    }
+  }
+
+  .sx-accordion-expanded {
+    flex: 1 1 auto;
+  }
+
+  /* accordion に埋め込まれたパネル派生コンポーネント (treepanel 等) はガワを消す */
+  .sx-accordion-embed {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    > .sx-layout-fit > .sx-panel {
+      border: none;
+      border-radius: 0;
+    }
+  }
+
+  /* ------------------------------------------------------ タブパネル */
+
+  .sx-tabbar {
+    flex: none;
+    display: flex;
+    gap: 2px;
+    padding: 6px 6px 0;
+    background: var(--sx-toolbar-bg);
+    border-block-end: 1px solid var(--sx-border);
+  }
+
+  .sx-tab {
+    appearance: none;
+    font: inherit;
+    padding: 6px 14px;
+    border: 1px solid var(--sx-border);
+    border-block-end: none;
+    border-radius: var(--sx-radius) var(--sx-radius) 0 0;
+    background: color-mix(in srgb, var(--sx-bg) 60%, white);
+    color: var(--sx-text);
+    cursor: pointer;
+    margin-block-end: -1px;
+
+    &:hover {
+      background: color-mix(in srgb, var(--sx-accent) 10%, white);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+
+  .sx-tab-active {
+    background: var(--sx-header-bg);
+    color: white;
+    font-weight: 600;
+    border-color: var(--sx-accent-dark);
+  }
+
+  .sx-tab-close {
+    margin-inline-start: 8px;
+    opacity: 0.7;
+  }
+
+  .sx-tabpanel-body {
+    display: flex;
+    flex-direction: column;
+
+    > .sx-layout-fit {
+      flex: 1 1 auto;
+    }
+  }
+
+  /* ------------------------------------------------------ ウィンドウ */
+
+  .sx-window {
+    box-shadow: 0 12px 40px color-mix(in srgb, var(--sx-text) 35%, transparent);
+    border-color: color-mix(in srgb, var(--sx-accent) 40%, var(--sx-border));
+  }
+
+  /* ルートに window を置いたらモーダル風に中央配置 */
+  .sx-viewport:has(> .sx-window) {
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--sx-text) 25%, var(--sx-bg));
+
+    > .sx-window {
+      block-size: auto;
+      max-block-size: 90%;
+      max-inline-size: 90%;
+    }
+  }
+
+  .sx-window-close {
+    appearance: none;
+    border: none;
+    background: color-mix(in srgb, white 20%, transparent);
+    color: white;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1;
+    inline-size: 20px;
+    block-size: 20px;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover {
+      background: color-mix(in srgb, white 35%, transparent);
+    }
+  }
+
+  /* -------------------------------------------------- フィールドセット */
+
+  .sx-fieldset {
+    margin: 8px 0;
+    padding: 4px 12px 8px;
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    min-inline-size: 0;
+  }
+
+  .sx-fieldset-legend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-inline: 6px;
+    font-weight: 600;
+    color: var(--sx-accent-dark);
+    user-select: none;
+  }
+
+  .sx-fieldset-bodywrap {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.25s ease;
+  }
+
+  .sx-fieldset.sx-collapsed .sx-fieldset-bodywrap {
+    grid-template-rows: 0fr;
+  }
+
+  .sx-fieldset-body {
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  /* ---------------------------------------------------------- ツリー */
+
+  .sx-tree {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sx-tree-body {
+    padding: 4px 0;
+  }
+
+  .sx-tree-node {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-block: 3px;
+    padding-inline-end: 8px;
+    white-space: nowrap;
+
+    &:hover {
+      background: color-mix(in srgb, var(--sx-accent) 8%, white);
+    }
+  }
+
+  .sx-tree-expander {
+    display: inline-block;
+    inline-size: 12px;
+    font-size: 10px;
+    color: var(--sx-muted);
+    text-align: center;
+  }
+
+  .sx-tree-icon {
+    font-size: 13px;
+  }
+
+  .sx-clickable {
+    cursor: pointer;
+  }
+
+  /* ---------------------------------------------------------- メニュー */
+
+  .sx-menu {
+    display: inline-flex;
+    flex-direction: column;
+    min-inline-size: 160px;
+    padding: 4px;
+    background: var(--sx-panel-bg);
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--sx-text) 25%, transparent);
+  }
+
+  .sx-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover:not(.sx-menu-disabled) {
+      background: color-mix(in srgb, var(--sx-accent) 12%, white);
+    }
+  }
+
+  .sx-menu-disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .sx-menu-text {
+    flex: 1;
+  }
+
+  .sx-menu-arrow {
+    font-size: 10px;
+    color: var(--sx-muted);
+  }
+
+  .sx-menu-sep {
+    block-size: 1px;
+    margin: 4px 6px;
+    background: var(--sx-border);
+  }
+
+  .sx-menu-trigger {
+    position: relative;
+    display: inline-flex;
+  }
+
+  /* Popover API (top layer) で描画。位置は JS が top/left を設定する */
+  .sx-menu-popover {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .sx-btn-arrow {
+    font-size: 9px;
+    margin-inline-start: 2px;
+  }
+
+  /* ------------------------------------------------ スプリットボタン */
+
+  .sx-splitbtn {
+    padding: 0;
+    overflow: hidden;
+
+    .sx-splitbtn-main,
+    .sx-splitbtn-arrow {
+      appearance: none;
+      border: none;
+      background: none;
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+      padding: 5px 10px;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+    }
+
+    .sx-splitbtn-arrow {
+      padding: 5px 7px;
+      font-size: 9px;
+      border-inline-start: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+
+      &:hover:not(:disabled) {
+        background: color-mix(in srgb, currentColor 12%, transparent);
+      }
+    }
+  }
+
+  /* ---------------------------------------------- プログレスバー */
+
+  .sx-progress {
+    position: relative;
+    block-size: 22px;
+    min-inline-size: 120px;
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    background: white;
+    overflow: hidden;
+    margin-block: 4px;
+  }
+
+  .sx-progress-fill {
+    block-size: 100%;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--sx-accent) 70%, white),
+      var(--sx-accent)
+    );
+    transition: inline-size 0.3s ease;
+  }
+
+  .sx-progress-text {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--sx-text);
+    mix-blend-mode: multiply;
+  }
+
+  /* ---------------------------------------------------------- スライダー */
+
+  .sx-slider {
+    inline-size: 100%;
+    margin-block: 8px;
+  }
+
+  /* ---------------------------------------- radiogroup / checkboxgroup */
+
+  .sx-checkgroup {
+    display: grid;
+    column-gap: 16px;
+    row-gap: 2px;
+    align-items: center;
+    justify-content: start;
+  }
+
   /* ---------------------------------------------------------- その他 */
 
   .sx-unknown {

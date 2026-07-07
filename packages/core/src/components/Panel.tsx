@@ -17,16 +17,33 @@ export interface PanelShellProps {
   /** body の中身。省略時は items を layout で描画する */
   children?: ReactNode
   bodyClassName?: string
+  className?: string
+  /** 折りたたみ状態を外部から制御する場合 (accordion レイアウトなど) */
+  collapsed?: boolean
+  onToggleCollapse?: () => void
+  /** ヘッダー右端に追加する要素 (window の閉じるボタンなど) */
+  headerExtra?: ReactNode
 }
 
 /**
  * パネルの共通ガワ(ヘッダー + ツールバー + 折りたたみ可能な body)。
  * gridpanel など Panel 派生コンポーネントからも再利用する。
  */
-export function PanelShell({ config, children, bodyClassName }: PanelShellProps) {
-  const [collapsed, setCollapsed] = useState(!!config.collapsed)
-  const collapsible = !!config.collapsible
-  const hasHeader = config.title !== undefined || config.header === true || collapsible
+export function PanelShell({
+  config,
+  children,
+  bodyClassName,
+  className,
+  collapsed: collapsedProp,
+  onToggleCollapse,
+  headerExtra,
+}: PanelShellProps) {
+  const [internalCollapsed, setInternalCollapsed] = useState(!!config.collapsed)
+  const collapsed = collapsedProp ?? internalCollapsed
+  const toggle = onToggleCollapse ?? (() => setInternalCollapsed((c) => !c))
+  const collapsible = !!config.collapsible || collapsedProp !== undefined
+  const hasHeader =
+    config.title !== undefined || config.header === true || collapsible || headerExtra !== undefined
   const tbar = normalizeBar(config.tbar)
   const bbar = normalizeBar(config.bbar)
 
@@ -43,6 +60,7 @@ export function PanelShell({ config, children, bodyClassName }: PanelShellProps)
         'sx-panel',
         config.frame && 'sx-panel-framed',
         collapsed && 'sx-collapsed',
+        className,
         config.cls,
       )}
       style={rootStyle}
@@ -51,7 +69,7 @@ export function PanelShell({ config, children, bodyClassName }: PanelShellProps)
       {hasHeader && (
         <header
           className={cx('sx-panel-header', collapsible && 'sx-clickable')}
-          onClick={collapsible ? () => setCollapsed((c) => !c) : undefined}
+          onClick={collapsible ? toggle : undefined}
         >
           <span className="sx-panel-title">{config.title}</span>
           {collapsible && (
@@ -59,6 +77,7 @@ export function PanelShell({ config, children, bodyClassName }: PanelShellProps)
               {collapsed ? '▸' : '▾'}
             </span>
           )}
+          {headerExtra}
         </header>
       )}
       <div className="sx-panel-bodywrap">

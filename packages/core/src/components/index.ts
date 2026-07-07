@@ -1,9 +1,13 @@
 import { registerComponent } from '../registry'
 import { Button } from './Button'
+import { FieldSet } from './FieldSet'
 import { GridPanel } from './GridPanel'
 import { Image } from './Image'
 import { Container, Panel, RawComponent } from './Panel'
+import { TabPanel } from './TabPanel'
 import { Toolbar } from './Toolbar'
+import { TreePanel } from './TreePanel'
+import { Window } from './Window'
 import {
   CheckItem,
   ComboBox,
@@ -12,6 +16,9 @@ import {
   TextArea,
   TextField,
 } from './fields'
+import { CheckGroup, Menu, ProgressBar, Slider, SplitButton } from './misc'
+// accordion レイアウトの登録 (副作用 import)
+import './Accordion'
 
 // 組み込み xtype の登録 (ExtJS の xtype 名に合わせる)
 registerComponent(['panel', 'form'], Panel)
@@ -27,10 +34,24 @@ registerComponent(['listbox', 'multiselect'], ListBox)
 registerComponent(['displayfield', 'label'], DisplayField)
 registerComponent(['grid', 'gridpanel'], GridPanel)
 registerComponent(['image', 'imagecomponent'], Image)
+registerComponent('tabpanel', TabPanel)
+registerComponent('fieldset', FieldSet)
+registerComponent('window', Window)
+registerComponent(['treepanel', 'tree'], TreePanel)
+registerComponent('menu', Menu)
+registerComponent('splitbutton', SplitButton)
+registerComponent(['progressbar', 'progress'], ProgressBar)
+registerComponent(['slider', 'sliderfield'], Slider)
+registerComponent(['radiogroup', 'checkboxgroup'], CheckGroup)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
 export { Toolbar } from './Toolbar'
 export { GridPanel } from './GridPanel'
 export { Image } from './Image'
+export { TabPanel } from './TabPanel'
+export { FieldSet } from './FieldSet'
+export { Window } from './Window'
+export { TreePanel } from './TreePanel'
 export * from './fields'
+export * from './misc'

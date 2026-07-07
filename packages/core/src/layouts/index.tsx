@@ -191,6 +191,74 @@ function makeBoxLayout(direction: 'row' | 'column'): LayoutComponent {
   }
 }
 
+// ---------------------------------------------------------------- card
+
+/** card: activeItem の 1 枚だけを表示する (tabpanel / ウィザードの基盤) */
+function CardLayout({ layout, items }: LayoutProps) {
+  const active = (layout.activeItem as number | undefined) ?? 0
+  const item = items[active]
+  if (!item) return null
+  return (
+    <div className="sx-layout-fit">
+      <XRender config={item} />
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- center
+
+/** center: 単一の子をコンテナ中央に配置 */
+function CenterLayout({ items }: LayoutProps) {
+  const first = items[0]
+  if (!first) return null
+  return (
+    <div className="sx-layout-center">
+      <XRender config={first} />
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- column
+
+/** column: columnWidth (0〜1 の割合) または固定 width で横並び・折り返し */
+function ColumnLayout({ items }: LayoutProps) {
+  return (
+    <div className="sx-layout-column">
+      {items.map((it, i) => {
+        const columnWidth = it.columnWidth as number | undefined
+        const width = columnWidth !== undefined ? `${columnWidth * 100}%` : toCssSize(it.width)
+        return (
+          <div key={it.id ?? it.itemId ?? i} className="sx-column-item" style={{ width }}>
+            <XRender config={{ ...it, width: undefined }} />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------- absolute
+
+/** absolute: x / y 座標による絶対位置指定 */
+function AbsoluteLayout({ items }: LayoutProps) {
+  return (
+    <div className="sx-layout-absolute">
+      {items.map((it, i) => (
+        <div
+          key={it.id ?? it.itemId ?? i}
+          className="sx-absolute-item"
+          style={{
+            insetInlineStart: toCssSize(it.x as number | string | undefined) ?? 0,
+            insetBlockStart: toCssSize(it.y as number | string | undefined) ?? 0,
+          }}
+        >
+          <XRender config={it} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ---------------------------------------------------------------- 登録
 
 registerLayout(['auto', 'anchor', 'form'], AutoLayout)
@@ -199,3 +267,8 @@ registerLayout('border', BorderLayout)
 registerLayout(['grid', 'table'], GridLayout)
 registerLayout('hbox', makeBoxLayout('row'))
 registerLayout('vbox', makeBoxLayout('column'))
+registerLayout('card', CardLayout)
+registerLayout('center', CenterLayout)
+registerLayout('column', ColumnLayout)
+registerLayout('absolute', AbsoluteLayout)
+// accordion は PanelShell を使うため components/Accordion.tsx で登録される
