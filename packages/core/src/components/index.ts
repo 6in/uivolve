@@ -3,7 +3,9 @@ import { Button } from './Button'
 import { DatePicker } from './DatePicker'
 import { FieldSet } from './FieldSet'
 import { GridPanel } from './GridPanel'
+import { HtmlEditor } from './HtmlEditor'
 import { Image } from './Image'
+import { PagingToolbar } from './PagingToolbar'
 import { Container, Panel, RawComponent } from './Panel'
 import { TabPanel } from './TabPanel'
 import { Toolbar } from './Toolbar'
@@ -45,6 +47,8 @@ registerComponent(['progressbar', 'progress'], ProgressBar)
 registerComponent(['slider', 'sliderfield'], Slider)
 registerComponent(['radiogroup', 'checkboxgroup'], CheckGroup)
 registerComponent('datepicker', DatePicker)
+registerComponent('htmleditor', HtmlEditor)
+registerComponent('pagingtoolbar', PagingToolbar)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
@@ -52,6 +56,8 @@ export { DatePicker } from './DatePicker'
 export { Icon } from './Icon'
 export { Toolbar } from './Toolbar'
 export { GridPanel } from './GridPanel'
+export { HtmlEditor } from './HtmlEditor'
+export { PagingToolbar } from './PagingToolbar'
 export { Image } from './Image'
 export { TabPanel } from './TabPanel'
 export { FieldSet } from './FieldSet'

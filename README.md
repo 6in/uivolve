@@ -135,13 +135,15 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `tabpanel` | タブ切替。`activeTab` / タブの `closable`(見た目) |
 | `fieldset` | グループ枠。`title` / `collapsible` / `checkboxToggle` |
 | `window` | ダイアログ。ルートに置くとモーダル風に中央表示。`closable` |
-| `treepanel` / `tree` | 階層ツリー。`root.children` のノード(`text` / `leaf` / `expanded` / `children`)、展開・折りたたみ可 |
+| `treepanel` / `tree` | 階層ツリー。`root.children` のノード(`text` / `leaf` / `expanded` / `children`)、展開・折りたたみ可。`columns`(`treecolumn` が階層列)指定で**ツリーグリッド** |
 | `menu` | メニューリスト。button / splitbutton の `menu` config で Popover API によるドロップダウン表示 |
 | `splitbutton` | 本体と矢印部が分かれたボタン |
 | `progressbar` | 進捗バー。`value`(0〜1)/ `text` |
 | `slider` / `sliderfield` | スライダー。`value` / `minValue` / `maxValue` / `increment` |
 | `datepicker` | インラインカレンダー。`value` / `showToday` / `todayText`、月移動・日付選択可 |
 | `radiogroup` / `checkboxgroup` | `boxLabel` 付き項目を `columns` 列に並べる |
+| `htmleditor` | リッチテキストエディタ。太字・斜体・下線・文字揃え・リスト・リンク・ソース編集が操作可。`enableFormat` 等の機能スイッチ対応 |
+| `pagingtoolbar` | ページングツールバー。`total` / `pageSize` / `displayInfo` / `displayMsg`。グリッドの `bbar: { xtype: 'pagingtoolbar', ... }` で使用 |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 
@@ -285,5 +287,5 @@ VS Code の JSON エディタでの補完 (`$schema` 指定) に使える。
 
 ## 今後の構想
 
-- htmleditor / pagingtoolbar / ツリーグリッドなどのコンポーネント追加
+- DSL⇄Figma ブリッジなどの外部ツール連携
 - VS Code 拡張やドキュメントサイトへの組み込み

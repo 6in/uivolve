@@ -24,13 +24,15 @@
 | `tabpanel` | TabPanel | タブ切替パネル。 各 item の title がタブ名になる。activeTab / closable に対応。 |
 | `fieldset` | FieldSet | フォームのグループ枠。 title が legend になる。collapsible / checkboxToggle に対応。 |
 | `window` | Window | ダイアログ風ウィンドウ。 モックなのでフロートはせず、ルートに置くと viewport 中央に配置される (.sx-viewport:has(> .sx-window) の CSS で実現)。閉じるボタンは見た目のみ。 |
-| `treepanel` / `tree` | TreePanel | 階層ツリー。 ExtJS の TreeStore 同様、root: { children: [...] } 形式のノードを描画する。 ノード: { text, leaf, expanded, children } |
+| `treepanel` / `tree` | TreePanel | 階層ツリー。 ExtJS の TreeStore 同様、root: { children: [...] } 形式のノードを描画する。 ノード: { text, leaf, expanded, children } columns (先頭または xtype: 'treecolumn' の列が階層表示になる) を指定すると **ツリーグリッド**になり、各ノードの任意のフィールドを列として表示できる。 columnLines はグリッド同様にカラム区切り線を表示する。 |
 | `menu` | Menu | メニューリスト。 items: { text, iconCls, menu(サブメニューは矢印表示のみ) } または '-'(区切り線)。 |
 | `splitbutton` | SplitButton | 本体と矢印部が分かれたボタン。menu でドロップダウンを表示。 |
 | `progressbar` / `progress` | ProgressBar | 進捗バー。value(0〜1)で進捗、text でラベルを上書き。 |
 | `slider` / `sliderfield` | Slider | スライダー。value / minValue / maxValue / increment に対応。 |
 | `radiogroup` / `checkboxgroup` | CheckGroup | items の boxLabel を columns 列に並べる。 |
 | `datepicker` | DatePicker | インラインのカレンダー (Ext.picker.Date 互換)。 value(初期選択日)/ showToday(「今日」ボタンの表示)/ todayText に対応。 月の移動と日付クリックによる選択ができる。 |
+| `htmleditor` | HtmlEditor | リッチテキストエディタ。 書式ツールバー + 編集領域 (contentEditable) で構成し、太字・斜体・下線・ 文字揃え・リスト・リンク挿入が実際に操作できる。value に初期 HTML を指定。 機能スイッチは ExtJS 互換: enableFormat / enableAlignments / enableLists / enableLinks / enableSourceEdit (すべて既定 true。ソース編集は HTML を直接編集)。 enableFont / enableFontSize / enableColors は未対応 (モックでは省略)。 |
+| `pagingtoolbar` | PagingToolbar | ページングツールバー。 モックのため store とは連動せず、total / pageSize (既定 25) からページ数を計算して ページ移動のインタラクションを再現する。displayInfo: true で右端に件数を表示し、 文言は displayMsg ('{0} - {1} 件目 / 全 {2} 件') / emptyMsg で変更できる。 beforePageText / afterPageText でページ番号まわりの文言も変更可能。 グリッドの下部に置くときは bbar: { xtype: 'pagingtoolbar', total: 200 } と書く。 |
 
 ## レイアウト (layout type)
 

@@ -17,6 +17,8 @@ export interface LayoutConfig {
 
 /** グリッド(データグリッド)の列定義 */
 export interface ColumnConfig {
+  /** treepanel のツリーグリッドで階層表示する列は 'treecolumn' を指定 */
+  xtype?: string
   text?: string
   dataIndex?: string
   width?: number | string
@@ -92,6 +94,20 @@ export interface ComponentConfig {
   // ---- datepicker ----
   showToday?: boolean
   todayText?: string
+
+  // ---- htmleditor ----
+  enableFormat?: boolean
+  enableAlignments?: boolean
+  enableLists?: boolean
+  enableLinks?: boolean
+  enableSourceEdit?: boolean
+
+  // ---- pagingtoolbar ----
+  pageSize?: number
+  total?: number
+  displayInfo?: boolean
+  displayMsg?: string
+  emptyMsg?: string
 
   // ---- 見た目 ----
   text?: string

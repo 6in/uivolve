@@ -1071,6 +1071,152 @@
     border-block-start: 1px solid var(--sx-border);
   }
 
+  /* ---------------------------------------------------- HTML エディタ */
+
+  .sx-htmleditor-field {
+    /* height 指定をエディタ本体まで伝える */
+    & .sx-field-body {
+      min-block-size: 0;
+    }
+  }
+
+  .sx-htmleditor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-block-size: 120px;
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    background: var(--sx-input-bg);
+    overflow: hidden;
+
+    &:focus-within {
+      border-color: var(--sx-accent);
+      outline: 2px solid color-mix(in srgb, var(--sx-accent) 60%, transparent);
+    }
+  }
+
+  .sx-htmled-toolbar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 3px 5px;
+    background: var(--sx-toolbar-bg);
+    border-block-end: 1px solid var(--sx-border);
+  }
+
+  .sx-htmled-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .sx-htmled-btn {
+    appearance: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 24px;
+    block-size: 22px;
+    padding: 0;
+    font: inherit;
+    color: var(--sx-text);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover {
+      background: color-mix(in srgb, var(--sx-accent) 12%, var(--sx-panel-bg));
+      border-color: color-mix(in srgb, var(--sx-accent) 40%, var(--sx-border));
+    }
+
+    &.sx-active {
+      background: color-mix(in srgb, var(--sx-accent) 20%, var(--sx-panel-bg));
+      border-color: var(--sx-accent);
+    }
+  }
+
+  .sx-htmled-sep {
+    inline-size: 1px;
+    block-size: 16px;
+    background: var(--sx-border);
+    margin-inline: 4px;
+  }
+
+  .sx-htmled-body {
+    flex: 1;
+    min-block-size: 0;
+    padding: 8px 10px;
+    overflow: auto;
+    outline: none;
+    font-size: 13px;
+    line-height: 1.6;
+
+    & > :first-child {
+      margin-block-start: 0;
+    }
+
+    & > :last-child {
+      margin-block-end: 0;
+    }
+
+    & a {
+      color: var(--sx-accent);
+    }
+  }
+
+  .sx-htmled-source {
+    flex: 1;
+    min-block-size: 0;
+    padding: 8px 10px;
+    border: none;
+    resize: none;
+    outline: none;
+    color: var(--sx-text);
+    background: var(--sx-input-bg);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* ------------------------------------------ ページングツールバー */
+
+  .sx-paging {
+    gap: 4px;
+  }
+
+  .sx-paging-btn {
+    padding: 3px 7px;
+    font-size: 11px;
+  }
+
+  .sx-paging-input {
+    flex: none;
+    inline-size: 48px;
+    padding: 3px 4px;
+    text-align: center;
+  }
+
+  .sx-paging-info {
+    color: var(--sx-muted);
+    font-size: 12px;
+  }
+
+  /* -------------------------------------------------- ツリーグリッド */
+
+  .sx-treecell {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    & .sx-tree-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
   /* ---------------------------------------------------------- その他 */
 
   .sx-unknown {

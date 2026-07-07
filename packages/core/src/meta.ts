@@ -180,13 +180,13 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     props: [...CONTAINER_PROPS, 'title', 'closable'],
   },
   treepanel: {
-    description: '階層ツリー (root.children)',
+    description: '階層ツリー (root.children)。columns 指定でツリーグリッド',
     aliases: ['tree'],
     defaults: {
       title: 'ツリー',
       root: { children: [{ text: 'フォルダ', expanded: true, children: [{ text: 'ノード', leaf: true }] }] },
     },
-    props: ['title', 'root', 'rootVisible', 'children'],
+    props: ['title', 'root', 'rootVisible', 'children', 'columns', 'columnLines'],
   },
   menu: {
     description: 'メニューリスト',
@@ -230,6 +230,31 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     description: 'インラインカレンダー',
     defaults: { value: '2026-01-01' },
     props: ['value', 'showToday', 'todayText'],
+  },
+  htmleditor: {
+    description: 'リッチテキストエディタ (書式ツールバー + 編集領域)',
+    defaults: { fieldLabel: 'ラベル', value: '<p>テキストを入力</p>', height: 160 },
+    props: [
+      ...FIELD_PROPS,
+      'enableFormat',
+      'enableAlignments',
+      'enableLists',
+      'enableLinks',
+      'enableSourceEdit',
+    ],
+  },
+  pagingtoolbar: {
+    description: 'ページングツールバー (グリッドの bbar 向け。total / pageSize)',
+    defaults: { displayInfo: true, pageSize: 25, total: 200 },
+    props: [
+      'pageSize',
+      'total',
+      'displayInfo',
+      'displayMsg',
+      'emptyMsg',
+      'beforePageText',
+      'afterPageText',
+    ],
   },
 }
 

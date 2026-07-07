@@ -11,6 +11,7 @@
         "activeTab": {
           "type": "number"
         },
+        "afterPageText": {},
         "alt": {},
         "bbar": {
           "type": "array",
@@ -26,6 +27,7 @@
             ]
           }
         },
+        "beforePageText": {},
         "bodyPadding": {
           "type": [
             "number",
@@ -106,7 +108,15 @@
           "type": "boolean"
         },
         "displayField": {},
+        "displayInfo": {},
+        "displayMsg": {},
+        "emptyMsg": {},
         "emptyText": {},
+        "enableAlignments": {},
+        "enableFormat": {},
+        "enableLinks": {},
+        "enableLists": {},
+        "enableSourceEdit": {},
         "fieldLabel": {},
         "flex": {
           "type": "number"
@@ -291,6 +301,7 @@
             "string"
           ]
         },
+        "pageSize": {},
         "readOnly": {
           "type": "boolean"
         },
@@ -364,6 +375,7 @@
         "text": {},
         "title": {},
         "todayText": {},
+        "total": {},
         "ui": {},
         "value": {},
         "valueField": {},
@@ -415,7 +427,9 @@
             "sliderfield",
             "radiogroup",
             "checkboxgroup",
-            "datepicker"
+            "datepicker",
+            "htmleditor",
+            "pagingtoolbar"
           ]
         }
       },

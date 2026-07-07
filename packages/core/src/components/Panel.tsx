@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { XRender } from '../XRender'
 import { LayoutBody } from '../layouts'
 import type { ComponentConfig, RendererProps } from '../types'
 import { cx, styleOf, toCssBox } from '../utils'
@@ -11,6 +12,12 @@ function normalizeBar(
   if (!bar) return undefined
   if (Array.isArray(bar)) return { xtype: 'toolbar', items: bar }
   return { xtype: 'toolbar', ...bar }
+}
+
+/** tbar / bbar の描画。pagingtoolbar など toolbar 以外の xtype はレジストリ経由で解決する */
+function Bar({ config }: { config: ComponentConfig }) {
+  if (config.xtype === 'toolbar') return <Toolbar config={config} />
+  return <XRender config={config} />
 }
 
 export interface PanelShellProps {
@@ -84,7 +91,7 @@ export function PanelShell({
       )}
       <div className="sx-panel-bodywrap">
         <div className="sx-panel-inner">
-          {tbar && <Toolbar config={tbar} />}
+          {tbar && <Bar config={tbar} />}
           <div
             className={cx('sx-panel-body', bodyClassName)}
             style={{ padding: toCssBox(config.bodyPadding) }}
@@ -101,7 +108,7 @@ export function PanelShell({
               </>
             )}
           </div>
-          {bbar && <Toolbar config={bbar} />}
+          {bbar && <Bar config={bbar} />}
         </div>
       </div>
     </section>
