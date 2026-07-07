@@ -1,0 +1,425 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/uivolve/dsl.schema.json",
+  "title": "uivolve DSL",
+  "description": "ExtJS 互換の画面モック DSL。xtype / layout の一覧は reference/components.md を参照。このスキーマは packages/core/src/meta.ts から自動生成される (npm run schema)。",
+  "$ref": "#/$defs/component",
+  "$defs": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "activeTab": {
+          "type": "number"
+        },
+        "alt": {},
+        "bbar": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/component"
+              },
+              {
+                "type": "string",
+                "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+              }
+            ]
+          }
+        },
+        "bodyPadding": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "boxLabel": {},
+        "checkboxToggle": {
+          "type": "boolean"
+        },
+        "checked": {
+          "type": "boolean"
+        },
+        "children": {},
+        "closable": {
+          "type": "boolean"
+        },
+        "cls": {},
+        "collapsed": {
+          "type": "boolean"
+        },
+        "collapsible": {
+          "type": "boolean"
+        },
+        "colspan": {
+          "type": "number"
+        },
+        "columnLines": {
+          "type": "boolean"
+        },
+        "columnWidth": {
+          "type": "number"
+        },
+        "columns": {
+          "anyOf": [
+            {
+              "type": "number",
+              "description": "grid レイアウト / radiogroup の列数"
+            },
+            {
+              "type": "array",
+              "description": "データグリッドの列定義",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "dataIndex": {
+                    "type": "string"
+                  },
+                  "width": {
+                    "type": [
+                      "number",
+                      "string"
+                    ]
+                  },
+                  "flex": {
+                    "type": "number"
+                  },
+                  "align": {
+                    "enum": [
+                      "left",
+                      "center",
+                      "right"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "data": {},
+        "defaults": {
+          "type": "object"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "displayField": {},
+        "emptyText": {},
+        "fieldLabel": {},
+        "flex": {
+          "type": "number"
+        },
+        "frame": {
+          "type": "boolean"
+        },
+        "header": {
+          "type": "boolean"
+        },
+        "height": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "html": {},
+        "iconCls": {},
+        "id": {},
+        "increment": {
+          "type": "number"
+        },
+        "inputType": {},
+        "itemId": {},
+        "items": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/component"
+              },
+              {
+                "type": "string",
+                "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+              }
+            ]
+          }
+        },
+        "labelWidth": {
+          "type": "number"
+        },
+        "layout": {
+          "anyOf": [
+            {
+              "enum": [
+                "auto",
+                "anchor",
+                "form",
+                "fit",
+                "border",
+                "grid",
+                "table",
+                "hbox",
+                "vbox",
+                "card",
+                "accordion",
+                "center",
+                "column",
+                "absolute"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "auto",
+                    "anchor",
+                    "form",
+                    "fit",
+                    "border",
+                    "grid",
+                    "table",
+                    "hbox",
+                    "vbox",
+                    "card",
+                    "accordion",
+                    "center",
+                    "column",
+                    "absolute"
+                  ]
+                },
+                "columns": {
+                  "type": "number"
+                },
+                "gap": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "align": {
+                  "type": "string"
+                },
+                "pack": {
+                  "type": "string"
+                },
+                "activeItem": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          ]
+        },
+        "margin": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "maxValue": {
+          "type": "number"
+        },
+        "menu": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/component"
+                  },
+                  {
+                    "type": "string",
+                    "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/$defs/component"
+            }
+          ]
+        },
+        "minHeight": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "minValue": {
+          "type": "number"
+        },
+        "minWidth": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "multiSelect": {
+          "type": "boolean"
+        },
+        "name": {},
+        "options": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "value": {},
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "padding": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "region": {
+          "enum": [
+            "north",
+            "south",
+            "east",
+            "west",
+            "center"
+          ]
+        },
+        "root": {
+          "type": "object"
+        },
+        "rootVisible": {
+          "type": "boolean"
+        },
+        "rows": {
+          "type": "number"
+        },
+        "rowspan": {
+          "type": "number"
+        },
+        "showToday": {
+          "type": "boolean"
+        },
+        "size": {
+          "type": "number"
+        },
+        "split": {
+          "type": "boolean"
+        },
+        "src": {},
+        "store": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "style": {},
+        "tbar": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/component"
+              },
+              {
+                "type": "string",
+                "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+              }
+            ]
+          }
+        },
+        "text": {},
+        "title": {},
+        "todayText": {},
+        "ui": {},
+        "value": {},
+        "valueField": {},
+        "width": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "xtype": {
+          "enum": [
+            "panel",
+            "form",
+            "container",
+            "fieldcontainer",
+            "component",
+            "box",
+            "toolbar",
+            "button",
+            "splitbutton",
+            "textfield",
+            "numberfield",
+            "datefield",
+            "textarea",
+            "textareafield",
+            "checkbox",
+            "checkboxfield",
+            "radio",
+            "radiofield",
+            "combobox",
+            "combo",
+            "listbox",
+            "multiselect",
+            "displayfield",
+            "label",
+            "grid",
+            "gridpanel",
+            "image",
+            "imagecomponent",
+            "tabpanel",
+            "fieldset",
+            "window",
+            "treepanel",
+            "tree",
+            "menu",
+            "progressbar",
+            "progress",
+            "slider",
+            "sliderfield",
+            "radiogroup",
+            "checkboxgroup",
+            "datepicker"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

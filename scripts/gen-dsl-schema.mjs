@@ -1,6 +1,6 @@
 #!/usr/bin/env node --experimental-strip-types
 /**
- * docs/dsl.schema.json を packages/core/src/meta.ts から生成する。
+ * reference/dsl.schema.json を packages/core/src/meta.ts から生成する。
  *
  * 用途:
  * - AI が生成した DSL (JSON) の検証
@@ -23,7 +23,7 @@ import {
 } from '../packages/core/src/meta.ts'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const outFile = path.join(root, 'docs/dsl.schema.json')
+const outFile = path.join(root, 'reference/dsl.schema.json')
 
 const sizeType = { type: ['number', 'string'] }
 const componentRef = { $ref: '#/$defs/component' }
@@ -149,7 +149,7 @@ const schema = {
   $id: 'https://github.com/uivolve/dsl.schema.json',
   title: 'uivolve DSL',
   description:
-    'ExtJS 互換の画面モック DSL。xtype / layout の一覧は docs/components.md を参照。' +
+    'ExtJS 互換の画面モック DSL。xtype / layout の一覧は reference/components.md を参照。' +
     'このスキーマは packages/core/src/meta.ts から自動生成される (npm run schema)。',
   $ref: '#/$defs/component',
   $defs: {

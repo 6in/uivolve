@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * docs/components.md を packages/core のソースコードから自動生成する。
+ * reference/components.md を packages/core のソースコードから自動生成する。
  *
  * 生成元:
  * - registerComponent() / registerLayout() の登録情報 (xtype / layout type と実装の対応)
@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const coreSrc = path.join(root, 'packages/core/src')
-const outFile = path.join(root, 'docs/components.md')
+const outFile = path.join(root, 'reference/components.md')
 
 // ---------------------------------------------------------------- 収集
 

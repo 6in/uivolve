@@ -14,6 +14,7 @@
     "docs": "node scripts/gen-component-docs.mjs",
     "schema": "node --experimental-strip-types scripts/gen-dsl-schema.mjs",
     "mdx:dev": "npm -w apps/mdx-demo run dev",
-    "mdx:build": "npm -w apps/mdx-demo run build"
+    "mdx:build": "npm -w apps/mdx-demo run build",
+    "pages": "npm -w apps/playground run build:pages"
   }
 }

@@ -32,15 +32,27 @@ packages/core/        — @uivolve/core: DSL パーサー + レンダラー (Rea
 packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンスをモック描画する remark プラグイン
 apps/playground/      — エディタ + ビューア (Vite)
 apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
-docs/                 — リファレンス (components.md は JSDoc から自動生成)
-scripts/              — docs 生成スクリプト
+reference/            — リファレンス (components.md は JSDoc から自動生成)
+docs/                 — GitHub Pages 用の Playground ビルド出力 (npm run pages で生成)
+scripts/              — reference 生成スクリプト
 .claude/skills/       — 開発ワークフロースキル (add-component)
 ```
 
+## GitHub Pages (オンライン Playground)
+
+`docs/` には Playground の静的ビルドが入っており、GitHub Pages で配信できる。
+
+```bash
+npm run pages   # Playground を docs/ にビルド (相対パスなのでどこでも配信可)
+```
+
+リポジトリの **Settings → Pages → Branch: main, フォルダ: /docs** を選ぶと
+`https://<user>.github.io/uivolve/` でモックツールがそのまま動く。
+
 ## ドキュメント
 
-- **[コンポーネント / レイアウト リファレンス](docs/components.md)** — ソースの JSDoc から `npm run docs` で自動生成
-- [ExtJS レイアウト一覧と対応状況](docs/extjs-layouts.md)
+- **[コンポーネント / レイアウト リファレンス](reference/components.md)** — ソースの JSDoc から `npm run docs` で自動生成
+- [ExtJS レイアウト一覧と対応状況](reference/extjs-layouts.md)
 
 コンポーネントの追加手順は Claude Code スキル **`/add-component`** にまとまっている
 (`.claude/skills/add-component/SKILL.md`)。
@@ -101,7 +113,7 @@ items:
 | `absolute` | 子の `x` / `y` による絶対位置指定 |
 | `auto` / `anchor` / `form` | 縦フロー(デフォルト) |
 
-ExtJS の全レイアウト一覧と対応状況は [docs/extjs-layouts.md](docs/extjs-layouts.md) を参照。
+ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md](reference/extjs-layouts.md) を参照。
 
 ### 対応コンポーネント (`xtype`)
 
@@ -267,7 +279,7 @@ export default defineConfig({
 
 ## JSON Schema
 
-`docs/dsl.schema.json` に DSL の JSON Schema がある (`npm run schema` で
+`reference/dsl.schema.json` に DSL の JSON Schema がある (`npm run schema` で
 `packages/core/src/meta.ts` から自動生成)。AI が生成した DSL の検証や、
 VS Code の JSON エディタでの補完 (`$schema` 指定) に使える。
 
