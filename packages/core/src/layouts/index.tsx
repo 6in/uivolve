@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type * as React from 'react'
 import type { ComponentConfig, LayoutConfig, Region } from '../types'
 import { XRender } from '../XRender'
@@ -72,8 +73,14 @@ function FitLayout({ items }: LayoutProps) {
 
 const REGIONS: Region[] = ['north', 'west', 'center', 'east', 'south']
 
-/** border: north/south/east/west/center の 5 領域レイアウト (CSS Grid で実現) */
+/**
+ * border: north/south/east/west/center の 5 領域レイアウト (CSS Grid で実現)。
+ * split: true のリージョンは ExtJS 同様、スプリットバーのドラッグでリサイズできる。
+ */
 function BorderLayout({ items }: LayoutProps) {
+  // ドラッグで確定したリージョンサイズ (px)。未ドラッグは config の width/height を使う
+  const [sizes, setSizes] = useState<Partial<Record<Region, number>>>({})
+
   const byRegion = new Map<Region, ComponentConfig[]>()
   for (const it of items) {
     const region = (it.region ?? 'center') as Region
@@ -81,29 +88,69 @@ function BorderLayout({ items }: LayoutProps) {
     list.push(it)
     byRegion.set(region, list)
   }
+
+  const startResize = (region: Region) => (e: React.PointerEvent) => {
+    e.preventDefault()
+    const wrapper = (e.currentTarget as HTMLElement).parentElement
+    if (!wrapper) return
+    const rect = wrapper.getBoundingClientRect()
+    const startX = e.clientX
+    const startY = e.clientY
+    const move = (ev: PointerEvent) => {
+      const size =
+        region === 'west'
+          ? rect.width + (ev.clientX - startX)
+          : region === 'east'
+            ? rect.width - (ev.clientX - startX)
+            : region === 'north'
+              ? rect.height + (ev.clientY - startY)
+              : rect.height - (ev.clientY - startY)
+      setSizes((s) => ({ ...s, [region]: Math.max(50, Math.round(size)) }))
+    }
+    const up = () => {
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', up)
+    }
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', up)
+  }
+
   return (
     <div className="sx-layout-border">
       {REGIONS.map((region) => {
         const regionItems = byRegion.get(region)
         if (!regionItems) return null
+        const head = regionItems[0]
         const sizing: React.CSSProperties = {}
         // east/west は width、north/south は height を領域サイズとして使う
-        const head = regionItems[0]
         if (region === 'east' || region === 'west') {
-          sizing.width = toCssSize(head.width) ?? '25%'
+          sizing.width =
+            sizes[region] !== undefined ? `${sizes[region]}px` : toCssSize(head.width) ?? '25%'
         } else if (region === 'north' || region === 'south') {
-          const h = toCssSize(head.height)
+          const h =
+            sizes[region] !== undefined ? `${sizes[region]}px` : toCssSize(head.height)
           if (h !== undefined) sizing.height = h
         }
+        const vertical = region === 'west' || region === 'east'
+        const splittable = head.split === true && region !== 'center'
         return (
-          <div
-            key={region}
-            className={cx('sx-region', `sx-region-${region}`, head.split && 'sx-region-split')}
-            style={sizing}
-          >
+          <div key={region} className={cx('sx-region', `sx-region-${region}`)} style={sizing}>
             {regionItems.map((it, i) => (
               <XRender key={it.id ?? it.itemId ?? i} config={{ ...it, width: undefined }} />
             ))}
+            {splittable && (
+              <div
+                className={cx(
+                  'sx-splitbar',
+                  vertical ? 'sx-splitbar-v' : 'sx-splitbar-h',
+                  `sx-splitbar-${region}`,
+                )}
+                role="separator"
+                aria-orientation={vertical ? 'vertical' : 'horizontal'}
+                aria-label={`${region} リージョンのサイズ調整`}
+                onPointerDown={startResize(region)}
+              />
+            )}
           </div>
         )
       })}

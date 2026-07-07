@@ -170,11 +170,13 @@
   }
 
   .sx-region {
+    position: relative;
     display: flex;
     flex-direction: column;
     min-inline-size: 0;
     min-block-size: 0;
 
+    /* splitbar は絶対配置なので flex の影響を受けない */
     > * {
       flex: 1 1 auto;
       min-block-size: 0;
@@ -187,11 +189,57 @@
   .sx-region-east  { grid-area: east; }
   .sx-region-center { grid-area: center; }
 
-  /* split: リサイズ用スプリッターの見た目だけ再現 */
-  .sx-region-split.sx-region-west  { border-inline-end: 4px double var(--sx-splitter); padding-inline-end: 3px; }
-  .sx-region-split.sx-region-east  { border-inline-start: 4px double var(--sx-splitter); padding-inline-start: 3px; }
-  .sx-region-split.sx-region-north { border-block-end: 4px double var(--sx-splitter); padding-block-end: 3px; }
-  .sx-region-split.sx-region-south { border-block-start: 4px double var(--sx-splitter); padding-block-start: 3px; }
+  /* split: true — リージョン間の gap に置かれる、ドラッグ可能なスプリットバー */
+  .sx-splitbar {
+    position: absolute;
+    z-index: 5;
+    flex: none;
+    touch-action: none;
+    user-select: none;
+
+    /* 中央のグリップ線 */
+    &::after {
+      content: '';
+      position: absolute;
+      background: var(--sx-splitter);
+      border-radius: 2px;
+      transition: background 0.15s ease;
+    }
+
+    &:hover::after,
+    &:active::after {
+      background: var(--sx-accent);
+    }
+  }
+
+  .sx-splitbar-v {
+    inset-block: 0;
+    inline-size: var(--sx-gap);
+    cursor: col-resize;
+
+    &::after {
+      inset-block: 0;
+      inset-inline-start: calc(50% - 1.5px);
+      inline-size: 3px;
+    }
+  }
+
+  .sx-splitbar-h {
+    inset-inline: 0;
+    block-size: var(--sx-gap);
+    cursor: row-resize;
+
+    &::after {
+      inset-inline: 0;
+      inset-block-start: calc(50% - 1.5px);
+      block-size: 3px;
+    }
+  }
+
+  .sx-splitbar-west  { inset-inline-start: 100%; }
+  .sx-splitbar-east  { inset-inline-end: 100%; }
+  .sx-splitbar-north { inset-block-start: 100%; }
+  .sx-splitbar-south { inset-block-end: 100%; }
 
   .sx-layout-grid {
     display: grid;

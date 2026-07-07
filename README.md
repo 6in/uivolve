@@ -52,7 +52,7 @@ JSON5 として解釈されるため、ExtJS の config をほぼそのままコ
 
 | type | 説明 |
 |---|---|
-| `border` | north / south / east / west / center の 5 領域。`region` / `split` / west・east の `width` に対応 |
+| `border` | north / south / east / west / center の 5 領域。`region` / west・east の `width` に対応。`split: true` でスプリットバーが付き、ドラッグでリージョンをリサイズ可能 |
 | `fit` | 最初の子をコンテナ全面に拡大 |
 | `grid` | CSS Grid ベースの独自レイアウト。`{ type: 'grid', columns: 3, gap: 12 }`、子の `colspan` / `rowspan` 対応 (`table` も同じエンジン) |
 | `hbox` / `vbox` | Flexbox。`align` / `pack`、子の `flex` に対応 |
