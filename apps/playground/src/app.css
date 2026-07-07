@@ -18,8 +18,10 @@ body {
 .pg-app {
   height: 100%;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr auto;
 }
+
+/* ------------------------------------------------------------ ヘッダー */
 
 .pg-header {
   display: flex;
@@ -43,6 +45,17 @@ body {
   margin-left: 8px;
 }
 
+/* ---------------------------------------------------------- ツールバー */
+
+.pg-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: linear-gradient(to bottom, #fdfdfd, #eef1f4);
+  border-bottom: 1px solid #cfd6dd;
+}
+
 .pg-sample {
   display: flex;
   align-items: center;
@@ -53,28 +66,47 @@ body {
     font: inherit;
     padding: 4px 8px;
     border-radius: 4px;
-    border: none;
+    border: 1px solid #cfd6dd;
+    background: white;
   }
 }
 
-.pg-copy {
+.pg-tb-fill {
+  flex: 1;
+}
+
+.pg-btn {
   font: inherit;
   font-size: 13px;
-  padding: 6px 14px;
-  border: none;
+  padding: 5px 12px;
+  border: 1px solid #cfd6dd;
   border-radius: 4px;
-  color: white;
-  background: #157fcc;
+  color: #333c47;
+  background: linear-gradient(to bottom, #ffffff, #e9edf1);
   cursor: pointer;
 
   &:hover {
-    background: color-mix(in srgb, #157fcc 80%, black);
+    border-color: #157fcc;
+    background: color-mix(in srgb, #157fcc 8%, white);
   }
 }
 
+.pg-btn-primary {
+  color: white;
+  border-color: #0f6bb0;
+  background: #157fcc;
+
+  &:hover {
+    background: color-mix(in srgb, #157fcc 80%, black);
+    border-color: color-mix(in srgb, #157fcc 80%, black);
+  }
+}
+
+/* ---------------------------------------------------------- メイン領域 */
+
 .pg-main {
   display: grid;
-  grid-template-columns: minmax(320px, 42%) 1fr;
+  /* grid-template-columns はスプリットバーの状態に応じてインラインで設定 */
   min-height: 0;
 }
 
@@ -82,11 +114,33 @@ body {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border-right: 1px solid #cfd6dd;
+
+  /* react-codemirror のラッパー div にも高さを伝える */
+  & > div {
+    height: 100%;
+  }
 
   & .cm-editor {
     height: 100%;
     font-size: 13px;
+  }
+
+  & .cm-scroller {
+    overflow: auto;
+    /* macOS のオーバーレイ式でも常時見えるスクロールバーにする */
+    scrollbar-color: #a9b6c1 #f0f3f6;
+    scrollbar-width: thin;
+  }
+}
+
+.pg-splitter {
+  cursor: col-resize;
+  background: #cfd6dd;
+  touch-action: none;
+
+  &:hover,
+  &:active {
+    background: #157fcc;
   }
 }
 
@@ -94,4 +148,32 @@ body {
   min-width: 0;
   min-height: 0;
   padding: 12px;
+}
+
+/* -------------------------------------------------------- ステータスバー */
+
+.pg-status {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #4d5a68;
+  background: #f0f3f6;
+  border-top: 1px solid #cfd6dd;
+
+  & > span {
+    white-space: nowrap;
+  }
+}
+
+.pg-status-msg {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #1d7a35;
+}
+
+.pg-status-error .pg-status-msg {
+  color: #b3261e;
 }
