@@ -16,11 +16,13 @@ npm run dev   # Playground (エディタ + ライブプレビュー) が http://
 ## プロジェクト構成
 
 ```
-packages/core/     — @similar-extjs/core: DSL パーサー + レンダラー (React)
-apps/playground/   — エディタ + ビューア (Vite)
-docs/              — リファレンス (components.md は JSDoc から自動生成)
-scripts/           — docs 生成スクリプト
-.claude/skills/    — 開発ワークフロースキル (add-component)
+packages/core/        — @similar-extjs/core: DSL パーサー + レンダラー (React)
+packages/remark-mock/ — @similar-extjs/remark-mock: ```extjs フェンスをモック描画する remark プラグイン
+apps/playground/      — エディタ + ビューア (Vite)
+apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
+docs/                 — リファレンス (components.md は JSDoc から自動生成)
+scripts/              — docs 生成スクリプト
+.claude/skills/       — 開発ワークフロースキル (add-component)
 ```
 
 ## ドキュメント
@@ -141,8 +143,47 @@ registerComponent('tabpanel', MyTabPanel)
 registerLayout('accordion', MyAccordionLayout)
 ```
 
+## Markdown / MDX 統合 (Astro)
+
+Mermaid.js と同じ感覚で、Markdown 内のコードフェンスに DSL を書くとその場にモックが描画される。
+
+````markdown
+```extjs height=420
+{
+  xtype: 'panel',
+  title: '受注管理システム',
+  layout: 'border',
+  items: [ ... ],
+}
+```
+````
+
+仕組みは `@similar-extjs/remark-mock` (remark プラグイン) が ` ```extjs ` フェンスを
+`<ExtMockup client:load />` に変換 + import を自動注入するだけなので、
+Astro に限らず MDX パイプラインなら組み込める。
+
+```bash
+npm run mdx:dev     # デモサイト (画面仕様書の例) を http://localhost:4321 で起動
+npm run mdx:build   # 静的ビルド
+```
+
+セットアップ (Astro):
+
+```js
+// astro.config.mjs
+import mdx from '@astrojs/mdx'
+import react from '@astrojs/react'
+import remarkSimilarExtjs from '@similar-extjs/remark-mock'
+
+export default defineConfig({
+  integrations: [react(), mdx({ remarkPlugins: [remarkSimilarExtjs] })],
+})
+```
+
+レイアウト側で `@similar-extjs/core/styles.css` (と必要なら Font Awesome) を読み込む。
+
 ## 今後の構想
 
-- Mermaid.js のように Markdown / MDX (Astro など) 内の DSL ブロックをモック描画するインテグレーション
-- ドラッグでのリージョンリサイズ、タブの実クローズなどインタラクションの強化
-- datepicker / htmleditor / pagingtoolbar / ツリーグリッドなどのコンポーネント追加
+- htmleditor / pagingtoolbar / ツリーグリッドなどのコンポーネント追加
+- VS Code 拡張やドキュメントサイトへの組み込み
+- DSL の JSON Schema 定義 (エディタ補完・AI 出力の検証用)

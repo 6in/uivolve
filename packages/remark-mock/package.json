@@ -1,0 +1,10 @@
+{
+  "name": "@similar-extjs/remark-mock",
+  "version": "0.1.0",
+  "description": "remark plugin: render ```extjs fenced code blocks as similar-extjs mockups (like Mermaid)",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  }
+}

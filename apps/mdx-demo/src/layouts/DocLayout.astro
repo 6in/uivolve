@@ -1,0 +1,86 @@
+---
+import '@fortawesome/fontawesome-free/css/all.min.css'
+import '@similar-extjs/core/styles.css'
+
+const { frontmatter } = Astro.props
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{frontmatter.title ?? 'similar-extjs MDX demo'}</title>
+  </head>
+  <body>
+    <main class="doc">
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    color: #333c47;
+    background: #f7f9fb;
+    line-height: 1.75;
+  }
+
+  .doc {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+
+    & h1 {
+      border-bottom: 3px solid #157fcc;
+      padding-bottom: 8px;
+    }
+
+    & h2 {
+      border-left: 4px solid #157fcc;
+      padding-left: 10px;
+      margin-top: 2.2em;
+    }
+
+    & table {
+      border-collapse: collapse;
+
+      & th,
+      & td {
+        border: 1px solid #d0d5db;
+        padding: 6px 14px;
+      }
+
+      & th {
+        background: #eef1f4;
+      }
+    }
+
+    & code {
+      background: #eef1f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    & pre code {
+      display: block;
+      padding: 14px;
+      overflow-x: auto;
+    }
+
+    /* 埋め込まれた画面モック */
+    & .sx-root {
+      border: 1px solid #d0d5db;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgb(51 60 71 / 8%);
+      overflow: hidden;
+      margin-block: 20px;
+    }
+  }
+</style>

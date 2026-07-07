@@ -1,0 +1,109 @@
+---
+layout: ../layouts/DocLayout.astro
+title: 受注管理システム 画面仕様書
+---
+
+# 受注管理システム 画面仕様書
+
+このドキュメントは **similar-extjs の MDX 統合デモ**。Mermaid.js と同じ感覚で、
+Markdown 内の ` ```extjs ` コードフェンスに ExtJS 互換 DSL を書くと、
+その場に画面モックが描画される。モックは実際に操作できる
+(パネルの折りたたみ、タブ切替、スプリットバーのドラッグ、グリッドの行選択など)。
+
+## 1. メイン画面
+
+アプリケーションのメイン画面。左のメニューから機能を選択し、中央のグリッドで受注を管理する。
+西リージョンはスプリットバーで幅を調整できること。
+
+```extjs height=440
+{
+  xtype: 'panel',
+  title: '受注管理システム',
+  layout: 'border',
+  items: [
+    {
+      region: 'north',
+      xtype: 'container',
+      items: [{
+        xtype: 'toolbar',
+        items: [
+          { text: '新規作成', ui: 'primary', iconCls: 'x-fa fa-plus' },
+          { text: '編集', iconCls: 'x-fa fa-pen' },
+          '-',
+          { text: '削除', iconCls: 'x-fa fa-trash' },
+          '->',
+          '検索:',
+          { xtype: 'textfield', emptyText: 'キーワード', width: 180 },
+        ],
+      }],
+    },
+    {
+      region: 'west',
+      title: 'メニュー',
+      width: 180,
+      split: true,
+      collapsible: true,
+      bodyPadding: 8,
+      items: [{ xtype: 'listbox', size: 6, options: ['受注一覧', '出荷指示', '請求管理', '顧客マスタ'] }],
+    },
+    {
+      region: 'center',
+      xtype: 'grid',
+      title: '受注一覧',
+      columns: [
+        { text: '受注番号', dataIndex: 'no', width: 110 },
+        { text: '顧客名', dataIndex: 'customer', flex: 1 },
+        { text: '金額', dataIndex: 'amount', width: 110, align: 'right' },
+        { text: '状態', dataIndex: 'status', width: 90 },
+      ],
+      store: { data: [
+        { no: 'SO-0001', customer: '山田商事', amount: '¥120,000', status: '出荷済' },
+        { no: 'SO-0002', customer: '鈴木工業', amount: '¥58,300', status: '受注' },
+        { no: 'SO-0003', customer: '田中物産', amount: '¥310,900', status: '請求済' },
+      ]},
+    },
+    {
+      region: 'south',
+      xtype: 'container',
+      items: [{ xtype: 'toolbar', items: ['ステータス: 準備完了', '->', '3 件'] }],
+    },
+  ],
+}
+```
+
+### 画面仕様
+
+| 項目 | 内容 |
+|---|---|
+| メニュー (west) | 幅 180px、スプリットバーでリサイズ可、折りたたみ可 |
+| 受注一覧 (center) | 行クリックで選択。金額は右寄せ |
+| ステータスバー (south) | 左に状態、右に件数 |
+
+## 2. 受注登録ダイアログ
+
+「新規作成」ボタン押下で表示されるモーダルダイアログ。
+
+```extjs height=380
+{
+  xtype: 'window',
+  title: '受注登録',
+  width: 420,
+  bodyPadding: 14,
+  items: [
+    { xtype: 'textfield', fieldLabel: '顧客名', emptyText: '顧客を入力' },
+    { xtype: 'datefield', fieldLabel: '受注日' },
+    { xtype: 'combobox', fieldLabel: '担当者', options: ['佐藤', '田中', '高橋'] },
+    { xtype: 'radiogroup', fieldLabel: '区分', columns: 2, items: [
+      { boxLabel: '通常', name: 'kind', checked: true },
+      { boxLabel: '緊急', name: 'kind' },
+    ]},
+    { xtype: 'textarea', fieldLabel: '備考', rows: 3 },
+  ],
+  bbar: ['->', { text: '登録', ui: 'primary', iconCls: 'x-fa fa-check' }, { text: 'キャンセル' }],
+}
+```
+
+## 3. AI への引き渡し
+
+上のコードフェンスの DSL をそのまま AI に渡せば、任意の UI ライブラリで本実装できる。
+仕様書 (この MDX) とモック定義 (DSL) が同一ソースで管理されるのがポイント。

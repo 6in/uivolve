@@ -11,6 +11,8 @@
     "dev": "npm -w apps/playground run dev",
     "build": "npm -w apps/playground run build",
     "typecheck": "npm -w apps/playground run typecheck",
-    "docs": "node scripts/gen-component-docs.mjs"
+    "docs": "node scripts/gen-component-docs.mjs",
+    "mdx:dev": "npm -w apps/mdx-demo run dev",
+    "mdx:build": "npm -w apps/mdx-demo run build"
   }
 }
