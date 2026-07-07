@@ -19,7 +19,7 @@
 | `combobox` / `combo` | ComboBox | ドロップダウン選択。options 配列または store.data から選択肢を生成。 |
 | `listbox` / `multiselect` | ListBox | リストボックス。multiSelect で複数選択、size で表示行数を指定。 |
 | `displayfield` / `label` | DisplayField | 静的テキスト表示。value / text / html のいずれかを描画。 |
-| `grid` / `gridpanel` | GridPanel | データグリッド。 columns / store(または data)から表を描画する。 CSS Grid + subgrid で列揃え・行ホバー・行選択を実現。 |
+| `grid` / `gridpanel` | GridPanel | データグリッド。 columns / store(または data)から表を描画する。 columnLines: true でカラム区切り線を表示 (ExtJS 互換)。 CSS Grid + subgrid で列揃え・行ホバー・行選択を実現。 |
 | `image` / `imagecomponent` | Image | src 未指定時はプレースホルダを表示 |
 | `tabpanel` | TabPanel | タブ切替パネル。 各 item の title がタブ名になる。activeTab / closable に対応。 |
 | `fieldset` | FieldSet | フォームのグループ枠。 title が legend になる。collapsible / checkboxToggle に対応。 |

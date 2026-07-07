@@ -507,6 +507,11 @@
     white-space: nowrap;
   }
 
+  /* columnLines: true — データ行にもカラム区切り線を表示 */
+  .sx-grid-columnlines .sx-grid-cell:not(:last-child) {
+    border-inline-end: 1px solid color-mix(in srgb, var(--sx-border) 70%, var(--sx-panel-bg));
+  }
+
   .sx-grid-headrow .sx-grid-cell {
     background: var(--sx-toolbar-bg);
     border-block-end: 1px solid var(--sx-border);

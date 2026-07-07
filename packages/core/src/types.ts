@@ -77,6 +77,7 @@ export interface ComponentConfig {
 
   // ---- グリッド ----
   columns?: number | ColumnConfig[]
+  columnLines?: boolean
   store?: { fields?: string[]; data?: Array<Record<string, unknown>> } | Array<Record<string, unknown>>
   data?: Array<Record<string, unknown>>
 

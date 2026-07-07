@@ -6,6 +6,7 @@ import { PanelShell } from './Panel'
 /**
  * xtype: 'grid' | 'gridpanel' — データグリッド。
  * columns / store(または data)から表を描画する。
+ * columnLines: true でカラム区切り線を表示 (ExtJS 互換)。
  * CSS Grid + subgrid で列揃え・行ホバー・行選択を実現。
  */
 export function GridPanel({ config }: RendererProps) {
@@ -29,7 +30,11 @@ export function GridPanel({ config }: RendererProps) {
 
   return (
     <PanelShell config={config} bodyClassName="sx-gridpanel-body">
-      <div className="sx-grid" style={{ gridTemplateColumns: template }} role="table">
+      <div
+        className={cx('sx-grid', config.columnLines === true && 'sx-grid-columnlines')}
+        style={{ gridTemplateColumns: template }}
+        role="table"
+      >
         <div className="sx-grid-row sx-grid-headrow" role="row">
           {columns.map((c, i) => (
             <div key={i} className={cx('sx-grid-cell', 'sx-grid-head')} role="columnheader">
