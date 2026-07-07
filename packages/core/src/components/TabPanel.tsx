@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { XRender } from '../XRender'
 import type { ComponentConfig, RendererProps } from '../types'
 import { cx, styleOf, toCssBox } from '../utils'
+import { Icon } from './Icon'
 
 /**
  * xtype: 'tabpanel' — タブ切替パネル。
@@ -32,6 +33,7 @@ export function TabPanel({ config }: RendererProps) {
             onClick={() => setActive(i)}
             disabled={it.disabled}
           >
+            <Icon iconCls={it.iconCls as string | undefined} />
             {it.title ?? `タブ ${i + 1}`}
             {it.closable === true && (
               <span className="sx-tab-close" aria-hidden>

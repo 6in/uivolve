@@ -72,7 +72,7 @@ ExtJS の全レイアウト一覧と対応状況は [docs/extjs-layouts.md](docs
 | `panel` / `form` | タイトルバー、`collapsible` / `collapsed`(折りたたみ・展開)、`tbar` / `bbar`、`bodyPadding`、`html` |
 | `container` / `fieldcontainer` | ヘッダーなしの汎用コンテナ |
 | `toolbar` | ショートハンド対応: `'->'`(右寄せ) / `'-'`(区切り) / 文字列(ラベル)。items の defaultType は button |
-| `button` | `text` / `ui: 'primary'` / `disabled` / `iconCls` |
+| `button` | `text` / `ui: 'primary'` / `disabled` / `iconCls` / `menu`(ドロップダウン) |
 | `textfield` / `numberfield` / `datefield` | `fieldLabel` / `value` / `emptyText` / `readOnly` |
 | `textarea` | 上記 + `rows` |
 | `checkbox` / `radio` | `boxLabel` / `checked` / `name` |
@@ -93,6 +93,21 @@ ExtJS の全レイアウト一覧と対応状況は [docs/extjs-layouts.md](docs
 | `radiogroup` / `checkboxgroup` | `boxLabel` 付き項目を `columns` 列に並べる |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
+
+### アイコン (`iconCls`) — Font Awesome 対応
+
+button / splitbutton / menu / panel タイトル / tabpanel のタブで `iconCls` に Font Awesome のクラスを指定できる。ExtJS の `'x-fa fa-plus'` 形式はそのまま `fa` に読み替えられるため ExtJS の config をコピペ可能。
+
+```json5
+{ xtype: 'button', text: '新規作成', iconCls: 'x-fa fa-plus' }   // ExtJS 形式
+{ xtype: 'button', text: '保存', iconCls: 'fa-solid fa-floppy-disk' } // FA 標準形式
+```
+
+Font Awesome の CSS はホストアプリ側で読み込む(Playground には同梱済み):
+
+```ts
+import '@fortawesome/fontawesome-free/css/all.min.css'
+```
 
 ## ライブラリとしての利用
 

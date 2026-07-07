@@ -46,6 +46,7 @@ registerComponent(['radiogroup', 'checkboxgroup'], CheckGroup)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
+export { Icon } from './Icon'
 export { Toolbar } from './Toolbar'
 export { GridPanel } from './GridPanel'
 export { Image } from './Image'

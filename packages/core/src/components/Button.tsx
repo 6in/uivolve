@@ -1,5 +1,6 @@
 import type { ComponentConfig, RendererProps } from '../types'
 import { cx, styleOf } from '../utils'
+import { Icon } from './Icon'
 import { MenuTrigger } from './misc'
 
 function normalizeMenu(menu: unknown): ComponentConfig | undefined {
@@ -26,7 +27,7 @@ export function Button({ config }: RendererProps) {
           onClick={menu ? toggle : undefined}
           aria-expanded={menu ? open : undefined}
         >
-          {config.iconCls && <span className={cx('sx-btn-icon', config.iconCls)} aria-hidden />}
+          <Icon iconCls={config.iconCls} />
           {config.text}
           {menu && (
             <span className="sx-btn-arrow" aria-hidden>

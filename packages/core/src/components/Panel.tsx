@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { LayoutBody } from '../layouts'
 import type { ComponentConfig, RendererProps } from '../types'
 import { cx, styleOf, toCssBox } from '../utils'
+import { Icon } from './Icon'
 import { Toolbar } from './Toolbar'
 
 function normalizeBar(
@@ -71,6 +72,7 @@ export function PanelShell({
           className={cx('sx-panel-header', collapsible && 'sx-clickable')}
           onClick={collapsible ? toggle : undefined}
         >
+          <Icon iconCls={config.iconCls as string | undefined} />
           <span className="sx-panel-title">{config.title}</span>
           {collapsible && (
             <span className="sx-tool" aria-hidden>

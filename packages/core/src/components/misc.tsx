@@ -2,6 +2,7 @@ import { useRef, useState, type ReactNode } from 'react'
 import { XRender } from '../XRender'
 import type { ComponentConfig, RendererProps } from '../types'
 import { cx, styleOf, toCssSize } from '../utils'
+import { Icon } from './Icon'
 
 // ---------------------------------------------------------------- menu
 
@@ -32,7 +33,9 @@ export function Menu({ config }: RendererProps) {
         }
         return (
           <div key={i} className={cx('sx-menu-item', it.disabled && 'sx-menu-disabled')} role="menuitem">
-            {it.iconCls && <span className={cx('sx-btn-icon', it.iconCls)} aria-hidden />}
+            <span className="sx-menu-iconslot">
+              <Icon iconCls={it.iconCls} />
+            </span>
             <span className="sx-menu-text">{it.text}</span>
             {it.checked !== undefined && <span aria-hidden>{it.checked ? '✓' : ''}</span>}
             {it.menu !== undefined && <span className="sx-menu-arrow" aria-hidden>▸</span>}
@@ -100,7 +103,7 @@ export function SplitButton({ config }: RendererProps) {
       {(open, toggle) => (
         <span className={cx('sx-btn', 'sx-splitbtn', config.ui === 'primary' && 'sx-btn-primary', config.cls)} style={styleOf(config)}>
           <button type="button" className="sx-splitbtn-main" disabled={config.disabled}>
-            {config.iconCls && <span className={cx('sx-btn-icon', config.iconCls)} aria-hidden />}
+            <Icon iconCls={config.iconCls} />
             {config.text}
           </button>
           <button
