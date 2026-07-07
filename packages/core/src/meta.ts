@@ -136,8 +136,19 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     defaults: {
       title: '一覧',
       columnLines: true,
-      columns: [{ text: '列名', dataIndex: 'field', flex: 1 }],
-      store: { data: [] },
+      columns: [
+        { text: 'ID', dataIndex: 'id', width: 80 },
+        { text: '名称', dataIndex: 'name', flex: 1 },
+        { text: '数量', dataIndex: 'qty', width: 90, align: 'right' },
+        { text: '状態', dataIndex: 'status', width: 100 },
+      ],
+      store: {
+        data: [
+          { id: 1, name: 'サンプル A', qty: 10, status: '有効' },
+          { id: 2, name: 'サンプル B', qty: 5, status: '無効' },
+          { id: 3, name: 'サンプル C', qty: 8, status: '有効' },
+        ],
+      },
     },
     props: ['title', 'columns', 'store', 'data', 'columnLines', 'tbar', 'bbar'],
   },

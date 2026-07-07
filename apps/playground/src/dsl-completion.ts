@@ -34,20 +34,29 @@ class TabStops {
   }
 }
 
+/**
+ * この名前のキー以下はサンプルデータとみなし、タブストップにしない
+ * (grid の 3 行データ全部にストップが付くと Tab 移動が煩雑になるため)
+ */
+const LITERAL_KEYS = new Set(['store', 'data', 'options', 'root', 'menu'])
+
 /** defaults オブジェクトを JSON5 のスニペット文字列へ (スカラー値がタブストップになる) */
-function toJson5Snippet(value: unknown, stops: TabStops, indent: string): string {
-  if (typeof value === 'string') return `'${stops.next(value)}'`
-  if (typeof value === 'number' || typeof value === 'boolean') return stops.next(String(value))
+function toJson5Snippet(value: unknown, stops: TabStops, indent: string, literal = false): string {
+  if (typeof value === 'string') return literal ? `'${esc(value)}'` : `'${stops.next(value)}'`
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return literal ? String(value) : stops.next(String(value))
+  }
   if (Array.isArray(value)) {
     if (value.length === 0) return '[]'
-    const inner = value.map((v) => `${indent}  ${toJson5Snippet(v, stops, `${indent}  `)},`)
+    const inner = value.map((v) => `${indent}  ${toJson5Snippet(v, stops, `${indent}  `, literal)},`)
     return `[\n${inner.join('\n')}\n${indent}]`
   }
   if (typeof value === 'object' && value !== null) {
     const entries = Object.entries(value)
     if (entries.length === 0) return '{}'
     const inner = entries.map(
-      ([k, v]) => `${indent}  ${k}: ${toJson5Snippet(v, stops, `${indent}  `)},`,
+      ([k, v]) =>
+        `${indent}  ${k}: ${toJson5Snippet(v, stops, `${indent}  `, literal || LITERAL_KEYS.has(k))},`,
     )
     return `{\n${inner.join('\n')}\n${indent}}`
   }
@@ -55,9 +64,11 @@ function toJson5Snippet(value: unknown, stops: TabStops, indent: string): string
 }
 
 /** defaults オブジェクトを YAML のスニペット文字列へ */
-function toYamlSnippet(value: unknown, stops: TabStops, indent: string): string {
-  if (typeof value === 'string') return `'${stops.next(value)}'`
-  if (typeof value === 'number' || typeof value === 'boolean') return stops.next(String(value))
+function toYamlSnippet(value: unknown, stops: TabStops, indent: string, literal = false): string {
+  if (typeof value === 'string') return literal ? `'${esc(value)}'` : `'${stops.next(value)}'`
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return literal ? String(value) : stops.next(String(value))
+  }
   if (Array.isArray(value)) {
     if (value.length === 0) return '[]'
     return `\n${value
@@ -66,12 +77,15 @@ function toYamlSnippet(value: unknown, stops: TabStops, indent: string): string 
           const entries = Object.entries(v)
           const [first, ...rest] = entries
           const lines = [
-            `${indent}- ${first[0]}: ${toYamlSnippet(first[1], stops, `${indent}    `)}`,
-            ...rest.map(([k, val]) => `${indent}  ${k}: ${toYamlSnippet(val, stops, `${indent}    `)}`),
+            `${indent}- ${first[0]}: ${toYamlSnippet(first[1], stops, `${indent}    `, literal || LITERAL_KEYS.has(first[0]))}`,
+            ...rest.map(
+              ([k, val]) =>
+                `${indent}  ${k}: ${toYamlSnippet(val, stops, `${indent}    `, literal || LITERAL_KEYS.has(k))}`,
+            ),
           ]
           return lines.join('\n')
         }
-        return `${indent}- ${toYamlSnippet(v, stops, `${indent}  `)}`
+        return `${indent}- ${toYamlSnippet(v, stops, `${indent}  `, literal)}`
       })
       .join('\n')}`
   }
@@ -79,7 +93,10 @@ function toYamlSnippet(value: unknown, stops: TabStops, indent: string): string 
     const entries = Object.entries(value)
     if (entries.length === 0) return '{}'
     return `\n${entries
-      .map(([k, v]) => `${indent}${k}: ${toYamlSnippet(v, stops, `${indent}  `)}`)
+      .map(
+        ([k, v]) =>
+          `${indent}${k}: ${toYamlSnippet(v, stops, `${indent}  `, literal || LITERAL_KEYS.has(k))}`,
+      )
       .join('\n')}`
   }
   return String(value)
@@ -94,17 +111,19 @@ function buildComponentSnippet(xtype: string, format: Format, extraIndent = ''):
   const meta = getXtypeMeta(xtype)
   const defaults = meta?.defaults ?? {}
   const stops = new TabStops()
+  // すべてのテンプレートに一意識別用の itemId を含める (最初のタブストップ)
+  const itemId = stops.next(`${xtype}1`)
   if (format === 'json5') {
     const body = Object.entries(defaults)
-      .map(([k, v]) => `  ${k}: ${toJson5Snippet(v, stops, '  ')},`)
+      .map(([k, v]) => `  ${k}: ${toJson5Snippet(v, stops, '  ', LITERAL_KEYS.has(k))},`)
       .join('\n')
     // 末尾カンマは JSON5 で常に合法なので、配列への挿入で構文が壊れないよう付けておく
-    return `{\n  xtype: '${xtype}',\n${body}\n},`
+    return `{\n  xtype: '${xtype}',\n  itemId: '${itemId}',\n${body}\n},`
   }
   const body = Object.entries(defaults)
-    .map(([k, v]) => `${k}: ${toYamlSnippet(v, stops, `${extraIndent}  `)}`)
+    .map(([k, v]) => `${k}: ${toYamlSnippet(v, stops, `${extraIndent}  `, LITERAL_KEYS.has(k))}`)
     .join('\n')
-  const snippet = `xtype: ${xtype}\n${body}`
+  const snippet = `xtype: ${xtype}\nitemId: ${itemId}\n${body}`
   if (!extraIndent) return snippet
   // 先頭行以外に追加インデントを付与 (Monaco は挿入行のインデントのみ複製するため)
   return snippet
