@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import '@similar-extjs/core/styles.css'
+import '@uivolve/core/styles.css'
 import './app.css'
 import { App } from './App'
 

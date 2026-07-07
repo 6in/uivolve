@@ -5,8 +5,8 @@ title: 受注管理システム 画面仕様書
 
 # 受注管理システム 画面仕様書
 
-このドキュメントは **similar-extjs の MDX 統合デモ**。Mermaid.js と同じ感覚で、
-Markdown 内の ` ```extjs ` コードフェンスに ExtJS 互換 DSL を書くと、
+このドキュメントは **uivolve の MDX 統合デモ**。Mermaid.js と同じ感覚で、
+Markdown 内の ` ```uivolve ` コードフェンスに ExtJS 互換 DSL を書くと、
 その場に画面モックが描画される。モックは実際に操作できる
 (パネルの折りたたみ、タブ切替、スプリットバーのドラッグ、グリッドの行選択など)。
 
@@ -18,7 +18,7 @@ Markdown 内の ` ```extjs ` コードフェンスに ExtJS 互換 DSL を書く
 アプリケーションのメイン画面。左のメニューから機能を選択し、中央のグリッドで受注を管理する。
 西リージョンはスプリットバーで幅を調整できること。
 
-```extjs height=440
+```uivolve height=440
 {
   xtype: 'panel',
   itemId: 'orderApp',
@@ -95,7 +95,7 @@ Markdown 内の ` ```extjs ` コードフェンスに ExtJS 互換 DSL を書く
 フェンスの meta に `theme=dark` を指定してダークテーマで表示している
 (`neptune` / `classic` / `gray` / `dark` が指定可能)。
 
-```extjs height=380 theme=dark
+```uivolve height=380 theme=dark
 {
   xtype: 'window',
   itemId: 'orderEntryDialog',
@@ -125,7 +125,7 @@ Markdown 内の ` ```extjs ` コードフェンスに ExtJS 互換 DSL を書く
 DSL は JSON5 だけでなく **YAML** でも書ける (先頭の文字から自動判別)。
 手書きするならこちらの方が楽。
 
-```extjs height=260
+```uivolve height=260
 xtype: panel
 itemId: syncPanel
 title: YAML で書いたモック

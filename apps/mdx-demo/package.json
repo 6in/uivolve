@@ -1,5 +1,5 @@
 {
-  "name": "@similar-extjs/mdx-demo",
+  "name": "@uivolve/mdx-demo",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -12,8 +12,8 @@
     "@astrojs/mdx": "^4.0.0",
     "@astrojs/react": "^4.0.0",
     "@fortawesome/fontawesome-free": "^7.3.0",
-    "@similar-extjs/core": "*",
-    "@similar-extjs/remark-mock": "*",
+    "@uivolve/core": "*",
+    "@uivolve/remark-mock": "*",
     "astro": "^5.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

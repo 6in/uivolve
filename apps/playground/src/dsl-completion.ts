@@ -7,14 +7,14 @@
  *                          基本プロパティ入りのコンポーネントスニペット (Tab 移動対応)
  *
  * JSON5 (language: javascript) と YAML の両方に対応。
- * 候補・スニペットは @similar-extjs/core の XTYPE_META / LAYOUT_META から生成する。
+ * 候補・スニペットは @uivolve/core の XTYPE_META / LAYOUT_META から生成する。
  */
 import {
   COMMON_PROPS,
   LAYOUT_META,
   XTYPE_META,
   getXtypeMeta,
-} from '@similar-extjs/core'
+} from '@uivolve/core'
 import type * as Monaco from 'monaco-editor'
 
 type Format = 'json5' | 'yaml'

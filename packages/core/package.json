@@ -1,5 +1,5 @@
 {
-  "name": "@similar-extjs/core",
+  "name": "@uivolve/core",
   "version": "0.1.0",
   "description": "ExtJS-compatible DSL mockup renderer for React",
   "type": "module",

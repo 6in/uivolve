@@ -8,7 +8,7 @@ import {
   type ComponentConfig,
   type DslFormat,
   type ThemeName,
-} from '@similar-extjs/core'
+} from '@uivolve/core'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { monaco } from './monaco-setup'
 import { samples } from './samples'
@@ -151,7 +151,7 @@ export function App() {
     <div className="pg-app">
       <header className="pg-header">
         <h1 className="pg-title">
-          similar-extjs <span className="pg-sub">Playground — ExtJS 互換 DSL モックビューア</span>
+          uivolve <span className="pg-sub">Playground — ExtJS 互換 DSL モックビューア</span>
         </h1>
       </header>
       <div className="pg-toolbar" role="toolbar">

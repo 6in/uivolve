@@ -1,7 +1,7 @@
 {
-  "name": "@similar-extjs/remark-mock",
+  "name": "@uivolve/remark-mock",
   "version": "0.1.0",
-  "description": "remark plugin: render ```extjs fenced code blocks as similar-extjs mockups (like Mermaid)",
+  "description": "remark plugin: render ```uivolve fenced code blocks as uivolve mockups (like Mermaid)",
   "type": "module",
   "main": "./index.mjs",
   "exports": {

@@ -1,4 +1,4 @@
-# similar-extjs
+# uivolve
 
 ExtJS の画面定義(宣言的 config)に**互換な DSL** で画面モックを描画する、React 製のモックアップライブラリ(POC)。
 
@@ -28,8 +28,8 @@ npm run dev   # Playground (エディタ + ライブプレビュー) が http://
 ## プロジェクト構成
 
 ```
-packages/core/        — @similar-extjs/core: DSL パーサー + レンダラー (React)
-packages/remark-mock/ — @similar-extjs/remark-mock: ```extjs フェンスをモック描画する remark プラグイン
+packages/core/        — @uivolve/core: DSL パーサー + レンダラー (React)
+packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンスをモック描画する remark プラグイン
 apps/playground/      — エディタ + ビューア (Vite)
 apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
 docs/                 — リファレンス (components.md は JSDoc から自動生成)
@@ -156,13 +156,13 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 
 - Playground: ツールバーの「テーマ」セレクタで切替
 - React: `<ExtMockup theme="dark" ... />`
-- MDX: フェンスの meta で ` ```extjs height=380 theme=dark `
+- MDX: フェンスの meta で ` ```uivolve height=380 theme=dark `
 
 ## ライブラリとしての利用
 
 ```tsx
-import { ExtMockup } from '@similar-extjs/core'
-import '@similar-extjs/core/styles.css'
+import { ExtMockup } from '@uivolve/core'
+import '@uivolve/core/styles.css'
 
 <ExtMockup code={dslSource} height={480} theme="dark" />
 // または <ExtMockup config={parsedConfig} />
@@ -173,7 +173,7 @@ import '@similar-extjs/core/styles.css'
 xtype・レイアウトはどちらもレジストリ方式で、後から追加・上書きできる:
 
 ```tsx
-import { registerComponent, registerLayout } from '@similar-extjs/core'
+import { registerComponent, registerLayout } from '@uivolve/core'
 
 registerComponent('tabpanel', MyTabPanel)
 registerLayout('accordion', MyAccordionLayout)
@@ -197,7 +197,8 @@ Playground (5173) とはポートが別なので同時起動できる。
 
 ### 書き方
 
-MDX ファイル内に ` ```extjs ` のコードフェンスで DSL を書くだけ。
+MDX ファイル内に ` ```uivolve ` のコードフェンスで DSL を書くだけ
+(言語名は `extjs` / `sx` もエイリアスとして使える)。
 import は remark プラグインが自動注入するので不要。
 
 ````mdx
@@ -210,7 +211,7 @@ title: ○○画面 仕様書
 
 ここは普通の Markdown。見出し・表・リストが書ける。
 
-```extjs height=420
+```uivolve height=420
 {
   xtype: 'panel',
   title: '受注管理システム',
@@ -227,12 +228,12 @@ title: ○○画面 仕様書
 | `height=420` | 表示領域の高さ (数値は px、`height=60vh` など CSS 長さも可)。省略時 360px |
 | `theme=dark` | テーマ (`neptune` / `classic` / `gray` / `dark`) |
 
-例: ` ```extjs height=380 theme=dark `
+例: ` ```uivolve height=380 theme=dark `
 
 フェンスではなく React コンポーネントとして直接使うこともできる (props で細かく制御したい場合):
 
 ```mdx
-import { ExtMockup } from '@similar-extjs/core'
+import { ExtMockup } from '@uivolve/core'
 
 <ExtMockup client:load height={300} theme="gray" code={`{ xtype: 'panel', title: 'Hello' }`} />
 ```
@@ -245,7 +246,7 @@ import { ExtMockup } from '@similar-extjs/core'
 
 ### 自分の Astro プロジェクトへの組み込み
 
-仕組みは `@similar-extjs/remark-mock` (remark プラグイン) が ` ```extjs ` フェンスを
+仕組みは `@uivolve/remark-mock` (remark プラグイン) が ` ```uivolve ` フェンスを
 `<ExtMockup client:load />` に変換 + import を自動注入するだけなので、
 Astro に限らず MDX パイプラインなら組み込める。
 
@@ -255,14 +256,14 @@ Astro に限らず MDX パイプラインなら組み込める。
 // astro.config.mjs
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
-import remarkSimilarExtjs from '@similar-extjs/remark-mock'
+import remarkUivolve from '@uivolve/remark-mock'
 
 export default defineConfig({
-  integrations: [react(), mdx({ remarkPlugins: [remarkSimilarExtjs] })],
+  integrations: [react(), mdx({ remarkPlugins: [remarkUivolve] })],
 })
 ```
 
-レイアウト側で `@similar-extjs/core/styles.css` (と必要なら Font Awesome) を読み込む。
+レイアウト側で `@uivolve/core/styles.css` (と必要なら Font Awesome) を読み込む。
 
 ## JSON Schema
 

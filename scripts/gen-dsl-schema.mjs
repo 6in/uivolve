@@ -146,8 +146,8 @@ function buildProperties() {
 
 const schema = {
   $schema: 'https://json-schema.org/draft/2020-12/schema',
-  $id: 'https://github.com/similar-extjs/dsl.schema.json',
-  title: 'similar-extjs DSL',
+  $id: 'https://github.com/uivolve/dsl.schema.json',
+  title: 'uivolve DSL',
   description:
     'ExtJS 互換の画面モック DSL。xtype / layout の一覧は docs/components.md を参照。' +
     'このスキーマは packages/core/src/meta.ts から自動生成される (npm run schema)。',

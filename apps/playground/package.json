@@ -1,5 +1,5 @@
 {
-  "name": "@similar-extjs/playground",
+  "name": "@uivolve/playground",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.3.0",
     "@monaco-editor/react": "^4.6.0",
-    "@similar-extjs/core": "*",
+    "@uivolve/core": "*",
     "monaco-editor": "^0.52.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -12,17 +12,17 @@
  * 必要な import (ExtMockup) は自動で注入される。
  *
  * @param {object} [options]
- * @param {string[]} [options.langs] 対象のフェンス言語 (default: ['extjs', 'similar-extjs', 'sx'])
+ * @param {string[]} [options.langs] 対象のフェンス言語 (default: ['uivolve', 'extjs', 'sx'])
  * @param {string} [options.componentName] 出力する JSX コンポーネント名 (default: 'ExtMockup')
- * @param {string} [options.importSource] import 元 (default: '@similar-extjs/core')
+ * @param {string} [options.importSource] import 元 (default: '@uivolve/core')
  * @param {number|string} [options.defaultHeight] height 未指定時の高さ (default: 360)
  * @param {boolean} [options.clientLoad] Astro の client:load 属性を付ける (default: true)
  */
-export default function remarkSimilarExtjs(options = {}) {
+export default function remarkUivolve(options = {}) {
   const {
-    langs = ['extjs', 'similar-extjs', 'sx'],
+    langs = ['uivolve', 'extjs', 'sx'],
     componentName = 'ExtMockup',
-    importSource = '@similar-extjs/core',
+    importSource = '@uivolve/core',
     defaultHeight = 360,
     clientLoad = true,
   } = options
