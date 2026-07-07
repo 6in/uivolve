@@ -85,8 +85,12 @@ function toYamlSnippet(value: unknown, stops: TabStops, indent: string): string 
   return String(value)
 }
 
-/** xtype のコンポーネントスニペット全体を作る */
-function buildComponentSnippet(xtype: string, format: Format): string {
+/**
+ * xtype のコンポーネントスニペット全体を作る。
+ * @param extraIndent YAML のリスト項目 (`- `) の直後に挿入する場合、
+ *   継続行を `- ` のぶん (2 スペース) 深くするための追加インデント
+ */
+function buildComponentSnippet(xtype: string, format: Format, extraIndent = ''): string {
   const meta = getXtypeMeta(xtype)
   const defaults = meta?.defaults ?? {}
   const stops = new TabStops()
@@ -98,9 +102,15 @@ function buildComponentSnippet(xtype: string, format: Format): string {
     return `{\n  xtype: '${xtype}',\n${body}\n},`
   }
   const body = Object.entries(defaults)
-    .map(([k, v]) => `${k}: ${toYamlSnippet(v, stops, '  ')}`)
+    .map(([k, v]) => `${k}: ${toYamlSnippet(v, stops, `${extraIndent}  `)}`)
     .join('\n')
-  return `xtype: ${xtype}\n${body}`
+  const snippet = `xtype: ${xtype}\n${body}`
+  if (!extraIndent) return snippet
+  // 先頭行以外に追加インデントを付与 (Monaco は挿入行のインデントのみ複製するため)
+  return snippet
+    .split('\n')
+    .map((line, i) => (i === 0 || line === '' ? line : extraIndent + line))
+    .join('\n')
 }
 
 // ---------------------------------------------------------------- 文脈判定
@@ -217,14 +227,17 @@ function componentSnippetSuggestions(
   monaco: typeof Monaco,
   range: Monaco.IRange,
   format: Format,
+  line: string,
 ): Monaco.languages.CompletionItem[] {
+  // YAML のリスト項目 (`- xty...`) に挿入する場合は継続行を 2 スペース深くする
+  const extraIndent = format === 'yaml' && /^\s*-\s/.test(line) ? '  ' : ''
   return Object.entries(XTYPE_META).map(([name, meta]) => ({
     label: `${name} コンポーネント`,
     filterText: name,
     kind: monaco.languages.CompletionItemKind.Snippet,
     detail: meta.description,
     documentation: '基本プロパティ入りのテンプレートを挿入 (Tab で入力箇所を移動)',
-    insertText: buildComponentSnippet(name, format),
+    insertText: buildComponentSnippet(name, format, extraIndent),
     insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
     range,
     sortText: `3${name}`,
@@ -278,7 +291,7 @@ export function registerDslCompletion(monaco: typeof Monaco): void {
           return {
             suggestions: [
               ...propSuggestions(monaco, range, xtype),
-              ...componentSnippetSuggestions(monaco, range, format),
+              ...componentSnippetSuggestions(monaco, range, format, line),
             ],
           }
         }
