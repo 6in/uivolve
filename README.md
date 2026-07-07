@@ -100,6 +100,7 @@ ExtJS の全レイアウト一覧と対応状況は [docs/extjs-layouts.md](docs
 | `splitbutton` | 本体と矢印部が分かれたボタン |
 | `progressbar` | 進捗バー。`value`(0〜1)/ `text` |
 | `slider` / `sliderfield` | スライダー。`value` / `minValue` / `maxValue` / `increment` |
+| `datepicker` | インラインカレンダー。`value` / `showToday` / `todayText`、月移動・日付選択可 |
 | `radiogroup` / `checkboxgroup` | `boxLabel` 付き項目を `columns` 列に並べる |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`

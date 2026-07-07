@@ -88,6 +88,10 @@ export interface ComponentConfig {
   options?: Array<string | { value: unknown; text: string }>
   multiSelect?: boolean
 
+  // ---- datepicker ----
+  showToday?: boolean
+  todayText?: string
+
   // ---- 見た目 ----
   text?: string
   iconCls?: string

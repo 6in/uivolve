@@ -919,6 +919,117 @@
     justify-content: start;
   }
 
+  /* -------------------------------------------------------- 日付ピッカー */
+
+  .sx-datepicker {
+    display: inline-flex;
+    flex-direction: column;
+    inline-size: 240px;
+    background: var(--sx-panel-bg);
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .sx-datepicker-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    background: var(--sx-header-bg);
+    color: white;
+    font-weight: 600;
+  }
+
+  .sx-datepicker-title {
+    flex: 1;
+    text-align: center;
+  }
+
+  .sx-datepicker-nav {
+    appearance: none;
+    border: none;
+    background: color-mix(in srgb, white 15%, transparent);
+    color: white;
+    inline-size: 22px;
+    block-size: 22px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+
+    &:hover {
+      background: color-mix(in srgb, white 30%, transparent);
+    }
+  }
+
+  .sx-datepicker-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    padding: 6px;
+
+    /* 曜日ヘッダー: 日曜は赤、土曜は青 */
+    > .sx-datepicker-dow:nth-child(1) {
+      color: #c0392b;
+    }
+
+    > .sx-datepicker-dow:nth-child(7) {
+      color: #2a6fbb;
+    }
+  }
+
+  .sx-datepicker-dow {
+    text-align: center;
+    font-size: 11px;
+    color: var(--sx-muted);
+    padding-block: 3px;
+  }
+
+  .sx-datepicker-day {
+    appearance: none;
+    border: none;
+    background: none;
+    font: inherit;
+    font-size: 12px;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--sx-text);
+    display: grid;
+    place-items: center;
+
+    &:hover {
+      background: color-mix(in srgb, var(--sx-accent) 12%, white);
+    }
+  }
+
+  .sx-datepicker-out {
+    color: color-mix(in srgb, var(--sx-text) 30%, white);
+  }
+
+  .sx-datepicker-todaymark {
+    outline: 1px solid var(--sx-accent);
+    outline-offset: -1px;
+  }
+
+  .sx-datepicker-selected {
+    background: var(--sx-accent);
+    color: white;
+
+    &:hover {
+      background: var(--sx-accent-dark);
+    }
+  }
+
+  .sx-datepicker-footer {
+    display: grid;
+    place-items: center;
+    padding: 6px;
+    border-block-start: 1px solid var(--sx-border);
+  }
+
   /* ---------------------------------------------------------- その他 */
 
   .sx-unknown {

@@ -30,6 +30,7 @@
 | `progressbar` / `progress` | ProgressBar | 進捗バー。value(0〜1)で進捗、text でラベルを上書き。 |
 | `slider` / `sliderfield` | Slider | スライダー。value / minValue / maxValue / increment に対応。 |
 | `radiogroup` / `checkboxgroup` | CheckGroup | items の boxLabel を columns 列に並べる。 |
+| `datepicker` | DatePicker | インラインのカレンダー (Ext.picker.Date 互換)。 value(初期選択日)/ showToday(「今日」ボタンの表示)/ todayText に対応。 月の移動と日付クリックによる選択ができる。 |
 
 ## レイアウト (layout type)
 

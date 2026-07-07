@@ -1,5 +1,6 @@
 import { registerComponent } from '../registry'
 import { Button } from './Button'
+import { DatePicker } from './DatePicker'
 import { FieldSet } from './FieldSet'
 import { GridPanel } from './GridPanel'
 import { Image } from './Image'
@@ -43,9 +44,11 @@ registerComponent('splitbutton', SplitButton)
 registerComponent(['progressbar', 'progress'], ProgressBar)
 registerComponent(['slider', 'sliderfield'], Slider)
 registerComponent(['radiogroup', 'checkboxgroup'], CheckGroup)
+registerComponent('datepicker', DatePicker)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
+export { DatePicker } from './DatePicker'
 export { Icon } from './Icon'
 export { Toolbar } from './Toolbar'
 export { GridPanel } from './GridPanel'
