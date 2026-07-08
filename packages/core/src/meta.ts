@@ -282,6 +282,35 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     },
     props: ['sprites'],
   },
+  gitgraph: {
+    description: 'Git マージツリー (独自拡張。branches + commits を gitk 風に描画)',
+    defaults: {
+      branches: ['main', 'develop'],
+      commits: [
+        { id: 'c1', branch: 'main', message: '初期コミット' },
+        { id: 'c2', branch: 'develop', parents: ['c1'], message: '開発開始' },
+        { id: 'c3', branch: 'main', parents: ['c1', 'c2'], message: 'リリース', tag: 'v1.0' },
+      ],
+    },
+    props: ['branches', 'commits'],
+  },
+  networkgraph: {
+    description: 'ノード・エッジグラフ (独自拡張。d3-force で自動レイアウト)',
+    aliases: ['forcegraph'],
+    defaults: {
+      height: 300,
+      nodes: [
+        { id: 'a', text: 'ノード A', group: 1 },
+        { id: 'b', text: 'ノード B', group: 1 },
+        { id: 'c', text: 'ノード C', group: 2 },
+      ],
+      edges: [
+        { from: 'a', to: 'b' },
+        { from: 'a', to: 'c' },
+      ],
+    },
+    props: ['nodes', 'edges'],
+  },
   mermaid: {
     description: 'Mermaid.js ダイアグラム (独自拡張。value に Mermaid 記法)',
     defaults: { value: 'graph LR; A[開始] --> B[処理] --> C[終了]' },

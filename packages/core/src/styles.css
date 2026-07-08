@@ -1298,6 +1298,113 @@
     }
   }
 
+  /* ------------------------------------------------ Git マージツリー */
+
+  .sx-gitgraph {
+    display: flex;
+    align-items: flex-start;
+    overflow: auto;
+  }
+
+  .sx-gitgraph-svg {
+    flex: none;
+  }
+
+  .sx-gitgraph-rows {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .sx-gitgraph-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-inline: 4px 8px;
+    font-size: 12.5px;
+    white-space: nowrap;
+
+    &:hover {
+      background: color-mix(in srgb, var(--sx-accent) 7%, transparent);
+    }
+  }
+
+  .sx-gitgraph-branch {
+    flex: none;
+    font-size: 10.5px;
+    padding: 0 6px;
+    border: 1px solid;
+    border-radius: 8px;
+    line-height: 15px;
+  }
+
+  .sx-gitgraph-msg {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sx-gitgraph-tag {
+    flex: none;
+    font-size: 10.5px;
+    padding: 0 6px;
+    border-radius: 8px;
+    line-height: 16px;
+    color: #7a5b00;
+    background: color-mix(in srgb, #d9a520 22%, var(--sx-panel-bg));
+    border: 1px solid color-mix(in srgb, #d9a520 55%, var(--sx-panel-bg));
+  }
+
+  .sx-gitgraph-id {
+    margin-inline-start: auto;
+    color: var(--sx-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+  }
+
+  /* -------------------------------------------- ネットワークグラフ */
+
+  .sx-networkgraph {
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 200px;
+  }
+
+  .sx-networkgraph-svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .sx-networkgraph-edge {
+    stroke: color-mix(in srgb, var(--sx-muted) 45%, var(--sx-panel-bg));
+    stroke-width: 1.2;
+  }
+
+  .sx-networkgraph-node {
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    & circle {
+      stroke: var(--sx-panel-bg);
+      stroke-width: 1.5;
+    }
+
+    & text {
+      font-size: 10px;
+      fill: var(--sx-muted);
+      text-anchor: middle;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    &:hover circle {
+      stroke: var(--sx-accent);
+      stroke-width: 2;
+    }
+  }
+
   /* ------------------------------------------------------ Mermaid */
 
   .sx-mermaid {

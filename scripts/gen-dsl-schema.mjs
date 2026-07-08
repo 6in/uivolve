@@ -131,6 +131,49 @@ const KNOWN_PROP_TYPES = {
   },
   typing: { type: 'boolean', description: 'チャット末尾に入力中インジケーターを表示' },
   message: { type: 'string' },
+  branches: {
+    type: 'array',
+    items: { type: 'string' },
+    description: 'gitgraph のレーン並び (省略時はコミットの登場順)',
+  },
+  commits: {
+    type: 'array',
+    description: 'gitgraph のコミット列 (上から古い順)',
+    items: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        branch: { type: 'string' },
+        parents: { type: 'array', items: { type: 'string' } },
+        message: { type: 'string' },
+        tag: { type: 'string' },
+      },
+    },
+  },
+  nodes: {
+    type: 'array',
+    description: 'networkgraph のノード',
+    items: {
+      type: 'object',
+      properties: {
+        id: { type: 'string' },
+        text: { type: 'string' },
+        group: { type: ['number', 'string'] },
+        color: { type: 'string' },
+        r: { type: 'number' },
+      },
+      required: ['id'],
+    },
+  },
+  edges: {
+    type: 'array',
+    description: 'networkgraph のエッジ',
+    items: {
+      type: 'object',
+      properties: { from: { type: 'string' }, to: { type: 'string' } },
+      required: ['from', 'to'],
+    },
+  },
   buttons: {
     description: "messagebox のボタンセットまたは任意のラベル配列",
     anyOf: [

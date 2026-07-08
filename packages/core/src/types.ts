@@ -107,6 +107,16 @@ export interface ComponentConfig {
   /** toast の表示位置 ('tr' | 'tl' | 'br' | 'bl' | 't' | 'b') */
   align?: string
 
+  // ---- gitgraph / networkgraph ----
+  /** gitgraph のレーン並び (省略時はコミットの登場順) */
+  branches?: string[]
+  /** gitgraph のコミット列 (上から古い順) */
+  commits?: Array<{ id?: string; branch?: string; parents?: string[]; message?: string; tag?: string }>
+  /** networkgraph のノード */
+  nodes?: Array<{ id: string; text?: string; group?: number | string; color?: string; r?: number }>
+  /** networkgraph のエッジ */
+  edges?: Array<{ from: string; to: string }>
+
   // ---- chatpanel ----
   /** チャットの会話。from: 'user' は右寄せ、text は Markdown 描画 */
   messages?: Array<{ from?: string; name?: string; text?: string; time?: string }>

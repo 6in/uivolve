@@ -46,6 +46,13 @@
           ]
         },
         "boxLabel": {},
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "gitgraph のレーン並び (省略時はコミットの登場順)"
+        },
         "buttons": {
           "description": "messagebox のボタンセットまたは任意のラベル配列",
           "anyOf": [
@@ -130,6 +137,33 @@
             }
           ]
         },
+        "commits": {
+          "type": "array",
+          "description": "gitgraph のコミット列 (上から古い順)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "string"
+              },
+              "parents": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "message": {
+                "type": "string"
+              },
+              "tag": {
+                "type": "string"
+              }
+            }
+          }
+        },
         "data": {},
         "defaults": {
           "type": "object"
@@ -140,6 +174,25 @@
         "displayField": {},
         "displayInfo": {},
         "displayMsg": {},
+        "edges": {
+          "type": "array",
+          "description": "networkgraph のエッジ",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ]
+          }
+        },
         "emptyMsg": {},
         "emptyText": {},
         "enableAlignments": {},
@@ -349,6 +402,36 @@
           "type": "boolean"
         },
         "name": {},
+        "nodes": {
+          "type": "array",
+          "description": "networkgraph のノード",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "group": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "color": {
+                "type": "string"
+              },
+              "r": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
         "options": {
           "type": "array",
           "items": {
@@ -573,6 +656,9 @@
             "cartesian",
             "polar",
             "draw",
+            "gitgraph",
+            "networkgraph",
+            "forcegraph",
             "mermaid",
             "messagebox",
             "msgbox",

@@ -152,6 +152,8 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `messagebox` / `msgbox` | シンプルダイアログ (Ext.Msg 互換)。`message` / `buttons: 'ok'\|'okcancel'\|'yesno'\|'yesnocancel'` / `icon: 'info'\|'question'\|'warning'\|'error'` / `prompt`。どこに置いてもバックドロップ + 中央表示 |
 | `toast` | トースト通知 (Ext.toast 互換)。`html` / `message` / `title` / `align: 'tr'\|'tl'\|'br'\|'bl'\|'t'\|'b'`。プレビュー隅に重ねて表示、× で消せる |
 | `mermaid` | Mermaid.js ダイアグラム (**独自拡張**)。`value` に Mermaid 記法 (YAML の `value: \|` が書きやすい)。mermaid 本体は初回描画時に動的ロード |
+| `gitgraph` | Git マージツリー (**独自拡張**)。`branches` + `commits: [{ id, branch, parents, message, tag }]` を gitk 風にレーン + マージ曲線 + メッセージ一覧で描画 |
+| `networkgraph` / `forcegraph` | ノード・エッジグラフ (**独自拡張**)。`nodes: [{ id, text, group, r }]` + `edges: [{ from, to }]` を d3-force で自動レイアウト。group 自動配色、ノードはドラッグ可 |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 

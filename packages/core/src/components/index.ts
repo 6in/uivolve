@@ -5,6 +5,7 @@ import { ChatPanel } from './ChatPanel'
 import { DatePicker } from './DatePicker'
 import { Draw } from './Draw'
 import { FieldSet } from './FieldSet'
+import { GitGraph } from './GitGraph'
 import { GridPanel } from './GridPanel'
 import { HtmlEditor } from './HtmlEditor'
 import { IFrame } from './IFrame'
@@ -12,6 +13,7 @@ import { Image } from './Image'
 import { Markdown } from './Markdown'
 import { Mermaid } from './Mermaid'
 import { MessageBox } from './MessageBox'
+import { NetworkGraph } from './NetworkGraph'
 import { PagingToolbar } from './PagingToolbar'
 import { Container, Panel, RawComponent } from './Panel'
 import { TabPanel } from './TabPanel'
@@ -60,6 +62,8 @@ registerComponent('pagingtoolbar', PagingToolbar)
 registerComponent(['uxiframe', 'iframe'], IFrame)
 registerComponent('markdown', Markdown)
 registerComponent('mermaid', Mermaid)
+registerComponent('gitgraph', GitGraph)
+registerComponent(['networkgraph', 'forcegraph'], NetworkGraph)
 registerComponent(['chatpanel', 'chat'], ChatPanel)
 registerComponent(['chart', 'cartesian', 'polar'], Chart)
 registerComponent('draw', Draw)
@@ -75,6 +79,8 @@ export { GridPanel } from './GridPanel'
 export { Chart } from './Chart'
 export { ChatPanel } from './ChatPanel'
 export { Draw } from './Draw'
+export { GitGraph } from './GitGraph'
+export { NetworkGraph } from './NetworkGraph'
 export { HtmlEditor } from './HtmlEditor'
 export { IFrame } from './IFrame'
 export { Markdown } from './Markdown'
