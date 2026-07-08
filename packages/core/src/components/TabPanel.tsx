@@ -49,7 +49,9 @@ export function TabPanel({ config }: RendererProps) {
         role="tabpanel"
       >
         {current && (
-          <div className="sx-layout-fit">
+          // key でタブごとに別ツリーとして再マウントする (キーがないと React が
+          // 同型コンポーネントを再利用し、非制御の入力値や Monaco の内容が前のタブのまま残る)
+          <div className="sx-layout-fit" key={current.id ?? current.itemId ?? active}>
             <XRender
               config={{ ...current, title: undefined, width: undefined, height: undefined }}
             />

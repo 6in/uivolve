@@ -252,7 +252,8 @@ function CardLayout({ layout, items }: LayoutProps) {
   const item = items[active]
   if (!item) return null
   return (
-    <div className="sx-layout-fit">
+    // key で activeItem ごとに再マウント (非制御入力の状態引き継ぎ防止。TabPanel と同じ理由)
+    <div className="sx-layout-fit" key={item.id ?? item.itemId ?? active}>
       <XRender config={item} />
     </div>
   )
