@@ -87,6 +87,12 @@ export interface ComponentConfig {
   src?: string
   alt?: string
 
+  // ---- chatpanel ----
+  /** チャットの会話。from: 'user' は右寄せ、text は Markdown 描画 */
+  messages?: Array<{ from?: string; name?: string; text?: string; time?: string }>
+  /** 末尾に入力中インジケーターを表示 */
+  typing?: boolean
+
   // ---- 選択系 ----
   options?: Array<string | { value: unknown; text: string }>
   multiSelect?: boolean

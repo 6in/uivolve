@@ -116,6 +116,20 @@ const KNOWN_PROP_TYPES = {
   },
   menu: { anyOf: [itemsType, componentRef] },
   src: { type: 'string' },
+  messages: {
+    type: 'array',
+    description: "チャットの会話。from: 'user' は右寄せ、text は Markdown 描画",
+    items: {
+      type: 'object',
+      properties: {
+        from: { type: 'string' },
+        name: { type: 'string' },
+        text: { type: 'string' },
+        time: { type: 'string' },
+      },
+    },
+  },
+  typing: { type: 'boolean', description: 'チャット末尾に入力中インジケーターを表示' },
   handler: {
     type: 'string',
     description:

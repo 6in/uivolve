@@ -255,6 +255,18 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     defaults: { value: '### 見出し' },
     props: ['value'],
   },
+  chatpanel: {
+    description: 'チャット画面 (独自拡張。messages の会話バルーンを表示)',
+    aliases: ['chat'],
+    defaults: {
+      title: 'チャット',
+      messages: [
+        { from: 'bot', text: 'こんにちは。ご用件をどうぞ。', time: '10:00' },
+        { from: 'user', text: '注文状況を教えて', time: '10:01' },
+      ],
+    },
+    props: ['title', 'messages', 'typing'],
+  },
   pagingtoolbar: {
     description: 'ページングツールバー (グリッドの bbar 向け。total / pageSize)',
     defaults: { displayInfo: true, pageSize: 25, total: 200 },

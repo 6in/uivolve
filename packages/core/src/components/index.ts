@@ -1,5 +1,6 @@
 import { registerComponent } from '../registry'
 import { Button } from './Button'
+import { ChatPanel } from './ChatPanel'
 import { DatePicker } from './DatePicker'
 import { FieldSet } from './FieldSet'
 import { GridPanel } from './GridPanel'
@@ -53,6 +54,7 @@ registerComponent('htmleditor', HtmlEditor)
 registerComponent('pagingtoolbar', PagingToolbar)
 registerComponent(['uxiframe', 'iframe'], IFrame)
 registerComponent('markdown', Markdown)
+registerComponent(['chatpanel', 'chat'], ChatPanel)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
@@ -60,6 +62,7 @@ export { DatePicker } from './DatePicker'
 export { Icon } from './Icon'
 export { Toolbar } from './Toolbar'
 export { GridPanel } from './GridPanel'
+export { ChatPanel } from './ChatPanel'
 export { HtmlEditor } from './HtmlEditor'
 export { IFrame } from './IFrame'
 export { Markdown } from './Markdown'

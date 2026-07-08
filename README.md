@@ -146,6 +146,7 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `pagingtoolbar` | ページングツールバー。`total` / `pageSize` / `displayInfo` / `displayMsg`。グリッドの `bbar: { xtype: 'pagingtoolbar', ... }` で使用 |
 | `uxiframe` / `iframe` | インラインフレーム (Ext.ux.IFrame 互換)。`src` の URL を埋め込み表示 |
 | `markdown` | Markdown 描画 (**独自拡張**、ExtJS にはない)。`value` に Markdown テキスト。仕様メモや説明文の埋め込みに |
+| `chatpanel` / `chat` | チャット画面 (**独自拡張**)。`messages: [{ from, name, text, time }]` の会話バルーン表示。`from: 'user'` は右寄せ、`text` は Markdown 描画、`typing` で入力中表示 |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 

@@ -1296,6 +1296,134 @@
     }
   }
 
+  /* -------------------------------------------------------- チャット */
+
+  .sx-chat-body {
+    padding: 0;
+  }
+
+  .sx-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .sx-chat-msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    max-inline-size: 80%;
+
+    &.sx-chat-user {
+      flex-direction: row-reverse;
+      align-self: flex-end;
+
+      & .sx-chat-col {
+        align-items: flex-end;
+      }
+    }
+  }
+
+  .sx-chat-avatar {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: 28px;
+    block-size: 28px;
+    font-size: 16px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--sx-bg) 70%, var(--sx-panel-bg));
+    border: 1px solid var(--sx-border);
+  }
+
+  .sx-chat-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    min-inline-size: 0;
+  }
+
+  .sx-chat-name,
+  .sx-chat-time {
+    font-size: 11px;
+    color: var(--sx-muted);
+    padding-inline: 4px;
+  }
+
+  .sx-chat-bubble {
+    padding: 7px 11px;
+    border-radius: 12px;
+    border-start-start-radius: 3px;
+    background: color-mix(in srgb, var(--sx-bg) 60%, var(--sx-panel-bg));
+    border: 1px solid var(--sx-border);
+    font-size: 13px;
+    line-height: 1.55;
+    overflow-wrap: break-word;
+
+    & > :first-child {
+      margin-block-start: 0;
+    }
+
+    & > :last-child {
+      margin-block-end: 0;
+    }
+
+    & code {
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: color-mix(in srgb, var(--sx-accent) 10%, var(--sx-bg));
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+    }
+
+    & a {
+      color: var(--sx-accent);
+    }
+
+    .sx-chat-user & {
+      border-radius: 12px;
+      border-start-end-radius: 3px;
+      color: white;
+      background: var(--sx-accent);
+      border-color: var(--sx-accent-dark);
+
+      & code {
+        background: color-mix(in srgb, white 20%, transparent);
+        color: white;
+      }
+
+      & a {
+        color: white;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  /* 入力中インジケーター (・・・のバウンス) */
+  .sx-chat-typing {
+    display: inline-flex;
+    gap: 4px;
+    padding-block: 11px;
+
+    & span {
+      inline-size: 6px;
+      block-size: 6px;
+      border-radius: 50%;
+      background: var(--sx-muted);
+      animation: sx-typing 1.2s infinite ease-in-out;
+
+      &:nth-child(2) { animation-delay: 0.2s; }
+      &:nth-child(3) { animation-delay: 0.4s; }
+    }
+  }
+
+  @keyframes sx-typing {
+    0%, 60%, 100% { translate: 0 0; opacity: 0.5; }
+    30% { translate: 0 -4px; opacity: 1; }
+  }
+
   /* -------------------------------------------------- ツリーグリッド */
 
   .sx-treecell {
