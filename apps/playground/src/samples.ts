@@ -21,7 +21,7 @@ const borderSample = `// Border レイアウトのダッシュボード例
           xtype: 'toolbar',
           itemId: 'mainToolbar',
           items: [
-            { itemId: 'btnNew', text: '新規作成', ui: 'primary', iconCls: 'x-fa fa-plus' },
+            { itemId: 'btnNew', text: '新規作成', ui: 'primary', iconCls: 'x-fa fa-plus', handler: 'onCreateOrder' },
             { itemId: 'btnEdit', text: '編集', iconCls: 'x-fa fa-pen' },
             '-',
             { itemId: 'btnDelete', text: '削除', iconCls: 'x-fa fa-trash' },
@@ -55,6 +55,7 @@ const borderSample = `// Border レイアウトのダッシュボード例
       itemId: 'orderGrid',
       title: '受注一覧',
       columnLines: true,
+      listeners: { select: 'onOrderSelect' },
       columns: [
         { text: '受注番号', dataIndex: 'no', width: 110 },
         { text: '顧客名', dataIndex: 'customer', flex: 1 },

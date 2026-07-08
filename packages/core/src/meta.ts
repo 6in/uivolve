@@ -19,6 +19,7 @@ export interface XtypeMeta {
 /** 全コンポーネント共通の config */
 export const COMMON_PROPS: string[] = [
   'xtype',
+  'listeners',
   'width',
   'height',
   'minWidth',
@@ -81,12 +82,12 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
   button: {
     description: 'ボタン (menu 指定でドロップダウン)',
     defaults: { text: 'ボタン' },
-    props: ['text', 'ui', 'menu', 'iconCls'],
+    props: ['text', 'ui', 'menu', 'iconCls', 'handler'],
   },
   splitbutton: {
     description: '本体と矢印が分かれたボタン',
     defaults: { text: 'ボタン', menu: [{ text: '項目 1' }] },
-    props: ['text', 'ui', 'menu', 'iconCls'],
+    props: ['text', 'ui', 'menu', 'iconCls', 'handler'],
   },
   textfield: {
     description: '1 行テキスト入力',
@@ -191,7 +192,7 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
   menu: {
     description: 'メニューリスト',
     defaults: { items: [{ text: '項目 1' }, '-', { text: '項目 2' }] },
-    props: ['items'],
+    props: ['items', 'handler'],
   },
   progressbar: {
     description: '進捗バー (value 0〜1)',

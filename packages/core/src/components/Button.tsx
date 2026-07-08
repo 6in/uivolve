@@ -9,7 +9,11 @@ function normalizeMenu(menu: unknown): ComponentConfig | undefined {
   return { xtype: 'menu', ...(menu as ComponentConfig) }
 }
 
-/** xtype: 'button' — menu 指定でドロップダウンメニュー付きになる */
+/**
+ * xtype: 'button' — menu 指定でドロップダウンメニュー付きになる。
+ * handler ('onSaveClick' のような参照名) は実行はせずツールチップに表示する
+ * (モックの動線を AI・レビュアーへ伝えるための宣言)。
+ */
 export function Button({ config }: RendererProps) {
   const menu = normalizeMenu(config.menu)
   return (
@@ -24,6 +28,7 @@ export function Button({ config }: RendererProps) {
           )}
           disabled={config.disabled}
           style={styleOf(config)}
+          title={config.handler ? `handler: ${config.handler}` : undefined}
           onClick={menu ? toggle : undefined}
           aria-expanded={menu ? open : undefined}
         >

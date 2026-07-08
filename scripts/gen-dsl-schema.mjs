@@ -115,6 +115,17 @@ const KNOWN_PROP_TYPES = {
     },
   },
   menu: { anyOf: [itemsType, componentRef] },
+  handler: {
+    type: 'string',
+    description:
+      "クリック時ハンドラの参照名 ('onSaveClick' など)。モックでは実行されない。AI への仕様引き渡し用",
+  },
+  listeners: {
+    type: 'object',
+    additionalProperties: { type: 'string' },
+    description:
+      "イベント名 → ハンドラ参照名のマップ ({ select: 'onRowSelect' } など)。モックでは実行されない",
+  },
   root: { type: 'object' },
   rows: { type: 'number' },
   size: { type: 'number' },

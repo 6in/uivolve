@@ -109,6 +109,12 @@ export interface ComponentConfig {
   displayMsg?: string
   emptyMsg?: string
 
+  // ---- イベント (宣言のみ。モックでは実行しない) ----
+  /** クリック時ハンドラの参照名。'onSaveClick' のような文字列で書く (AI への仕様引き渡し用) */
+  handler?: string
+  /** イベント名 → ハンドラ参照名。{ select: 'onRowSelect' } のような文字列マップ */
+  listeners?: Record<string, string>
+
   // ---- 見た目 ----
   text?: string
   iconCls?: string

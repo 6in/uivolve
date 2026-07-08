@@ -147,6 +147,19 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 
+### イベントの宣言 (`handler` / `listeners`)
+
+イベントは**宣言のみ**対応 (モックでは実行されない):
+
+```json5
+{ xtype: 'button', itemId: 'btnSave', text: '保存', handler: 'onSaveClick' }
+{ xtype: 'grid', itemId: 'orderGrid', listeners: { select: 'onOrderSelect' }, /* ... */ }
+```
+
+ハンドラは**参照名 (文字列)** で書く。AI へ実装を引き渡すときに「どの操作で何が起きるか」の
+動線情報として使う (ボタンでは `handler: ...` がツールチップに表示される)。
+ExtJS の function リテラルは JSON5 として解析できないため、コピペ時は文字列参照に書き換えること。
+
 ### アイコン (`iconCls`) — Font Awesome 対応
 
 button / splitbutton / menu / panel タイトル / tabpanel のタブで `iconCls` に Font Awesome のクラスを指定できる。ExtJS の `'x-fa fa-plus'` 形式はそのまま `fa` に読み替えられるため ExtJS の config をコピペ可能。

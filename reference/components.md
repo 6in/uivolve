@@ -12,7 +12,7 @@
 | `container` / `fieldcontainer` | Container | ヘッダーなしの汎用コンテナ。layout と items で子を配置する。 |
 | `component` / `box` | RawComponent | html / text をそのまま描画 |
 | `toolbar` / `tbar` | Toolbar | ExtJS のショートハンドに対応: '->' = 右寄せ / '-' = セパレーター / ' ' = スペーサー / 文字列 = ラベル items の defaultType は button。 |
-| `button` | Button | menu 指定でドロップダウンメニュー付きになる |
+| `button` | Button | menu 指定でドロップダウンメニュー付きになる。 handler ('onSaveClick' のような参照名) は実行はせずツールチップに表示する (モックの動線を AI・レビュアーへ伝えるための宣言)。 |
 | `textfield` / `numberfield` / `datefield` | TextField | 1 行テキスト入力。 numberfield は数値入力、datefield は日付ピッカーになる。 fieldLabel / value / emptyText / readOnly / disabled / inputType に対応。 |
 | `textarea` / `textareafield` | TextArea | 複数行テキスト入力。rows で行数を指定。 |
 | `checkbox` / `checkboxfield` / `radio` / `radiofield` | CheckItem | 単体のチェックボックス / ラジオボタン。 boxLabel / checked / name(ラジオのグループ化)に対応。 |
