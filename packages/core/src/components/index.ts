@@ -4,7 +4,9 @@ import { DatePicker } from './DatePicker'
 import { FieldSet } from './FieldSet'
 import { GridPanel } from './GridPanel'
 import { HtmlEditor } from './HtmlEditor'
+import { IFrame } from './IFrame'
 import { Image } from './Image'
+import { Markdown } from './Markdown'
 import { PagingToolbar } from './PagingToolbar'
 import { Container, Panel, RawComponent } from './Panel'
 import { TabPanel } from './TabPanel'
@@ -49,6 +51,8 @@ registerComponent(['radiogroup', 'checkboxgroup'], CheckGroup)
 registerComponent('datepicker', DatePicker)
 registerComponent('htmleditor', HtmlEditor)
 registerComponent('pagingtoolbar', PagingToolbar)
+registerComponent(['uxiframe', 'iframe'], IFrame)
+registerComponent('markdown', Markdown)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
@@ -57,6 +61,8 @@ export { Icon } from './Icon'
 export { Toolbar } from './Toolbar'
 export { GridPanel } from './GridPanel'
 export { HtmlEditor } from './HtmlEditor'
+export { IFrame } from './IFrame'
+export { Markdown } from './Markdown'
 export { PagingToolbar } from './PagingToolbar'
 export { Image } from './Image'
 export { TabPanel } from './TabPanel'

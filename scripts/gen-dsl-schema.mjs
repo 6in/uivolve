@@ -115,6 +115,7 @@ const KNOWN_PROP_TYPES = {
     },
   },
   menu: { anyOf: [itemsType, componentRef] },
+  src: { type: 'string' },
   handler: {
     type: 'string',
     description:

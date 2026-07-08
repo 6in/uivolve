@@ -33,6 +33,8 @@
 | `datepicker` | DatePicker | インラインのカレンダー (Ext.picker.Date 互換)。 value(初期選択日)/ showToday(「今日」ボタンの表示)/ todayText に対応。 月の移動と日付クリックによる選択ができる。 |
 | `htmleditor` | HtmlEditor | リッチテキストエディタ。 書式ツールバー + 編集領域 (contentEditable) で構成し、太字・斜体・下線・ 文字揃え・リスト・リンク挿入が実際に操作できる。value に初期 HTML を指定。 機能スイッチは ExtJS 互換: enableFormat / enableAlignments / enableLists / enableLinks / enableSourceEdit (すべて既定 true。ソース編集は HTML を直接編集)。 enableFont / enableFontSize / enableColors は未対応 (モックでは省略)。 |
 | `pagingtoolbar` | PagingToolbar | ページングツールバー。 モックのため store とは連動せず、total / pageSize (既定 25) からページ数を計算して ページ移動のインタラクションを再現する。displayInfo: true で右端に件数を表示し、 文言は displayMsg ('{0} - {1} 件目 / 全 {2} 件') / emptyMsg で変更できる。 beforePageText / afterPageText でページ番号まわりの文言も変更可能。 グリッドの下部に置くときは bbar: { xtype: 'pagingtoolbar', total: 200 } と書く。 |
+| `uxiframe` / `iframe` | IFrame | インラインフレーム (Ext.ux.IFrame 互換)。 src の URL を埋め込み表示する。src 省略時はプレースホルダを表示。 高さは height / flex で指定する (既定 200px)。 |
+| `markdown` | Markdown | Markdown を描画する (ExtJS にはない独自拡張)。 value に Markdown テキストを指定 (YAML 記法ならブロックスカラー `value: \|` が書きやすい)。 見出し・リスト・表・コードブロック・引用などに対応 (marked で HTML 化)。 画面内の説明文や、モックに仕様メモを添える用途を想定。 |
 
 ## レイアウト (layout type)
 

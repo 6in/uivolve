@@ -244,6 +244,17 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
       'enableSourceEdit',
     ],
   },
+  uxiframe: {
+    description: 'インラインフレーム (src の URL を埋め込み)',
+    aliases: ['iframe'],
+    defaults: { src: 'https://example.com', height: 200 },
+    props: ['src', 'title'],
+  },
+  markdown: {
+    description: 'Markdown 描画 (独自拡張。value に Markdown テキスト)',
+    defaults: { value: '### 見出し' },
+    props: ['value'],
+  },
   pagingtoolbar: {
     description: 'ページングツールバー (グリッドの bbar 向け。total / pageSize)',
     defaults: { displayInfo: true, pageSize: 25, total: 200 },

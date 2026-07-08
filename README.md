@@ -144,6 +144,8 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `radiogroup` / `checkboxgroup` | `boxLabel` 付き項目を `columns` 列に並べる |
 | `htmleditor` | リッチテキストエディタ。太字・斜体・下線・文字揃え・リスト・リンク・ソース編集が操作可。`enableFormat` 等の機能スイッチ対応 |
 | `pagingtoolbar` | ページングツールバー。`total` / `pageSize` / `displayInfo` / `displayMsg`。グリッドの `bbar: { xtype: 'pagingtoolbar', ... }` で使用 |
+| `uxiframe` / `iframe` | インラインフレーム (Ext.ux.IFrame 互換)。`src` の URL を埋め込み表示 |
+| `markdown` | Markdown 描画 (**独自拡張**、ExtJS にはない)。`value` に Markdown テキスト。仕様メモや説明文の埋め込みに |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 
