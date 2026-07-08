@@ -87,6 +87,14 @@ export interface ComponentConfig {
   src?: string
   alt?: string
 
+  // ---- chart / draw ----
+  /** チャート系列。最初の 1 つだけ使用 ({ type: 'bar'|'line'|'area'|'pie', xField, yField }) */
+  series?:
+    | Array<{ type?: string; xField?: string; yField?: string | string[]; title?: string | string[] }>
+    | { type?: string; xField?: string; yField?: string | string[]; title?: string | string[] }
+  /** draw のスプライト定義 (Ext.draw 互換: type / fillStyle / strokeStyle / lineWidth など) */
+  sprites?: Array<Record<string, unknown>>
+
   // ---- chatpanel ----
   /** チャットの会話。from: 'user' は右寄せ、text は Markdown 描画 */
   messages?: Array<{ from?: string; name?: string; text?: string; time?: string }>

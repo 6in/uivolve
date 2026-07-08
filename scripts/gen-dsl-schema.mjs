@@ -130,6 +130,29 @@ const KNOWN_PROP_TYPES = {
     },
   },
   typing: { type: 'boolean', description: 'チャット末尾に入力中インジケーターを表示' },
+  series: {
+    description: "チャート系列。最初の 1 つだけ使用 ({ type: 'bar'|'line'|'area'|'pie', xField, yField })",
+    type: ['array', 'object'],
+    items: {
+      type: 'object',
+      properties: {
+        type: { enum: ['bar', 'line', 'area', 'pie'] },
+        xField: { type: 'string' },
+        yField: { type: ['string', 'array'] },
+        title: { type: ['string', 'array'] },
+      },
+    },
+  },
+  sprites: {
+    description: 'draw のスプライト定義 (Ext.draw 互換の fillStyle / strokeStyle / lineWidth など)',
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        type: { enum: ['rect', 'circle', 'ellipse', 'line', 'path', 'text'] },
+      },
+    },
+  },
   handler: {
     type: 'string',
     description:

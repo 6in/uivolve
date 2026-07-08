@@ -1296,6 +1296,41 @@
     }
   }
 
+  /* -------------------------------------------------- チャート / draw */
+
+  .sx-chart {
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 160px;
+  }
+
+  .sx-chart-svg {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+
+    & text {
+      font-size: 11px;
+      font-family: inherit;
+      fill: var(--sx-muted);
+    }
+  }
+
+  .sx-draw {
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 60px;
+
+    & svg {
+      display: block;
+    }
+
+    & text {
+      font-family: inherit;
+      fill: var(--sx-text);
+    }
+  }
+
   /* -------------------------------------------------------- チャット */
 
   .sx-chat-body {

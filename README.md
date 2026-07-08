@@ -147,6 +147,8 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `uxiframe` / `iframe` | インラインフレーム (Ext.ux.IFrame 互換)。`src` の URL を埋め込み表示 |
 | `markdown` | Markdown 描画 (**独自拡張**、ExtJS にはない)。`value` に Markdown テキスト。仕様メモや説明文の埋め込みに |
 | `chatpanel` / `chat` | チャット画面 (**独自拡張**)。`messages: [{ from, name, text, time }]` の会話バルーン表示。`from: 'user'` は右寄せ、`text` は Markdown 描画、`typing` で入力中表示 |
+| `chart` / `cartesian` / `polar` | 簡易チャート (SVG 自前描画)。`series: [{ type: 'bar'\|'line'\|'area'\|'pie', xField, yField }]` + `store.data`。`yField` 配列で複数系列 + 凡例。最初の series のみ・`axes` は無視 |
+| `draw` | SVG 描画サーフェス (Ext.draw.Container 互換サブセット)。`sprites: [{ type: 'rect'\|'circle'\|'ellipse'\|'line'\|'path'\|'text', fillStyle, strokeStyle, ... }]` |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 

@@ -255,6 +255,33 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     defaults: { value: '### 見出し' },
     props: ['value'],
   },
+  chart: {
+    description: '簡易チャート (series + store.data。bar/line/area/pie)',
+    aliases: ['cartesian', 'polar'],
+    defaults: {
+      height: 200,
+      series: [{ type: 'bar', xField: 'month', yField: 'value' }],
+      store: {
+        data: [
+          { month: '4月', value: 120 },
+          { month: '5月', value: 90 },
+          { month: '6月', value: 150 },
+        ],
+      },
+    },
+    props: ['series', 'store', 'data'],
+  },
+  draw: {
+    description: 'SVG 描画サーフェス (sprites: rect/circle/line/path/text)',
+    defaults: {
+      height: 120,
+      sprites: [
+        { type: 'circle', cx: 60, cy: 60, r: 40, fillStyle: '#157fcc' },
+        { type: 'text', x: 110, y: 66, text: 'テキスト', fontSize: 14 },
+      ],
+    },
+    props: ['sprites'],
+  },
   chatpanel: {
     description: 'チャット画面 (独自拡張。messages の会話バルーンを表示)',
     aliases: ['chat'],

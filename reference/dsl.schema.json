@@ -358,6 +358,41 @@
         "rowspan": {
           "type": "number"
         },
+        "series": {
+          "description": "チャート系列。最初の 1 つだけ使用 ({ type: 'bar'|'line'|'area'|'pie', xField, yField })",
+          "type": [
+            "array",
+            "object"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "bar",
+                  "line",
+                  "area",
+                  "pie"
+                ]
+              },
+              "xField": {
+                "type": "string"
+              },
+              "yField": {
+                "type": [
+                  "string",
+                  "array"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "array"
+                ]
+              }
+            }
+          }
+        },
         "showToday": {
           "type": "boolean"
         },
@@ -366,6 +401,25 @@
         },
         "split": {
           "type": "boolean"
+        },
+        "sprites": {
+          "description": "draw のスプライト定義 (Ext.draw 互換の fillStyle / strokeStyle / lineWidth など)",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "rect",
+                  "circle",
+                  "ellipse",
+                  "line",
+                  "path",
+                  "text"
+                ]
+              }
+            }
+          }
         },
         "src": {
           "type": "string"
@@ -470,6 +524,10 @@
             "uxiframe",
             "iframe",
             "markdown",
+            "chart",
+            "cartesian",
+            "polar",
+            "draw",
             "chatpanel",
             "chat",
             "pagingtoolbar"
