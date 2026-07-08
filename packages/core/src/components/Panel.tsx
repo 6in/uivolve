@@ -6,7 +6,7 @@ import { cx, styleOf, toCssBox } from '../utils'
 import { Icon } from './Icon'
 import { Toolbar } from './Toolbar'
 
-function normalizeBar(
+export function normalizeBar(
   bar: ComponentConfig['tbar'],
 ): ComponentConfig | undefined {
   if (!bar) return undefined
@@ -15,7 +15,7 @@ function normalizeBar(
 }
 
 /** tbar / bbar の描画。pagingtoolbar など toolbar 以外の xtype はレジストリ経由で解決する */
-function Bar({ config }: { config: ComponentConfig }) {
+export function Bar({ config }: { config: ComponentConfig }) {
   if (config.xtype === 'toolbar') return <Toolbar config={config} />
   return <XRender config={config} />
 }
@@ -130,14 +130,22 @@ export function Panel({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'container' | 'fieldcontainer' — ヘッダーなしの汎用コンテナ。layout と items で子を配置する。 */
+/**
+ * xtype: 'container' | 'fieldcontainer' — ヘッダーなしの汎用コンテナ。layout と items で子を配置する。
+ * パネル同様 tbar / bbar も置ける (ExtJS では Panel の config だが、ヘッダー不要の
+ * ツールバー領域を container + tbar だけで書けるよう緩和した独自拡張)。
+ */
 export function Container({ config }: RendererProps) {
+  const tbar = normalizeBar(config.tbar)
+  const bbar = normalizeBar(config.bbar)
   return (
     <div
-      className={cx('sx-container', config.cls)}
+      className={cx('sx-container', (tbar || bbar) && 'sx-container-bars', config.cls)}
       style={{ ...styleOf(config), padding: toCssBox(config.padding) }}
     >
+      {tbar && <Bar config={tbar} />}
       <LayoutBody config={config} />
+      {bbar && <Bar config={bbar} />}
     </div>
   )
 }

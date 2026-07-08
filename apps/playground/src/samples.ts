@@ -16,20 +16,15 @@ const borderSample = `// Border レイアウトのダッシュボード例
       region: 'north',
       xtype: 'container',
       itemId: 'headerArea',
-      items: [
-        {
-          xtype: 'toolbar',
-          itemId: 'mainToolbar',
-          items: [
-            { itemId: 'btnNew', text: '新規作成', ui: 'primary', iconCls: 'x-fa fa-plus', handler: 'onCreateOrder' },
-            { itemId: 'btnEdit', text: '編集', iconCls: 'x-fa fa-pen' },
-            '-',
-            { itemId: 'btnDelete', text: '削除', iconCls: 'x-fa fa-trash' },
-            '->',
-            '検索:',
-            { xtype: 'textfield', itemId: 'searchField', emptyText: 'キーワード', width: 200 },
-          ],
-        },
+      // tbar は container にもそのまま書ける (items に xtype: 'toolbar' を置くのと同等)
+      tbar: [
+        { itemId: 'btnNew', text: '新規作成', ui: 'primary', iconCls: 'x-fa fa-plus', handler: 'onCreateOrder' },
+        { itemId: 'btnEdit', text: '編集', iconCls: 'x-fa fa-pen' },
+        '-',
+        { itemId: 'btnDelete', text: '削除', iconCls: 'x-fa fa-trash' },
+        '->',
+        '検索:',
+        { xtype: 'textfield', itemId: 'searchField', emptyText: 'キーワード', width: 200 },
       ],
     },
     {

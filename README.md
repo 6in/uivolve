@@ -134,7 +134,7 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | xtype | 説明 |
 |---|---|
 | `panel` / `form` | タイトルバー、`collapsible` / `collapsed`(折りたたみ・展開)、`tbar` / `bbar`、`bodyPadding`、`html` |
-| `container` / `fieldcontainer` | ヘッダーなしの汎用コンテナ |
+| `container` / `fieldcontainer` | ヘッダーなしの汎用コンテナ。`tbar` / `bbar` も置ける (ツールバー領域を `container` + `tbar` だけで書ける) |
 | `toolbar` | ショートハンド対応: `'->'`(右寄せ) / `'-'`(区切り) / 文字列(ラベル)。items の defaultType は button |
 | `button` | `text` / `ui: 'primary'` / `disabled` / `iconCls` / `menu`(ドロップダウン) |
 | `textfield` / `numberfield` / `datefield` | `fieldLabel` / `value` / `emptyText` / `readOnly`。バリデーション宣言: `allowBlank: false` (必須、ラベルに *) / `maxLength` / `minLength` / `regex` / `vtype: 'email'\|'url'\|'alpha'\|'alphanum'`、numberfield は `minValue` / `maxValue`。ネイティブ検証で違反入力は赤枠 |

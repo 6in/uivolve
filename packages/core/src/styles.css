@@ -177,6 +177,17 @@
     padding: 4px;
   }
 
+  /* tbar / bbar 付き container はツールバー以外の領域が残りを埋める */
+  .sx-container-bars {
+    display: flex;
+    flex-direction: column;
+
+    & > :not(.sx-toolbar) {
+      flex: 1;
+      min-block-size: 0;
+    }
+  }
+
   /* -------------------------------------------------------- レイアウト */
 
   .sx-layout-auto {
