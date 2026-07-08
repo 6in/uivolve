@@ -1,6 +1,7 @@
 import Editor, { type OnMount } from '@monaco-editor/react'
 import {
   ExtMockup,
+  buildAiReference,
   detectFormat,
   parseDsl,
   stringifyDsl,
@@ -113,8 +114,15 @@ export function App() {
   }
 
   const copyForAi = async () => {
+    // 使用している部品のリファレンスを添付する (構文エラー中は DSL のみ)
+    let reference = ''
+    try {
+      reference = `\n${buildAiReference(parseDsl(code))}\n`
+    } catch {
+      // ステータスバーにエラー表示済み
+    }
     await navigator.clipboard.writeText(
-      `以下は ExtJS 互換 DSL で記述した画面モックの定義です。この画面を実装してください。\n\n\`\`\`${format === 'yaml' ? 'yaml' : 'json5'}\n${code}\`\`\`\n`,
+      `以下は ExtJS 互換 DSL (uivolve) で記述した画面モックの定義です。この画面を任意の UI ライブラリで実装してください。\n\n\`\`\`${format === 'yaml' ? 'yaml' : 'json5'}\n${code}\`\`\`\n${reference}`,
     )
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)

@@ -5,6 +5,7 @@ import './layouts'
 export { ExtMockup, type ExtMockupProps, type ThemeName } from './ExtMockup'
 export { XRender } from './XRender'
 export { parseDsl, stringifyDsl, detectFormat, DslParseError, type DslFormat } from './parser'
+export { buildAiReference } from './ai'
 export {
   COMMON_PROPS,
   CONTAINER_PROPS,
