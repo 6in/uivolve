@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { ColumnConfig, ComponentConfig, RendererProps } from '../types'
 import { cx } from '../utils'
+import { GridCellValue, cellAlign } from './GridPanel'
 import { PanelShell } from './Panel'
 
 interface TreeNode {
@@ -186,10 +187,10 @@ function TreeGrid({ config, columns }: { config: ComponentConfig; columns: Colum
                 <div
                   key={i}
                   className="sx-grid-cell"
-                  style={{ textAlign: c.align }}
+                  style={{ textAlign: cellAlign(c) }}
                   role="gridcell"
                 >
-                  {String(node[c.dataIndex ?? ''] ?? '')}
+                  <GridCellValue col={c} row={node} />
                 </div>
               ),
             )}

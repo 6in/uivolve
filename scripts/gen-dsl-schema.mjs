@@ -89,11 +89,35 @@ const KNOWN_PROP_TYPES = {
         items: {
           type: 'object',
           properties: {
+            xtype: {
+              enum: ['treecolumn', 'checkcolumn', 'actioncolumn', 'widgetcolumn'],
+              description: '列の種別 (階層 / チェックボックス / アイコンボタン / ウィジェット埋め込み)',
+            },
             text: { type: 'string' },
             dataIndex: { type: 'string' },
             width: sizeType,
             flex: { type: 'number' },
             align: { enum: ['left', 'center', 'right'] },
+            items: {
+              type: 'array',
+              description: 'actioncolumn のアイコンボタン',
+              items: {
+                type: 'object',
+                properties: {
+                  iconCls: { type: 'string' },
+                  tooltip: { type: 'string' },
+                  handler: { type: 'string' },
+                },
+              },
+            },
+            widget: {
+              ...componentRef,
+              description: 'widgetcolumn に埋め込むコンポーネント (value に dataIndex の値が入る)',
+            },
+            editor: {
+              anyOf: [{ type: 'boolean' }, componentRef],
+              description: 'セル編集。true = textfield、または numberfield / combobox など',
+            },
           },
         },
       },

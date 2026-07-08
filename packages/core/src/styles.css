@@ -555,6 +555,42 @@
     }
   }
 
+  /* actioncolumn のアイコンボタン */
+  .sx-grid-actionbtn {
+    appearance: none;
+    border: none;
+    background: none;
+    padding: 0 4px;
+    font: inherit;
+    color: var(--sx-accent);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--sx-accent-dark);
+    }
+  }
+
+  /* editor 付きセルはパディングを詰めて入力欄を収める */
+  .sx-grid-cell:has(> .sx-grid-editor) {
+    padding: 3px 6px;
+  }
+
+  .sx-grid-editor {
+    padding: 3px 7px;
+    font-size: 12.5px;
+  }
+
+  /* widgetcolumn の progressbar はセルに収まる高さへ */
+  .sx-grid-cell > .sx-progress {
+    block-size: 16px;
+    margin-block: 1px;
+  }
+
+  .sx-grid-cell > .sx-progress .sx-progress-text {
+    font-size: 10.5px;
+    line-height: 16px;
+  }
+
   .sx-grid-empty {
     grid-column: 1 / -1;
     padding: 24px;

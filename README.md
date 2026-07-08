@@ -128,7 +128,7 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `checkbox` / `radio` | `boxLabel` / `checked` / `name` |
 | `combobox` | ドロップダウン。`options` または `store.data` |
 | `listbox` / `multiselect` | リストボックス。`multiSelect` / `size` |
-| `grid` / `gridpanel` | データグリッド。`columns`(`text` / `dataIndex` / `width` / `flex` / `align`)+ `store.data`。行選択・ストライプ表示 |
+| `grid` / `gridpanel` | データグリッド。`columns`(`text` / `dataIndex` / `width` / `flex` / `align`)+ `store.data`。行選択・ストライプ表示。列の `xtype: 'checkcolumn'\|'actioncolumn'\|'widgetcolumn'` (チェック / アイコンボタン / progressbar 等の埋め込み)、`editor: true` や `{ xtype: 'numberfield'\|'combobox' }` でセル内編集 |
 | `image` | `src` / `alt`。src 省略時はプレースホルダ表示 |
 | `displayfield` / `label` | 静的テキスト |
 | `component` / `box` | `html` / `text` をそのまま描画 |

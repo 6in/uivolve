@@ -19,7 +19,7 @@
 | `combobox` / `combo` | ComboBox | ドロップダウン選択。options 配列または store.data から選択肢を生成。 allowBlank: false で必須 (ラベルに * 表示)。 |
 | `listbox` / `multiselect` | ListBox | リストボックス。multiSelect で複数選択、size で表示行数を指定。 |
 | `displayfield` / `label` | DisplayField | 静的テキスト表示。value / text / html のいずれかを描画。 |
-| `grid` / `gridpanel` | GridPanel | データグリッド。 columns / store(または data)から表を描画する。 columnLines: true でカラム区切り線を表示 (ExtJS 互換)。 CSS Grid + subgrid で列揃え・行ホバー・行選択を実現。 |
+| `grid` / `gridpanel` | GridPanel | データグリッド。 columns / store(または data)から表を描画する。 columnLines: true でカラム区切り線を表示 (ExtJS 互換)。 列の xtype で checkcolumn (チェックボックス) / actioncolumn (アイコンボタン。items で複数) / widgetcolumn (widget: { xtype: 'progressbar' } 等を埋め込み) が使える。 通常列に editor: true (textfield) や editor: { xtype: 'numberfield' \| 'combobox' } を 指定するとセル内で入力できる (モックとして常時編集表示)。 CSS Grid + subgrid で列揃え・行ホバー・行選択を実現。 |
 | `image` / `imagecomponent` | Image | src 未指定時はプレースホルダを表示 |
 | `tabpanel` | TabPanel | タブ切替パネル。 各 item の title がタブ名になる。activeTab / closable に対応。 |
 | `fieldset` | FieldSet | フォームのグループ枠。 title が legend になる。collapsible / checkboxToggle に対応。 |

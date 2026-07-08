@@ -17,13 +17,23 @@ export interface LayoutConfig {
 
 /** グリッド(データグリッド)の列定義 */
 export interface ColumnConfig {
-  /** treepanel のツリーグリッドで階層表示する列は 'treecolumn' を指定 */
+  /**
+   * 列の種別 (ExtJS 互換):
+   * 'treecolumn' (ツリーグリッドの階層列) / 'checkcolumn' (チェックボックス) /
+   * 'actioncolumn' (アイコンボタン。items で複数) / 'widgetcolumn' (widget を埋め込み)
+   */
   xtype?: string
   text?: string
   dataIndex?: string
   width?: number | string
   flex?: number
   align?: 'left' | 'center' | 'right'
+  /** actioncolumn のアイコンボタン定義 */
+  items?: Array<{ iconCls?: string; tooltip?: string; handler?: string }>
+  /** widgetcolumn に埋め込むコンポーネント (value には dataIndex の値が入る) */
+  widget?: ComponentConfig
+  /** セル編集。true = textfield、または { xtype: 'numberfield' } / combobox など */
+  editor?: boolean | ComponentConfig
 }
 
 /**
