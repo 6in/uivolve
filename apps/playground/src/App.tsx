@@ -27,6 +27,16 @@ interface ParseResult {
   errorColumn?: number
 }
 
+/**
+ * コメントが含まれていそうかの簡易判定。
+ * 文字列リテラルを除去してから探すので、'https://...' のような URL は誤検知しない。
+ * (YAML の # は行頭または空白の直後のみコメント)
+ */
+function hasComments(code: string, format: DslFormat): boolean {
+  const stripped = code.replace(/'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"/g, "''")
+  return format === 'yaml' ? /(^|\s)#/m.test(stripped) : /\/\/|\/\*/.test(stripped)
+}
+
 /** config ツリー内のコンポーネント数を数える (items / tbar / bbar を再帰) */
 function countComponents(config: ComponentConfig): number {
   let n = 1
@@ -113,6 +123,15 @@ export function App() {
   const convertFormat = () => {
     try {
       const obj = parseDsl(code)
+      const target = format === 'json5' ? 'YAML' : 'JSON5'
+      if (
+        hasComments(code, format) &&
+        !window.confirm(
+          `コメントが含まれています。${target} への変換でコメントは失われます (元に戻せません)。変換しますか?`,
+        )
+      ) {
+        return
+      }
       setCode(stringifyDsl(obj, format === 'json5' ? 'yaml' : 'json5'))
     } catch {
       // 構文エラー中は変換しない (ステータスバーにエラー表示済み)
