@@ -12,7 +12,7 @@
 | `container` / `fieldcontainer` | Container | ヘッダーなしの汎用コンテナ。layout と items で子を配置する。 パネル同様 tbar / bbar も置ける (ExtJS では Panel の config だが、ヘッダー不要の ツールバー領域を container + tbar だけで書けるよう緩和した独自拡張)。 |
 | `component` / `box` | RawComponent | html / text をそのまま描画 |
 | `toolbar` / `tbar` | Toolbar | ExtJS のショートハンドに対応: '->' = 右寄せ / '-' = セパレーター / ' ' = スペーサー / 文字列 = ラベル items の defaultType は button。 |
-| `button` | Button | menu 指定でドロップダウンメニュー付きになる。 handler ('onSaveClick' のような参照名) は実行はせずツールチップに表示する (モックの動線を AI・レビュアーへ伝えるための宣言)。 |
+| `button` | Button | menu 指定でドロップダウンメニュー付きになる。 handler ('onSaveClick' のような参照名) は実行はせずツールチップに表示する (モックの動線を AI・レビュアーへ伝えるための宣言)。 clipboard (独自拡張のユーティリティ): true でクリック時に自分の iconCls 定義 (iconCls: 'x-fa fa-plus' 形式) を、文字列なら任意のテキストをクリップボードへコピーする。 アイコンカタログやデザイントークン一覧のサンプル向け。 |
 | `textfield` / `numberfield` / `datefield` | TextField | 1 行テキスト入力。 numberfield は数値入力 (minValue / maxValue)、datefield は日付ピッカーになる。 fieldLabel / value / emptyText / readOnly / disabled / inputType に対応。 バリデーション仕様の宣言 (ExtJS 互換): allowBlank: false (必須。ラベルに * 表示)、 maxLength / minLength、regex (HTML の pattern として適用)、 vtype ('email' \| 'url' \| 'alpha' \| 'alphanum')。 ブラウザネイティブ検証にマップされ、違反入力は赤枠になる (モック上の軽い動作)。 |
 | `textarea` / `textareafield` | TextArea | 複数行テキスト入力。rows で行数を指定。 allowBlank: false (必須) / maxLength / minLength のバリデーション宣言に対応。 |
 | `checkbox` / `checkboxfield` / `radio` / `radiofield` | CheckItem | 単体のチェックボックス / ラジオボタン。 boxLabel / checked / name(ラジオのグループ化)に対応。 |

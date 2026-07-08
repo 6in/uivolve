@@ -206,6 +206,10 @@ export interface ComponentConfig {
   /** イベント名 → ハンドラ参照名。{ select: 'onRowSelect' } のような文字列マップ */
   listeners?: Record<string, string>
 
+  // ---- ユーティリティ (独自拡張) ----
+  /** button: クリックでコピー。true = 自分の iconCls 定義、文字列 = そのテキスト */
+  clipboard?: boolean | string
+
   // ---- 見た目 ----
   text?: string
   iconCls?: string

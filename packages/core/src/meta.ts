@@ -89,7 +89,7 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
   button: {
     description: 'ボタン (menu 指定でドロップダウン)',
     defaults: { text: 'ボタン' },
-    props: ['text', 'ui', 'menu', 'iconCls', 'handler'],
+    props: ['text', 'ui', 'menu', 'iconCls', 'handler', 'clipboard'],
   },
   splitbutton: {
     description: '本体と矢印が分かれたボタン',

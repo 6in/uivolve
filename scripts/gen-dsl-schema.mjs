@@ -156,6 +156,10 @@ const KNOWN_PROP_TYPES = {
   typing: { type: 'boolean', description: 'チャット末尾に入力中インジケーターを表示' },
   message: { type: 'string' },
   allowBlank: { type: 'boolean', description: 'false で必須入力 (ラベルに * 表示)' },
+  clipboard: {
+    anyOf: [{ type: 'boolean' }, { type: 'string' }],
+    description: 'button: クリックでコピー (true = 自分の iconCls 定義、文字列 = そのテキスト)',
+  },
   maxLength: { type: 'number' },
   minLength: { type: 'number' },
   regex: { type: 'string', description: '入力パターン (HTML の pattern として適用)' },

@@ -86,6 +86,17 @@
           "type": "boolean"
         },
         "children": {},
+        "clipboard": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "button: クリックでコピー (true = 自分の iconCls 定義、文字列 = そのテキスト)"
+        },
         "closable": {
           "type": "boolean"
         },
