@@ -95,6 +95,18 @@ export interface ComponentConfig {
   /** draw のスプライト定義 (Ext.draw 互換: type / fillStyle / strokeStyle / lineWidth など) */
   sprites?: Array<Record<string, unknown>>
 
+  // ---- messagebox / toast ----
+  /** ダイアログ本文 (ExtJS の msg も可) */
+  message?: string
+  /** ボタンセット ('ok' | 'okcancel' | 'yesno' | 'yesnocancel') または任意のラベル配列 */
+  buttons?: string | string[]
+  /** ダイアログのアイコン ('info' | 'question' | 'warning' | 'error') */
+  icon?: string
+  /** messagebox に入力欄を付ける (Ext.Msg.prompt 相当) */
+  prompt?: boolean
+  /** toast の表示位置 ('tr' | 'tl' | 'br' | 'bl' | 't' | 'b') */
+  align?: string
+
   // ---- chatpanel ----
   /** チャットの会話。from: 'user' は右寄せ、text は Markdown 描画 */
   messages?: Array<{ from?: string; name?: string; text?: string; time?: string }>

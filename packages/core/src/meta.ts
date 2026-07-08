@@ -282,6 +282,17 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     },
     props: ['sprites'],
   },
+  messagebox: {
+    description: 'シンプルダイアログ (Ext.Msg 互換。alert/confirm/prompt)',
+    aliases: ['msgbox'],
+    defaults: { title: '確認', message: '保存しますか?', buttons: 'yesno', icon: 'question' },
+    props: ['title', 'message', 'buttons', 'icon', 'prompt', 'value'],
+  },
+  toast: {
+    description: 'トースト通知 (プレビュー隅に重ねて表示)',
+    defaults: { title: '通知', html: '保存しました', align: 'tr' },
+    props: ['title', 'html', 'message', 'align', 'closable', 'iconCls'],
+  },
   chatpanel: {
     description: 'チャット画面 (独自拡張。messages の会話バルーンを表示)',
     aliases: ['chat'],

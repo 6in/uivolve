@@ -130,6 +130,17 @@ const KNOWN_PROP_TYPES = {
     },
   },
   typing: { type: 'boolean', description: 'チャット末尾に入力中インジケーターを表示' },
+  message: { type: 'string' },
+  buttons: {
+    description: "messagebox のボタンセットまたは任意のラベル配列",
+    anyOf: [
+      { enum: ['ok', 'okcancel', 'yesno', 'yesnocancel'] },
+      { type: 'array', items: { type: 'string' } },
+    ],
+  },
+  icon: { enum: ['info', 'question', 'warning', 'error'] },
+  prompt: { type: 'boolean', description: 'messagebox に入力欄を付ける (Ext.Msg.prompt 相当)' },
+  align: { enum: ['tr', 'tl', 'br', 'bl', 't', 'b'], description: 'toast の表示位置' },
   series: {
     description: "チャート系列。最初の 1 つだけ使用 ({ type: 'bar'|'line'|'area'|'pie', xField, yField })",
     type: ['array', 'object'],

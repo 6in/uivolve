@@ -77,6 +77,8 @@
     block-size: 100%;
     overflow: auto;
     padding: 0;
+    /* toast / messagebox オーバーレイの位置基準 */
+    position: relative;
 
     /* ルート要素は ExtJS の Viewport のように全体に広げる (inline の height 指定が優先される) */
     > .sx-panel,
@@ -1293,6 +1295,125 @@
 
     & img {
       max-inline-size: 100%;
+    }
+  }
+
+  /* ------------------------------------------ メッセージボックス */
+
+  .sx-msgbox-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--sx-text) 25%, transparent);
+  }
+
+  .sx-msgbox {
+    max-inline-size: 90%;
+  }
+
+  .sx-msgbox-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 14px;
+  }
+
+  .sx-msgbox-icon {
+    flex: none;
+    font-size: 26px;
+    min-inline-size: 28px;
+  }
+
+  .sx-msgbox-info,
+  .sx-msgbox-question {
+    color: var(--sx-accent);
+  }
+
+  .sx-msgbox-warning {
+    color: #d9a520;
+  }
+
+  .sx-msgbox-error {
+    color: #cd5c5c;
+  }
+
+  .sx-msgbox-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-inline-size: 0;
+  }
+
+  .sx-msgbox-message {
+    line-height: 1.6;
+    padding-block-start: 3px;
+  }
+
+  /* ------------------------------------------------------ トースト */
+
+  .sx-toast {
+    position: absolute;
+    z-index: 50;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    min-inline-size: 200px;
+    max-inline-size: 320px;
+    padding: 10px 12px;
+    background: var(--sx-panel-bg);
+    border: 1px solid color-mix(in srgb, var(--sx-accent) 45%, var(--sx-border));
+    border-radius: var(--sx-radius);
+    box-shadow: 0 6px 24px color-mix(in srgb, var(--sx-text) 25%, transparent);
+    font-size: 12.5px;
+    animation: sx-toast-in 0.25s ease-out;
+  }
+
+  .sx-toast-tr { inset-block-start: 12px; inset-inline-end: 12px; }
+  .sx-toast-tl { inset-block-start: 12px; inset-inline-start: 12px; }
+  .sx-toast-br { inset-block-end: 12px; inset-inline-end: 12px; }
+  .sx-toast-bl { inset-block-end: 12px; inset-inline-start: 12px; }
+  .sx-toast-t { inset-block-start: 12px; inset-inline-start: 50%; translate: -50% 0; }
+  .sx-toast-b { inset-block-end: 12px; inset-inline-start: 50%; translate: -50% 0; }
+
+  .sx-toast-icon {
+    color: var(--sx-accent);
+    font-size: 15px;
+    padding-block-start: 1px;
+  }
+
+  .sx-toast-content {
+    flex: 1;
+    min-inline-size: 0;
+  }
+
+  .sx-toast-title {
+    font-weight: 700;
+    margin-block-end: 2px;
+  }
+
+  .sx-toast-close {
+    appearance: none;
+    border: none;
+    background: none;
+    color: var(--sx-muted);
+    font: inherit;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0 2px;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--sx-text);
+    }
+  }
+
+  /* translate は配置 (t / b の中央寄せ) に使うため、アニメーションは opacity のみ */
+  @keyframes sx-toast-in {
+    from {
+      opacity: 0;
     }
   }
 

@@ -12,6 +12,17 @@
           "type": "number"
         },
         "afterPageText": {},
+        "align": {
+          "enum": [
+            "tr",
+            "tl",
+            "br",
+            "bl",
+            "t",
+            "b"
+          ],
+          "description": "toast の表示位置"
+        },
         "alt": {},
         "bbar": {
           "type": "array",
@@ -35,6 +46,25 @@
           ]
         },
         "boxLabel": {},
+        "buttons": {
+          "description": "messagebox のボタンセットまたは任意のラベル配列",
+          "anyOf": [
+            {
+              "enum": [
+                "ok",
+                "okcancel",
+                "yesno",
+                "yesnocancel"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
         "checkboxToggle": {
           "type": "boolean"
         },
@@ -141,6 +171,14 @@
           "type": "boolean"
         },
         "html": {},
+        "icon": {
+          "enum": [
+            "info",
+            "question",
+            "warning",
+            "error"
+          ]
+        },
         "iconCls": {},
         "id": {},
         "increment": {
@@ -268,6 +306,9 @@
             }
           ]
         },
+        "message": {
+          "type": "string"
+        },
         "messages": {
           "type": "array",
           "description": "チャットの会話。from: 'user' は右寄せ、text は Markdown 描画",
@@ -334,6 +375,10 @@
           ]
         },
         "pageSize": {},
+        "prompt": {
+          "type": "boolean",
+          "description": "messagebox に入力欄を付ける (Ext.Msg.prompt 相当)"
+        },
         "readOnly": {
           "type": "boolean"
         },
@@ -528,6 +573,9 @@
             "cartesian",
             "polar",
             "draw",
+            "messagebox",
+            "msgbox",
+            "toast",
             "chatpanel",
             "chat",
             "pagingtoolbar"
