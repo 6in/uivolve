@@ -1298,6 +1298,22 @@
     }
   }
 
+  /* ------------------------------------------------ コードエディタ */
+
+  .sx-codeeditor {
+    min-block-size: 120px;
+    block-size: 100%;
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    overflow: hidden;
+
+    /* @monaco-editor/react のラッパーに高さを伝える */
+    & > section,
+    & > div {
+      block-size: 100%;
+    }
+  }
+
   /* ---------------------------------------------------- ターミナル */
 
   .sx-terminal {

@@ -131,6 +131,17 @@ const KNOWN_PROP_TYPES = {
   },
   typing: { type: 'boolean', description: 'チャット末尾に入力中インジケーターを表示' },
   message: { type: 'string' },
+  language: {
+    type: 'string',
+    description: 'codeeditor の Monaco 言語 ID (javascript / typescript / yaml / sql など)',
+  },
+  theme: {
+    type: 'string',
+    description: "codeeditor のテーマ ('light' / 'dark' または Monaco のテーマ名)",
+  },
+  lineNumbers: { type: 'boolean' },
+  minimap: { type: 'boolean' },
+  fontSize: { type: 'number' },
   lines: {
     type: 'array',
     items: { type: 'string' },

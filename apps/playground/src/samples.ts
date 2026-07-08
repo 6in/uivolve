@@ -1139,6 +1139,67 @@ const terminalSample = `// ターミナル (terminal) と動画 (video) の例
 }
 `
 
+const codeEditorSample = `# ソースコードエディタ (codeeditor) の例 — Monaco Editor
+# language に Monaco の言語 ID、theme に light / dark を指定
+xtype: tabpanel
+itemId: codeTabs
+height: 420
+margin: 12
+items:
+  - title: TypeScript (dark)
+    itemId: tsTab
+    iconCls: x-fa fa-code
+    layout: fit
+    items:
+      - xtype: codeeditor
+        itemId: tsEditor
+        language: typescript
+        theme: dark
+        minimap: true
+        value: |
+          export interface Order {
+            no: string
+            customer: string
+            amount: number
+          }
+
+          export function total(orders: Order[]): number {
+            return orders.reduce((sum, o) => sum + o.amount, 0)
+          }
+  - title: SQL (light)
+    itemId: sqlTab
+    iconCls: x-fa fa-database
+    layout: fit
+    items:
+      - xtype: codeeditor
+        itemId: sqlEditor
+        language: sql
+        theme: light
+        value: |
+          SELECT o.no, c.name, o.amount
+          FROM orders o
+          JOIN customers c ON c.id = o.customer_id
+          WHERE o.status = '受注'
+          ORDER BY o.amount DESC;
+  - title: JSON (読み取り専用)
+    itemId: jsonTab
+    iconCls: x-fa fa-lock
+    layout: fit
+    items:
+      - xtype: codeeditor
+        itemId: jsonViewer
+        language: json
+        theme: light
+        readOnly: true
+        lineNumbers: false
+        value: |
+          {
+            "name": "uivolve",
+            "components": 38,
+            "license": "MIT"
+          }
+`
+
 export const samples: Sample[] = [
   { name: 'Border レイアウト', code: borderSample },
   { name: 'YAML 記法', code: yamlSample },
@@ -1154,4 +1215,5 @@ export const samples: Sample[] = [
   { name: 'Mermaid ダイアグラム (YAML)', code: mermaidSample },
   { name: 'グラフ表示 (Git / ネットワーク)', code: graphSample },
   { name: 'ターミナルと動画', code: terminalSample },
+  { name: 'コードエディタ (YAML)', code: codeEditorSample },
 ]

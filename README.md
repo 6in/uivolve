@@ -156,6 +156,7 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `networkgraph` / `forcegraph` | ノード・エッジグラフ (**独自拡張**)。`nodes: [{ id, text, group, r }]` + `edges: [{ from, to }]` を d3-force で自動レイアウト。group 自動配色、ノードはドラッグ可 |
 | `terminal` / `console` | コンソールログ風アニメーション (**独自拡張**)。`lines` を `speed` ms 間隔 (±ランダム揺らぎ) でサイクリックに流す。`$`/`✓`/`✗`/`⚠` 自動ハイライト、macOS 風ウィンドウバー |
 | `video` | 動画プレイヤー (Ext.Video 互換)。`url` / `posterUrl` / `loop` / `muted` / `autoplay` / `controls` |
+| `codeeditor` / `code` | ソースコードエディタ (**独自拡張**、Monaco Editor)。`language` (Monaco の言語 ID) / `theme: 'light'\|'dark'` / `readOnly` / `lineNumbers` / `minimap` / `fontSize`。Monaco 本体は CDN から遅延ロード (ローカルバンドルは `loader.config` で設定可) |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 

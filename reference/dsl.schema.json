@@ -210,6 +210,9 @@
         "flex": {
           "type": "number"
         },
+        "fontSize": {
+          "type": "number"
+        },
         "frame": {
           "type": "boolean"
         },
@@ -261,6 +264,10 @@
         },
         "labelWidth": {
           "type": "number"
+        },
+        "language": {
+          "type": "string",
+          "description": "codeeditor の Monaco 言語 ID (javascript / typescript / yaml / sql など)"
         },
         "layout": {
           "anyOf": [
@@ -327,6 +334,9 @@
               ]
             }
           ]
+        },
+        "lineNumbers": {
+          "type": "boolean"
         },
         "lines": {
           "type": "array",
@@ -416,6 +426,9 @@
             "number",
             "string"
           ]
+        },
+        "minimap": {
+          "type": "boolean"
         },
         "multiSelect": {
           "type": "boolean"
@@ -618,6 +631,10 @@
           }
         },
         "text": {},
+        "theme": {
+          "type": "string",
+          "description": "codeeditor のテーマ ('light' / 'dark' または Monaco のテーマ名)"
+        },
         "title": {},
         "todayText": {},
         "total": {},
@@ -698,6 +715,8 @@
             "terminal",
             "console",
             "video",
+            "codeeditor",
+            "code",
             "chatpanel",
             "chat",
             "pagingtoolbar"

@@ -342,6 +342,17 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     defaults: { url: '', height: 220 },
     props: ['url', 'posterUrl', 'loop', 'muted', 'autoplay', 'controls'],
   },
+  codeeditor: {
+    description: 'ソースコードエディタ (Monaco。language / theme / readOnly)',
+    aliases: ['code'],
+    defaults: {
+      language: 'javascript',
+      theme: 'dark',
+      height: 200,
+      value: "const hello = () => 'world'",
+    },
+    props: ['value', 'language', 'theme', 'readOnly', 'lineNumbers', 'minimap', 'fontSize'],
+  },
   chatpanel: {
     description: 'チャット画面 (独自拡張。messages の会話バルーンを表示)',
     aliases: ['chat'],

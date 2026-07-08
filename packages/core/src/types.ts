@@ -133,6 +133,17 @@ export interface ComponentConfig {
   autoplay?: boolean
   controls?: boolean
 
+  // ---- codeeditor ----
+  /** Monaco の言語 ID (javascript / typescript / json / yaml / sql / python など) */
+  language?: string
+  /** codeeditor のテーマ ('light' / 'dark' または Monaco のテーマ名) */
+  theme?: string
+  /** 行番号の表示 (既定 true) */
+  lineNumbers?: boolean
+  /** ミニマップの表示 (既定 false) */
+  minimap?: boolean
+  fontSize?: number
+
   // ---- chatpanel ----
   /** チャットの会話。from: 'user' は右寄せ、text は Markdown 描画 */
   messages?: Array<{ from?: string; name?: string; text?: string; time?: string }>
