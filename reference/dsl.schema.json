@@ -573,6 +573,7 @@
             "cartesian",
             "polar",
             "draw",
+            "mermaid",
             "messagebox",
             "msgbox",
             "toast",

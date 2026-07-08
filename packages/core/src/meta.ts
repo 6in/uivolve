@@ -282,6 +282,11 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     },
     props: ['sprites'],
   },
+  mermaid: {
+    description: 'Mermaid.js ダイアグラム (独自拡張。value に Mermaid 記法)',
+    defaults: { value: 'graph LR; A[開始] --> B[処理] --> C[終了]' },
+    props: ['value'],
+  },
   messagebox: {
     description: 'シンプルダイアログ (Ext.Msg 互換。alert/confirm/prompt)',
     aliases: ['msgbox'],

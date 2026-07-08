@@ -151,6 +151,7 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `draw` | SVG 描画サーフェス (Ext.draw.Container 互換サブセット)。`sprites: [{ type: 'rect'\|'circle'\|'ellipse'\|'line'\|'path'\|'text', fillStyle, strokeStyle, ... }]` |
 | `messagebox` / `msgbox` | シンプルダイアログ (Ext.Msg 互換)。`message` / `buttons: 'ok'\|'okcancel'\|'yesno'\|'yesnocancel'` / `icon: 'info'\|'question'\|'warning'\|'error'` / `prompt`。どこに置いてもバックドロップ + 中央表示 |
 | `toast` | トースト通知 (Ext.toast 互換)。`html` / `message` / `title` / `align: 'tr'\|'tl'\|'br'\|'bl'\|'t'\|'b'`。プレビュー隅に重ねて表示、× で消せる |
+| `mermaid` | Mermaid.js ダイアグラム (**独自拡張**)。`value` に Mermaid 記法 (YAML の `value: \|` が書きやすい)。mermaid 本体は初回描画時に動的ロード |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 

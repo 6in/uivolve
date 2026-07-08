@@ -1298,6 +1298,27 @@
     }
   }
 
+  /* ------------------------------------------------------ Mermaid */
+
+  .sx-mermaid {
+    text-align: center;
+
+    & svg {
+      max-inline-size: 100%;
+      block-size: auto;
+    }
+  }
+
+  .sx-mermaid-error {
+    text-align: start;
+    padding: 8px 10px;
+    color: #b3261e;
+    border: 1px dashed #b3261e;
+    border-radius: var(--sx-radius);
+    font-size: 12px;
+    white-space: pre-wrap;
+  }
+
   /* ------------------------------------------ メッセージボックス */
 
   .sx-msgbox-overlay {
