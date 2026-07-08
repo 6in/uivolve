@@ -17,9 +17,11 @@ import { NetworkGraph } from './NetworkGraph'
 import { PagingToolbar } from './PagingToolbar'
 import { Container, Panel, RawComponent } from './Panel'
 import { TabPanel } from './TabPanel'
+import { Terminal } from './Terminal'
 import { Toast } from './Toast'
 import { Toolbar } from './Toolbar'
 import { TreePanel } from './TreePanel'
+import { Video } from './Video'
 import { Window } from './Window'
 import {
   CheckItem,
@@ -69,6 +71,8 @@ registerComponent(['chart', 'cartesian', 'polar'], Chart)
 registerComponent('draw', Draw)
 registerComponent(['messagebox', 'msgbox'], MessageBox)
 registerComponent('toast', Toast)
+registerComponent(['terminal', 'console'], Terminal)
+registerComponent('video', Video)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
@@ -87,7 +91,9 @@ export { Markdown } from './Markdown'
 export { Mermaid } from './Mermaid'
 export { MessageBox } from './MessageBox'
 export { PagingToolbar } from './PagingToolbar'
+export { Terminal } from './Terminal'
 export { Toast } from './Toast'
+export { Video } from './Video'
 export { Image } from './Image'
 export { TabPanel } from './TabPanel'
 export { FieldSet } from './FieldSet'

@@ -117,6 +117,22 @@ export interface ComponentConfig {
   /** networkgraph のエッジ */
   edges?: Array<{ from: string; to: string }>
 
+  // ---- terminal / video ----
+  /** terminal に流すテキスト行 (サイクリック再生) */
+  lines?: string[]
+  /** terminal の行間隔 (ms、既定 500。±ランダム揺らぎ付き) */
+  speed?: number
+  /** terminal の保持行数 (既定 100) */
+  maxLines?: number
+  /** video の動画 URL (Ext.Video 互換。src も可) */
+  url?: string
+  /** video のポスター画像 (poster も可) */
+  posterUrl?: string
+  loop?: boolean
+  muted?: boolean
+  autoplay?: boolean
+  controls?: boolean
+
   // ---- chatpanel ----
   /** チャットの会話。from: 'user' は右寄せ、text は Markdown 描画 */
   messages?: Array<{ from?: string; name?: string; text?: string; time?: string }>

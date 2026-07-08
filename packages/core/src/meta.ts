@@ -327,6 +327,21 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     defaults: { title: '通知', html: '保存しました', align: 'tr' },
     props: ['title', 'html', 'message', 'align', 'closable', 'iconCls'],
   },
+  terminal: {
+    description: 'コンソールログ風アニメーション (lines をサイクリックに流す)',
+    aliases: ['console'],
+    defaults: {
+      title: 'bash',
+      height: 200,
+      lines: ['$ npm run build', 'vite building for production...', '✓ built in 3.2s'],
+    },
+    props: ['title', 'lines', 'speed', 'maxLines'],
+  },
+  video: {
+    description: '動画プレイヤー (url / posterUrl / loop / controls)',
+    defaults: { url: '', height: 220 },
+    props: ['url', 'posterUrl', 'loop', 'muted', 'autoplay', 'controls'],
+  },
   chatpanel: {
     description: 'チャット画面 (独自拡張。messages の会話バルーンを表示)',
     aliases: ['chat'],

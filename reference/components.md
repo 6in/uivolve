@@ -43,6 +43,8 @@
 | `draw` | Draw | SVG 描画サーフェス (Ext.draw.Container 互換のサブセット)。 sprites: [{ type, ...属性 }] を SVG に変換して描画する。対応スプライト: rect (x/y/width/height/radius) / circle (cx/cy/r) / ellipse (cx/cy/rx/ry) / line (fromX/fromY/toX/toY) / path (path) / text (x/y/text/fontSize/textAlign)。 共通属性は ExtJS 同名の fillStyle / strokeStyle / lineWidth / opacity。 生の SVG をそのまま埋め込みたい場合は component の html config でも可。 |
 | `messagebox` / `msgbox` | MessageBox | シンプルダイアログ (Ext.Msg 互換)。 alert / confirm / prompt のモックを宣言的に書く。 title / message (msg も可) / buttons ('ok' \| 'okcancel' \| 'yesno' \| 'yesnocancel' または任意のラベル配列) / icon ('info' \| 'question' \| 'warning' \| 'error') / prompt: true (入力欄。初期値は value) に対応。 どこに置いても画面全体に半透明バックドロップ + 中央のダイアログを重ねて表示する。 ボタンは見た目のみ (先頭ボタンが primary)。 |
 | `toast` | Toast | トースト通知 (Ext.toast 互換)。 html (または message) をプレビュー領域の隅に重ねて表示する。 align: 'tr' (既定) / 'tl' / 'br' / 'bl' / 't' / 'b'。title / iconCls 付きも可。 closable (既定 true) の × で消せる。モックなので自動では消えない (timeout は無視)。 |
+| `terminal` / `console` | Terminal | コンソールログ風アニメーション (ExtJS にはない独自拡張)。 lines のテキストを speed ms 間隔 (±ランダムな揺らぎ付き) で 1 行ずつ流し、 末尾まで行ったら先頭からサイクリックに繰り返す。maxLines (既定 100) で 保持行数を制限し、常に最下部へ自動スクロールする。 '$' / '>' 始まりはプロンプト色、✓ / ✗ / ⚠ / WARN / ERROR は意味色で自動ハイライト。 title を指定すると macOS 風のウィンドウバーを表示する。 |
+| `video` | Video | 動画プレイヤー (Ext.Video 互換)。 url (src も可) の動画を HTML5 video で再生する。posterUrl (poster も可) / loop / muted / autoplay / controls (既定 true) に対応。url 省略時はプレースホルダを表示。 YouTube などの埋め込みプレイヤーは video ではなく iframe を使うこと。 |
 
 ## レイアウト (layout type)
 

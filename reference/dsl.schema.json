@@ -24,6 +24,9 @@
           "description": "toast の表示位置"
         },
         "alt": {},
+        "autoplay": {
+          "type": "boolean"
+        },
         "bbar": {
           "type": "array",
           "items": {
@@ -163,6 +166,9 @@
               }
             }
           }
+        },
+        "controls": {
+          "type": "boolean"
         },
         "data": {},
         "defaults": {
@@ -322,6 +328,13 @@
             }
           ]
         },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "terminal に流すテキスト行 (サイクリック再生)"
+        },
         "listeners": {
           "type": "object",
           "additionalProperties": {
@@ -329,11 +342,17 @@
           },
           "description": "イベント名 → ハンドラ参照名のマップ ({ select: 'onRowSelect' } など)。モックでは実行されない"
         },
+        "loop": {
+          "type": "boolean"
+        },
         "margin": {
           "type": [
             "number",
             "string"
           ]
+        },
+        "maxLines": {
+          "type": "number"
         },
         "maxValue": {
           "type": "number"
@@ -401,6 +420,9 @@
         "multiSelect": {
           "type": "boolean"
         },
+        "muted": {
+          "type": "boolean"
+        },
         "name": {},
         "nodes": {
           "type": "array",
@@ -458,6 +480,9 @@
           ]
         },
         "pageSize": {},
+        "posterUrl": {
+          "type": "string"
+        },
         "prompt": {
           "type": "boolean",
           "description": "messagebox に入力欄を付ける (Ext.Msg.prompt 相当)"
@@ -526,6 +551,10 @@
         },
         "size": {
           "type": "number"
+        },
+        "speed": {
+          "type": "number",
+          "description": "terminal の行間隔 ms (±ランダム揺らぎ付き)"
         },
         "split": {
           "type": "boolean"
@@ -597,6 +626,9 @@
           "description": "チャット末尾に入力中インジケーターを表示"
         },
         "ui": {},
+        "url": {
+          "type": "string"
+        },
         "value": {},
         "valueField": {},
         "width": {
@@ -663,6 +695,9 @@
             "messagebox",
             "msgbox",
             "toast",
+            "terminal",
+            "console",
+            "video",
             "chatpanel",
             "chat",
             "pagingtoolbar"

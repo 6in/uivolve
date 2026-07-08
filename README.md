@@ -154,6 +154,8 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `mermaid` | Mermaid.js ダイアグラム (**独自拡張**)。`value` に Mermaid 記法 (YAML の `value: \|` が書きやすい)。mermaid 本体は初回描画時に動的ロード |
 | `gitgraph` | Git マージツリー (**独自拡張**)。`branches` + `commits: [{ id, branch, parents, message, tag }]` を gitk 風にレーン + マージ曲線 + メッセージ一覧で描画 |
 | `networkgraph` / `forcegraph` | ノード・エッジグラフ (**独自拡張**)。`nodes: [{ id, text, group, r }]` + `edges: [{ from, to }]` を d3-force で自動レイアウト。group 自動配色、ノードはドラッグ可 |
+| `terminal` / `console` | コンソールログ風アニメーション (**独自拡張**)。`lines` を `speed` ms 間隔 (±ランダム揺らぎ) でサイクリックに流す。`$`/`✓`/`✗`/`⚠` 自動ハイライト、macOS 風ウィンドウバー |
+| `video` | 動画プレイヤー (Ext.Video 互換)。`url` / `posterUrl` / `loop` / `muted` / `autoplay` / `controls` |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 
