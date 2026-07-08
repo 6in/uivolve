@@ -11,6 +11,7 @@ import {
   type ThemeName,
 } from '@uivolve/core'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { AiChat } from './AiChat'
 import { monaco } from './monaco-setup'
 import { samples } from './samples'
 
@@ -222,24 +223,27 @@ export function App() {
         style={{ gridTemplateColumns: `${editorPct}% 6px 1fr` }}
       >
         <section className="pg-editor" aria-label="DSL エディタ">
-          <Editor
-            language={format === 'yaml' ? 'yaml' : 'javascript'}
-            value={code}
-            onChange={(v) => setCode(v ?? '')}
-            onMount={onEditorMount}
-            options={{
-              fontSize: 13,
-              tabSize: 2,
-              minimap: { enabled: false },
-              scrollBeyondLastLine: false,
-              automaticLayout: true,
-              wordBasedSuggestions: 'off',
-              quickSuggestions: { other: true, comments: false, strings: true },
-              suggest: { showWords: false, snippetsPreventQuickSuggestions: false },
-              fixedOverflowWidgets: true,
-              scrollbar: { verticalScrollbarSize: 10 },
-            }}
-          />
+          <div className="pg-editor-monaco">
+            <Editor
+              language={format === 'yaml' ? 'yaml' : 'javascript'}
+              value={code}
+              onChange={(v) => setCode(v ?? '')}
+              onMount={onEditorMount}
+              options={{
+                fontSize: 13,
+                tabSize: 2,
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
+                wordBasedSuggestions: 'off',
+                quickSuggestions: { other: true, comments: false, strings: true },
+                suggest: { showWords: false, snippetsPreventQuickSuggestions: false },
+                fixedOverflowWidgets: true,
+                scrollbar: { verticalScrollbarSize: 10 },
+              }}
+            />
+          </div>
+          <AiChat code={code} format={format} onApply={setCode} />
         </section>
         <div
           className="pg-splitter"
