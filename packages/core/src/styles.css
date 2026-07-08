@@ -438,6 +438,13 @@
     flex-direction: column;
   }
 
+  /* allowBlank: false の必須マーク */
+  .sx-field-required {
+    color: #cd3d3d;
+    margin-inline-start: 2px;
+    font-weight: 700;
+  }
+
   .sx-input {
     flex: 1 1 auto;
     inline-size: 100%;
@@ -460,6 +467,12 @@
 
     &:disabled {
       opacity: 0.55;
+    }
+
+    /* バリデーション違反 (required / maxLength / pattern 等) は操作後に赤枠 */
+    &:user-invalid {
+      border-color: #cd3d3d;
+      outline-color: color-mix(in srgb, #cd3d3d 60%, transparent);
     }
   }
 

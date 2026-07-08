@@ -13,10 +13,10 @@
 | `component` / `box` | RawComponent | html / text をそのまま描画 |
 | `toolbar` / `tbar` | Toolbar | ExtJS のショートハンドに対応: '->' = 右寄せ / '-' = セパレーター / ' ' = スペーサー / 文字列 = ラベル items の defaultType は button。 |
 | `button` | Button | menu 指定でドロップダウンメニュー付きになる。 handler ('onSaveClick' のような参照名) は実行はせずツールチップに表示する (モックの動線を AI・レビュアーへ伝えるための宣言)。 |
-| `textfield` / `numberfield` / `datefield` | TextField | 1 行テキスト入力。 numberfield は数値入力、datefield は日付ピッカーになる。 fieldLabel / value / emptyText / readOnly / disabled / inputType に対応。 |
-| `textarea` / `textareafield` | TextArea | 複数行テキスト入力。rows で行数を指定。 |
+| `textfield` / `numberfield` / `datefield` | TextField | 1 行テキスト入力。 numberfield は数値入力 (minValue / maxValue)、datefield は日付ピッカーになる。 fieldLabel / value / emptyText / readOnly / disabled / inputType に対応。 バリデーション仕様の宣言 (ExtJS 互換): allowBlank: false (必須。ラベルに * 表示)、 maxLength / minLength、regex (HTML の pattern として適用)、 vtype ('email' \| 'url' \| 'alpha' \| 'alphanum')。 ブラウザネイティブ検証にマップされ、違反入力は赤枠になる (モック上の軽い動作)。 |
+| `textarea` / `textareafield` | TextArea | 複数行テキスト入力。rows で行数を指定。 allowBlank: false (必須) / maxLength / minLength のバリデーション宣言に対応。 |
 | `checkbox` / `checkboxfield` / `radio` / `radiofield` | CheckItem | 単体のチェックボックス / ラジオボタン。 boxLabel / checked / name(ラジオのグループ化)に対応。 |
-| `combobox` / `combo` | ComboBox | ドロップダウン選択。options 配列または store.data から選択肢を生成。 |
+| `combobox` / `combo` | ComboBox | ドロップダウン選択。options 配列または store.data から選択肢を生成。 allowBlank: false で必須 (ラベルに * 表示)。 |
 | `listbox` / `multiselect` | ListBox | リストボックス。multiSelect で複数選択、size で表示行数を指定。 |
 | `displayfield` / `label` | DisplayField | 静的テキスト表示。value / text / html のいずれかを描画。 |
 | `grid` / `gridpanel` | GridPanel | データグリッド。 columns / store(または data)から表を描画する。 columnLines: true でカラム区切り線を表示 (ExtJS 互換)。 CSS Grid + subgrid で列揃え・行ホバー・行選択を実現。 |

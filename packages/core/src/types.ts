@@ -77,6 +77,20 @@ export interface ComponentConfig {
   boxLabel?: string
   checked?: boolean
 
+  // ---- バリデーション宣言 (ExtJS 互換。モックではネイティブ検証 + 必須マーク表示) ----
+  /** false で必須入力 (ラベルに * を表示) */
+  allowBlank?: boolean
+  maxLength?: number
+  minLength?: number
+  /** 入力パターン (HTML の pattern として適用。文字列で指定) */
+  regex?: string
+  /** 入力種別のバリデーション ('email' | 'url' | 'alpha' | 'alphanum') */
+  vtype?: string
+  /** 数値の下限 (numberfield / slider) */
+  minValue?: number
+  /** 数値の上限 (numberfield / slider) */
+  maxValue?: number
+
   // ---- グリッド ----
   columns?: number | ColumnConfig[]
   columnLines?: boolean

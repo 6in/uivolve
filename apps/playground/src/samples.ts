@@ -101,19 +101,21 @@ const formSample = `// フォームの例 (折りたたみパネル付き)
       itemId: 'basicInfoForm',
       title: '基本情報',
       items: [
-        { xtype: 'textfield', itemId: 'nameField', fieldLabel: '氏名', emptyText: '山田 太郎' },
-        { xtype: 'textfield', itemId: 'emailField', fieldLabel: 'メール', value: 'taro@example.com' },
+        // allowBlank: false = 必須 (ラベルに * 表示)。maxLength / vtype はネイティブ検証も効く
+        { xtype: 'textfield', itemId: 'nameField', fieldLabel: '氏名', emptyText: '山田 太郎', allowBlank: false, maxLength: 20 },
+        { xtype: 'textfield', itemId: 'emailField', fieldLabel: 'メール', value: 'taro@example.com', allowBlank: false, vtype: 'email' },
         { xtype: 'datefield', itemId: 'birthField', fieldLabel: '生年月日' },
         {
           xtype: 'combobox',
           itemId: 'deptCombo',
           fieldLabel: '部署',
+          allowBlank: false,
           options: ['営業部', '開発部', '総務部'],
         },
         { xtype: 'radio', itemId: 'genderMale', fieldLabel: '性別', boxLabel: '男性', name: 'gender', checked: true },
         { xtype: 'radio', itemId: 'genderFemale', fieldLabel: '', boxLabel: '女性', name: 'gender' },
         { xtype: 'checkbox', itemId: 'notifyCheck', fieldLabel: '通知', boxLabel: 'メールマガジンを受け取る' },
-        { xtype: 'textarea', itemId: 'memoArea', fieldLabel: '備考', emptyText: '自由記入欄', rows: 3 },
+        { xtype: 'textarea', itemId: 'memoArea', fieldLabel: '備考', emptyText: '自由記入欄 (200 文字まで)', rows: 3, maxLength: 200 },
       ],
     },
     {

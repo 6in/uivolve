@@ -131,6 +131,14 @@ const KNOWN_PROP_TYPES = {
   },
   typing: { type: 'boolean', description: 'チャット末尾に入力中インジケーターを表示' },
   message: { type: 'string' },
+  allowBlank: { type: 'boolean', description: 'false で必須入力 (ラベルに * 表示)' },
+  maxLength: { type: 'number' },
+  minLength: { type: 'number' },
+  regex: { type: 'string', description: '入力パターン (HTML の pattern として適用)' },
+  vtype: {
+    enum: ['email', 'url', 'alpha', 'alphanum'],
+    description: '入力種別のバリデーション',
+  },
   language: {
     type: 'string',
     description: 'codeeditor の Monaco 言語 ID (javascript / typescript / yaml / sql など)',

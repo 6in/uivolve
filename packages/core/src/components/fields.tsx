@@ -4,7 +4,7 @@ import { cx, styleOf, toCssSize } from '../utils'
 
 // ---------------------------------------------------------------- 共通
 
-/** fieldLabel 付きフィールドの共通レイアウト */
+/** fieldLabel 付きフィールドの共通レイアウト。allowBlank: false で必須マーク (*) を表示 */
 function FieldRow({ config, children }: { config: ComponentConfig; children: ReactNode }) {
   return (
     <label className={cx('sx-field', config.cls)} style={styleOf(config)}>
@@ -14,12 +14,25 @@ function FieldRow({ config, children }: { config: ComponentConfig; children: Rea
           style={{ inlineSize: toCssSize(config.labelWidth) ?? 'var(--sx-label-width)' }}
         >
           {config.fieldLabel}
+          {config.allowBlank === false && (
+            <span className="sx-field-required" title="必須">
+              *
+            </span>
+          )}
           {config.fieldLabel !== '' && ':'}
         </span>
       )}
       <span className="sx-field-body">{children}</span>
     </label>
   )
+}
+
+// vtype (ExtJS の入力種別バリデーション) → HTML の type / pattern への対応
+const VTYPES: Record<string, { type?: string; pattern?: string }> = {
+  email: { type: 'email' },
+  url: { type: 'url' },
+  alpha: { pattern: '[a-zA-Z_]+' },
+  alphanum: { pattern: '[a-zA-Z0-9_]+' },
 }
 
 interface Option {
@@ -51,12 +64,21 @@ function optionsOf(config: ComponentConfig): Option[] {
 
 /**
  * xtype: 'textfield' | 'numberfield' | 'datefield' — 1 行テキスト入力。
- * numberfield は数値入力、datefield は日付ピッカーになる。
+ * numberfield は数値入力 (minValue / maxValue)、datefield は日付ピッカーになる。
  * fieldLabel / value / emptyText / readOnly / disabled / inputType に対応。
+ * バリデーション仕様の宣言 (ExtJS 互換): allowBlank: false (必須。ラベルに * 表示)、
+ * maxLength / minLength、regex (HTML の pattern として適用)、
+ * vtype ('email' | 'url' | 'alpha' | 'alphanum')。
+ * ブラウザネイティブ検証にマップされ、違反入力は赤枠になる (モック上の軽い動作)。
  */
 export function TextField({ config }: RendererProps) {
-  const inputType =
-    config.xtype === 'numberfield' ? 'number' : config.xtype === 'datefield' ? 'date' : (config.inputType as string | undefined) ?? 'text'
+  const vtype = VTYPES[(config.vtype as string | undefined) ?? '']
+  const isNumber = config.xtype === 'numberfield'
+  const inputType = isNumber
+    ? 'number'
+    : config.xtype === 'datefield'
+      ? 'date'
+      : vtype?.type ?? (config.inputType as string | undefined) ?? 'text'
   return (
     <FieldRow config={config}>
       <input
@@ -66,12 +88,21 @@ export function TextField({ config }: RendererProps) {
         placeholder={config.emptyText}
         readOnly={config.readOnly}
         disabled={config.disabled}
+        required={config.allowBlank === false}
+        maxLength={config.maxLength}
+        minLength={config.minLength}
+        min={isNumber ? config.minValue : undefined}
+        max={isNumber ? config.maxValue : undefined}
+        pattern={(config.regex as string | undefined) ?? vtype?.pattern}
       />
     </FieldRow>
   )
 }
 
-/** xtype: 'textarea' | 'textareafield' — 複数行テキスト入力。rows で行数を指定。 */
+/**
+ * xtype: 'textarea' | 'textareafield' — 複数行テキスト入力。rows で行数を指定。
+ * allowBlank: false (必須) / maxLength / minLength のバリデーション宣言に対応。
+ */
 export function TextArea({ config }: RendererProps) {
   return (
     <FieldRow config={config}>
@@ -82,6 +113,9 @@ export function TextArea({ config }: RendererProps) {
         placeholder={config.emptyText}
         readOnly={config.readOnly}
         disabled={config.disabled}
+        required={config.allowBlank === false}
+        maxLength={config.maxLength}
+        minLength={config.minLength}
       />
     </FieldRow>
   )
@@ -108,7 +142,10 @@ export function CheckItem({ config }: RendererProps) {
   )
 }
 
-/** xtype: 'combobox' | 'combo' — ドロップダウン選択。options 配列または store.data から選択肢を生成。 */
+/**
+ * xtype: 'combobox' | 'combo' — ドロップダウン選択。options 配列または store.data から選択肢を生成。
+ * allowBlank: false で必須 (ラベルに * 表示)。
+ */
 export function ComboBox({ config }: RendererProps) {
   const options = optionsOf(config)
   return (
@@ -117,6 +154,7 @@ export function ComboBox({ config }: RendererProps) {
         className="sx-input sx-select"
         defaultValue={config.value !== undefined ? String(config.value) : undefined}
         disabled={config.disabled}
+        required={config.allowBlank === false}
       >
         {config.emptyText && <option value="">{config.emptyText}</option>}
         {options.map((o, i) => (

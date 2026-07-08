@@ -123,8 +123,8 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `container` / `fieldcontainer` | ヘッダーなしの汎用コンテナ |
 | `toolbar` | ショートハンド対応: `'->'`(右寄せ) / `'-'`(区切り) / 文字列(ラベル)。items の defaultType は button |
 | `button` | `text` / `ui: 'primary'` / `disabled` / `iconCls` / `menu`(ドロップダウン) |
-| `textfield` / `numberfield` / `datefield` | `fieldLabel` / `value` / `emptyText` / `readOnly` |
-| `textarea` | 上記 + `rows` |
+| `textfield` / `numberfield` / `datefield` | `fieldLabel` / `value` / `emptyText` / `readOnly`。バリデーション宣言: `allowBlank: false` (必須、ラベルに *) / `maxLength` / `minLength` / `regex` / `vtype: 'email'\|'url'\|'alpha'\|'alphanum'`、numberfield は `minValue` / `maxValue`。ネイティブ検証で違反入力は赤枠 |
+| `textarea` | 上記 + `rows` / `maxLength` / `minLength` |
 | `checkbox` / `radio` | `boxLabel` / `checked` / `name` |
 | `combobox` | ドロップダウン。`options` または `store.data` |
 | `listbox` / `multiselect` | リストボックス。`multiSelect` / `size` |

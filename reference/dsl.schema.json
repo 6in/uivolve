@@ -23,6 +23,10 @@
           ],
           "description": "toast の表示位置"
         },
+        "allowBlank": {
+          "type": "boolean",
+          "description": "false で必須入力 (ラベルに * 表示)"
+        },
         "alt": {},
         "autoplay": {
           "type": "boolean"
@@ -361,6 +365,9 @@
             "string"
           ]
         },
+        "maxLength": {
+          "type": "number"
+        },
         "maxLines": {
           "type": "number"
         },
@@ -417,6 +424,9 @@
             "number",
             "string"
           ]
+        },
+        "minLength": {
+          "type": "number"
         },
         "minValue": {
           "type": "number"
@@ -506,6 +516,10 @@
         },
         "readOnly": {
           "type": "boolean"
+        },
+        "regex": {
+          "type": "string",
+          "description": "入力パターン (HTML の pattern として適用)"
         },
         "region": {
           "enum": [
@@ -656,6 +670,15 @@
         },
         "value": {},
         "valueField": {},
+        "vtype": {
+          "enum": [
+            "email",
+            "url",
+            "alpha",
+            "alphanum"
+          ],
+          "description": "入力種別のバリデーション"
+        },
         "width": {
           "type": [
             "number",

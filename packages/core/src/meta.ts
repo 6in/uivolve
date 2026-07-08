@@ -53,7 +53,14 @@ export const CONTAINER_PROPS: string[] = [
 ]
 
 /** フィールド系で使える config */
-export const FIELD_PROPS: string[] = ['fieldLabel', 'labelWidth', 'name', 'value', 'readOnly']
+export const FIELD_PROPS: string[] = [
+  'fieldLabel',
+  'labelWidth',
+  'name',
+  'value',
+  'readOnly',
+  'allowBlank',
+]
 
 export const XTYPE_META: Record<string, XtypeMeta> = {
   panel: {
@@ -93,13 +100,23 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     description: '1 行テキスト入力',
     aliases: ['numberfield', 'datefield'],
     defaults: { fieldLabel: 'ラベル', emptyText: '' },
-    props: [...FIELD_PROPS, 'emptyText', 'inputType'],
+    props: [
+      ...FIELD_PROPS,
+      'emptyText',
+      'inputType',
+      'maxLength',
+      'minLength',
+      'regex',
+      'vtype',
+      'minValue',
+      'maxValue',
+    ],
   },
   textarea: {
     description: '複数行テキスト入力',
     aliases: ['textareafield'],
     defaults: { fieldLabel: 'ラベル', rows: 4 },
-    props: [...FIELD_PROPS, 'emptyText', 'rows'],
+    props: [...FIELD_PROPS, 'emptyText', 'rows', 'maxLength', 'minLength'],
   },
   checkbox: {
     description: 'チェックボックス',
