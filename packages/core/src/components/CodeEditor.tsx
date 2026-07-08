@@ -1,4 +1,4 @@
-import Editor from '@monaco-editor/react'
+import Editor, { DiffEditor } from '@monaco-editor/react'
 import type { RendererProps } from '../types'
 import { cx, styleOf } from '../utils'
 
@@ -34,6 +34,38 @@ export function CodeEditor({ config }: RendererProps) {
           scrollBeyondLastLine: false,
           automaticLayout: true,
           tabSize: 2,
+        }}
+      />
+    </div>
+  )
+}
+
+/**
+ * xtype: 'diffeditor' | 'diff' — 差分表示 (ExtJS にはない独自拡張。Monaco Diff Editor)。
+ * original (変更前) と value (変更後) のコードを比較表示する。
+ * language / theme は codeeditor と同じ指定方法。sideBySide: false で
+ * インライン (unified) 表示になる。readOnly は既定 true (右側も編集させたい場合は false)。
+ */
+export function DiffView({ config }: RendererProps) {
+  const themeRaw = (config.theme as string | undefined) ?? 'light'
+  return (
+    <div className={cx('sx-codeeditor', 'sx-diffeditor', config.cls)} style={styleOf(config)}>
+      <DiffEditor
+        height="100%"
+        language={(config.language as string | undefined) ?? 'javascript'}
+        original={(config.original as string | undefined) ?? ''}
+        modified={(config.value as string | undefined) ?? ''}
+        theme={THEME_ALIAS[themeRaw] ?? themeRaw}
+        options={{
+          readOnly: config.readOnly !== false,
+          renderSideBySide: config.sideBySide !== false,
+          // sideBySide 未指定なら幅が狭いときだけ Monaco 判断でインラインに落とす
+          useInlineViewWhenSpaceIsLimited: config.sideBySide === undefined,
+          minimap: { enabled: config.minimap === true },
+          lineNumbers: config.lineNumbers === false ? 'off' : 'on',
+          fontSize: (config.fontSize as number | undefined) ?? 13,
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
         }}
       />
     </div>

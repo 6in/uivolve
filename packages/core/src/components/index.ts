@@ -2,7 +2,7 @@ import { registerComponent } from '../registry'
 import { Button } from './Button'
 import { Chart } from './Chart'
 import { ChatPanel } from './ChatPanel'
-import { CodeEditor } from './CodeEditor'
+import { CodeEditor, DiffView } from './CodeEditor'
 import { DatePicker } from './DatePicker'
 import { Draw } from './Draw'
 import { FieldSet } from './FieldSet'
@@ -75,6 +75,7 @@ registerComponent('toast', Toast)
 registerComponent(['terminal', 'console'], Terminal)
 registerComponent('video', Video)
 registerComponent(['codeeditor', 'code'], CodeEditor)
+registerComponent(['diffeditor', 'diff'], DiffView)
 
 export { Container, Panel, PanelShell, RawComponent } from './Panel'
 export { Button } from './Button'
@@ -84,7 +85,7 @@ export { Toolbar } from './Toolbar'
 export { GridPanel } from './GridPanel'
 export { Chart } from './Chart'
 export { ChatPanel } from './ChatPanel'
-export { CodeEditor } from './CodeEditor'
+export { CodeEditor, DiffView } from './CodeEditor'
 export { Draw } from './Draw'
 export { GitGraph } from './GitGraph'
 export { NetworkGraph } from './NetworkGraph'

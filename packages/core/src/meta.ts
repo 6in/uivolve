@@ -353,6 +353,26 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     },
     props: ['value', 'language', 'theme', 'readOnly', 'lineNumbers', 'minimap', 'fontSize'],
   },
+  diffeditor: {
+    description: '差分表示 (Monaco Diff。original ⇔ value を比較)',
+    aliases: ['diff'],
+    defaults: {
+      language: 'javascript',
+      height: 200,
+      original: "const total = a + b",
+      value: "const total = a + b + tax",
+    },
+    props: [
+      'original',
+      'value',
+      'language',
+      'theme',
+      'sideBySide',
+      'readOnly',
+      'lineNumbers',
+      'fontSize',
+    ],
+  },
   chatpanel: {
     description: 'チャット画面 (独自拡張。messages の会話バルーンを表示)',
     aliases: ['chat'],

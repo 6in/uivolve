@@ -486,6 +486,10 @@
             ]
           }
         },
+        "original": {
+          "type": "string",
+          "description": "diffeditor の変更前コード (変更後は value)"
+        },
         "padding": {
           "type": [
             "number",
@@ -561,6 +565,10 @@
         },
         "showToday": {
           "type": "boolean"
+        },
+        "sideBySide": {
+          "type": "boolean",
+          "description": "diffeditor の並列表示 (false でインライン)"
         },
         "size": {
           "type": "number"
@@ -717,6 +725,8 @@
             "video",
             "codeeditor",
             "code",
+            "diffeditor",
+            "diff",
             "chatpanel",
             "chat",
             "pagingtoolbar"

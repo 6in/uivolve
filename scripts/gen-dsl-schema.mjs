@@ -142,6 +142,8 @@ const KNOWN_PROP_TYPES = {
   lineNumbers: { type: 'boolean' },
   minimap: { type: 'boolean' },
   fontSize: { type: 'number' },
+  original: { type: 'string', description: 'diffeditor の変更前コード (変更後は value)' },
+  sideBySide: { type: 'boolean', description: 'diffeditor の並列表示 (false でインライン)' },
   lines: {
     type: 'array',
     items: { type: 'string' },

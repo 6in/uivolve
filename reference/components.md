@@ -46,6 +46,7 @@
 | `terminal` / `console` | Terminal | コンソールログ風アニメーション (ExtJS にはない独自拡張)。 lines のテキストを speed ms 間隔 (±ランダムな揺らぎ付き) で 1 行ずつ流し、 末尾まで行ったら先頭からサイクリックに繰り返す。maxLines (既定 100) で 保持行数を制限し、常に最下部へ自動スクロールする。 '$' / '>' 始まりはプロンプト色、✓ / ✗ / ⚠ / WARN / ERROR は意味色で自動ハイライト。 title を指定すると macOS 風のウィンドウバーを表示する。 |
 | `video` | Video | 動画プレイヤー (Ext.Video 互換)。 url (src も可) の動画を HTML5 video で再生する。posterUrl (poster も可) / loop / muted / autoplay / controls (既定 true) に対応。url 省略時はプレースホルダを表示。 YouTube などの埋め込みプレイヤーは video ではなく iframe を使うこと。 |
 | `codeeditor` / `code` | CodeEditor | ソースコードエディタ (ExtJS にはない独自拡張。Monaco Editor)。 value に初期コード (YAML 記法なら value: \| が書きやすい)、language に Monaco の言語 ID (javascript / typescript / json / yaml / sql / python / html / css など)、 theme に 'light' / 'dark' (または Monaco のテーマ名 vs / vs-dark / hc-black) を指定。 readOnly / lineNumbers / minimap / fontSize に対応。編集は非制御 (モックとして自由に触れる)。 Monaco 本体は既定では CDN から遅延ロードされる (Playground はローカルバンドル設定済み)。 |
+| `diffeditor` / `diff` | DiffView | 差分表示 (ExtJS にはない独自拡張。Monaco Diff Editor)。 original (変更前) と value (変更後) のコードを比較表示する。 language / theme は codeeditor と同じ指定方法。sideBySide: false で インライン (unified) 表示になる。readOnly は既定 true (右側も編集させたい場合は false)。 |
 
 ## レイアウト (layout type)
 

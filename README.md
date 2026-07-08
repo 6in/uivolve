@@ -157,6 +157,7 @@ ExtJS の全レイアウト一覧と対応状況は [reference/extjs-layouts.md]
 | `terminal` / `console` | コンソールログ風アニメーション (**独自拡張**)。`lines` を `speed` ms 間隔 (±ランダム揺らぎ) でサイクリックに流す。`$`/`✓`/`✗`/`⚠` 自動ハイライト、macOS 風ウィンドウバー |
 | `video` | 動画プレイヤー (Ext.Video 互換)。`url` / `posterUrl` / `loop` / `muted` / `autoplay` / `controls` |
 | `codeeditor` / `code` | ソースコードエディタ (**独自拡張**、Monaco Editor)。`language` (Monaco の言語 ID) / `theme: 'light'\|'dark'` / `readOnly` / `lineNumbers` / `minimap` / `fontSize`。Monaco 本体は CDN から遅延ロード (ローカルバンドルは `loader.config` で設定可) |
+| `diffeditor` / `diff` | 差分表示 (**独自拡張**、Monaco Diff Editor)。`original` (変更前) ⇔ `value` (変更後) を比較。`sideBySide: false` でインライン表示。`language` / `theme` は codeeditor と同じ |
 
 共通 config: `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled` / `style` / `cls`
 

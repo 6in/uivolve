@@ -143,6 +143,10 @@ export interface ComponentConfig {
   /** ミニマップの表示 (既定 false) */
   minimap?: boolean
   fontSize?: number
+  /** diffeditor の変更前コード (変更後は value) */
+  original?: string
+  /** diffeditor の並列表示 (既定 true。false でインライン表示) */
+  sideBySide?: boolean
 
   // ---- chatpanel ----
   /** チャットの会話。from: 'user' は右寄せ、text は Markdown 描画 */

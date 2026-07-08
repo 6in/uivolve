@@ -1198,6 +1198,23 @@ items:
             "components": 38,
             "license": "MIT"
           }
+  - title: 差分表示 (diff)
+    itemId: diffTab
+    iconCls: x-fa fa-code-compare
+    layout: fit
+    items:
+      - xtype: diffeditor
+        itemId: taxDiff
+        language: typescript
+        original: |
+          export function total(orders: Order[]): number {
+            return orders.reduce((sum, o) => sum + o.amount, 0)
+          }
+        value: |
+          export function total(orders: Order[], taxRate = 0.1): number {
+            const sub = orders.reduce((sum, o) => sum + o.amount, 0)
+            return Math.round(sub * (1 + taxRate))
+          }
 `
 
 export const samples: Sample[] = [
