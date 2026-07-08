@@ -30,7 +30,9 @@ function listSources(dir) {
 /** ソース中の JSDoc を関数/定数名 → 説明文のマップとして抽出 */
 function extractJsdocs(source) {
   const map = new Map()
-  const re = /\/\*\*([\s\S]*?)\*\/\s*(?:export\s+)?(?:function\s+(\w+)|const\s+(\w+))/g
+  // コメント本文に `*/` を含めない ((?:[^*]|\*(?!\/))*) ことで、interface フィールドの
+  // JSDoc から後続の実コードまで巻き込む誤マッチを防ぐ (直後が関数/const の場合のみ採用)
+  const re = /\/\*\*((?:[^*]|\*(?!\/))*)\*\/\s*(?:export\s+)?(?:function\s+(\w+)|const\s+(\w+))/g
   for (const m of source.matchAll(re)) {
     const name = m[2] ?? m[3]
     const text = m[1]

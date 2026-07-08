@@ -4,13 +4,13 @@ import { cx } from '../utils'
 import { PanelShell } from './Panel'
 
 export interface ChatMessage {
-  /** 'user' は右寄せ、それ以外 ('bot' など) は左寄せで表示する */
+  // 'user' は右寄せ、それ以外 ('bot' など) は左寄せで表示する
   from?: string
-  /** 送信者名 (バルーンの上に小さく表示) */
+  // 送信者名 (バルーンの上に小さく表示)
   name?: string
-  /** 本文。Markdown として描画される */
+  // 本文。Markdown として描画される
   text?: string
-  /** 時刻などの補足 (バルーンの下に小さく表示) */
+  // 時刻などの補足 (バルーンの下に小さく表示)
   time?: string
 }
 
