@@ -189,10 +189,16 @@ export function App() {
         <label className="pg-sample">
           サンプル:
           <select value={sampleIndex} onChange={(e) => selectSample(Number(e.target.value))}>
-            {samples.map((s, i) => (
-              <option key={i} value={i}>
-                {s.name}
-              </option>
+            {[...new Set(samples.map((s) => s.category))].map((category) => (
+              <optgroup key={category} label={category}>
+                {samples.map((s, i) =>
+                  s.category === category ? (
+                    <option key={i} value={i}>
+                      {s.name}
+                    </option>
+                  ) : null,
+                )}
+              </optgroup>
             ))}
           </select>
         </label>
