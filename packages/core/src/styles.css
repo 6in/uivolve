@@ -1374,6 +1374,14 @@
     }
   }
 
+  .sx-monaco-loading {
+    display: grid;
+    place-items: center;
+    color: var(--sx-muted);
+    font-size: 12px;
+    background: var(--sx-input-bg);
+  }
+
   /* ---------------------------------------------------- ターミナル */
 
   .sx-terminal {

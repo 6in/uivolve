@@ -1,4 +1,4 @@
-import Editor, { DiffEditor } from '@monaco-editor/react'
+import { useEffect, useState } from 'react'
 import type { RendererProps } from '../types'
 import { cx, styleOf } from '../utils'
 
@@ -7,6 +7,33 @@ const THEME_ALIAS: Record<string, string> = {
   light: 'vs',
   dark: 'vs-dark',
   hc: 'hc-black',
+}
+
+// @monaco-editor/react は SSR (Astro の静的ビルドなど) で解決できないため、
+// mermaid と同様にクライアントでの初回描画時に動的 import する
+type MonacoModule = typeof import('@monaco-editor/react')
+let monacoModule: Promise<MonacoModule> | null = null
+
+function useMonacoModule(): MonacoModule | null {
+  const [mod, setMod] = useState<MonacoModule | null>(null)
+  useEffect(() => {
+    let alive = true
+    ;(monacoModule ??= import('@monaco-editor/react')).then((m) => {
+      if (alive) setMod(m)
+    })
+    return () => {
+      alive = false
+    }
+  }, [])
+  return mod
+}
+
+function MonacoLoading({ config }: RendererProps) {
+  return (
+    <div className={cx('sx-codeeditor', 'sx-monaco-loading', config.cls)} style={styleOf(config)}>
+      エディタを読み込み中…
+    </div>
+  )
 }
 
 /**
@@ -19,6 +46,9 @@ const THEME_ALIAS: Record<string, string> = {
  */
 export function CodeEditor({ config }: RendererProps) {
   const themeRaw = (config.theme as string | undefined) ?? 'light'
+  const mod = useMonacoModule()
+  if (!mod) return <MonacoLoading config={config} />
+  const Editor = mod.default
   return (
     <div className={cx('sx-codeeditor', config.cls)} style={styleOf(config)}>
       <Editor
@@ -48,6 +78,9 @@ export function CodeEditor({ config }: RendererProps) {
  */
 export function DiffView({ config }: RendererProps) {
   const themeRaw = (config.theme as string | undefined) ?? 'light'
+  const mod = useMonacoModule()
+  if (!mod) return <MonacoLoading config={config} />
+  const { DiffEditor } = mod
   return (
     <div className={cx('sx-codeeditor', 'sx-diffeditor', config.cls)} style={styleOf(config)}>
       <DiffEditor
