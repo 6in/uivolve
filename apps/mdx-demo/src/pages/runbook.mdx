@@ -1,0 +1,188 @@
+---
+layout: ../layouts/DocLayout.astro
+title: 障害対応報告書 — INC-0712
+---
+
+# 障害対応報告書 INC-0712
+
+このページは uivolve の「**リッチドキュメント**」としての利用例。画面モックに限らず、
+チャート・ダイアグラム・ターミナルログ・コード差分などを ` ```uivolve ` フェンスの
+DSL として埋め込むと、Markdown が動く報告書になる。
+
+| 項目 | 内容 |
+|---|---|
+| 発生日時 | 2026-07-08 14:32 |
+| 影響範囲 | 受注 API (注文確定が最大 8 分遅延) |
+| 重要度 | Sev-2 |
+| ステータス | **クローズ済み** |
+
+## 1. 障害の推移
+
+14:32 にエラー率が急上昇、14:55 の暫定対処で収束した。
+
+```uivolve height=240
+{
+  xtype: 'chart',
+  itemId: 'errorRateChart',
+  series: [{ type: 'area', xField: 'time', yField: ['errors'], title: ['エラー率 (%)'] }],
+  store: {
+    data: [
+      { time: '14:00', errors: 0.2 },
+      { time: '14:15', errors: 0.3 },
+      { time: '14:30', errors: 4.8 },
+      { time: '14:45', errors: 12.5 },
+      { time: '15:00', errors: 1.1 },
+      { time: '15:15', errors: 0.2 },
+    ],
+  },
+}
+```
+
+## 2. 対応フロー
+
+今回の対応で辿ったエスカレーションの流れ。
+
+```uivolve height=220
+xtype: mermaid
+itemId: responseFlow
+value: |
+  graph LR
+    A[アラート検知] --> B{一次切り分け}
+    B -- DB 起因 --> C[DBA へエスカレーション]
+    B -- アプリ起因 --> D[開発チーム]
+    C --> E[暫定対処: インデックス再構築]
+    E --> F[恒久対処: クエリ修正]
+    F --> G[クローズ]
+```
+
+## 3. 発生時のログ
+
+監視基盤で観測されたログの抜粋 (ループ再生)。
+
+```uivolve height=230
+{
+  xtype: 'terminal',
+  itemId: 'incidentLog',
+  title: 'order-api — production',
+  speed: 600,
+  lines: [
+    '14:32:05 WARN  order-api: slow query detected (4,821ms)',
+    '14:32:18 ERROR order-api: statement timeout — SELECT * FROM orders WHERE ...',
+    '14:33:02 ERROR order-api: connection pool exhausted (50/50)',
+    '$ kubectl rollout status deploy/order-api',
+    '14:40:11 WARN  order-api: circuit breaker OPEN',
+    '$ psql -c "REINDEX INDEX CONCURRENTLY idx_orders_created_at"',
+    '14:55:47 ✓ reindex complete',
+    '14:56:03 ✓ order-api: circuit breaker CLOSED',
+    '15:02:19 ✓ error rate back to baseline',
+  ],
+}
+```
+
+## 4. 原因と恒久対処
+
+原因は注文検索クエリのフルスキャン化。調査クエリと修正差分をタブで併記する。
+
+```uivolve height=340
+xtype: tabpanel
+itemId: fixTabs
+items:
+  - title: 調査クエリ
+    itemId: investigateTab
+    iconCls: x-fa fa-magnifying-glass
+    layout: fit
+    items:
+      - xtype: codeeditor
+        itemId: explainSql
+        language: sql
+        theme: light
+        readOnly: true
+        value: |
+          EXPLAIN ANALYZE
+          SELECT o.id, o.no, c.name
+          FROM orders o
+          JOIN customers c ON c.id = o.customer_id
+          WHERE date(o.created_at) = current_date   -- ← 関数適用でインデックスが効かない
+          ORDER BY o.created_at DESC
+          LIMIT 50;
+  - title: 修正差分
+    itemId: diffTab
+    iconCls: x-fa fa-code-compare
+    layout: fit
+    items:
+      - xtype: diffeditor
+        itemId: queryFix
+        language: sql
+        original: |
+          SELECT o.id, o.no, c.name
+          FROM orders o
+          JOIN customers c ON c.id = o.customer_id
+          WHERE date(o.created_at) = current_date
+          ORDER BY o.created_at DESC
+          LIMIT 50;
+        value: |
+          SELECT o.id, o.no, c.name
+          FROM orders o
+          JOIN customers c ON c.id = o.customer_id
+          WHERE o.created_at >= current_date
+            AND o.created_at < current_date + interval '1 day'
+          ORDER BY o.created_at DESC
+          LIMIT 50;
+```
+
+## 5. 影響範囲 (サービス依存)
+
+受注 API の遅延が波及したサービスの依存関係。ノードはドラッグで動かせる。
+
+```uivolve height=320
+{
+  xtype: 'networkgraph',
+  itemId: 'impactGraph',
+  height: '100%',
+  nodes: [
+    { id: 'db', text: '受注DB', group: 1, r: 15 },
+    { id: 'api', text: '受注API', group: 1, r: 13 },
+    { id: 'web', text: 'Web注文', group: 2 },
+    { id: 'mobile', text: 'モバイル', group: 2 },
+    { id: 'batch', text: '出荷バッチ', group: 3 },
+    { id: 'bi', text: '売上集計', group: 3 },
+    { id: 'notify', text: '通知', group: 4 },
+  ],
+  edges: [
+    { from: 'db', to: 'api' },
+    { from: 'api', to: 'web' },
+    { from: 'api', to: 'mobile' },
+    { from: 'api', to: 'batch' },
+    { from: 'db', to: 'bi' },
+    { from: 'batch', to: 'notify' },
+  ],
+}
+```
+
+## 6. アクションアイテム
+
+```uivolve height=220
+{
+  xtype: 'grid',
+  itemId: 'actionItems',
+  columnLines: true,
+  columns: [
+    { xtype: 'checkcolumn', text: '完了', dataIndex: 'done', width: 60 },
+    { text: '対応内容', dataIndex: 'action', flex: 1 },
+    { text: '担当', dataIndex: 'owner', width: 100 },
+    { text: '期限', dataIndex: 'due', width: 120 },
+  ],
+  store: {
+    data: [
+      { done: true, action: 'クエリ修正のリリース', owner: '田中', due: '2026-07-09' },
+      { done: true, action: 'スロークエリ監視のしきい値見直し', owner: '佐藤', due: '2026-07-10' },
+      { done: false, action: '類似クエリの横展開調査', owner: '鈴木', due: '2026-07-15' },
+      { done: false, action: 'ポストモーテムの共有会', owner: '田中', due: '2026-07-16' },
+    ],
+  },
+}
+```
+
+---
+
+[← 画面仕様書のデモに戻る](../)
