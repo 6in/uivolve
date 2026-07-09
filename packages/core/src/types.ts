@@ -64,6 +64,12 @@ export interface ComponentConfig {
   tbar?: Array<ComponentConfig | string> | ComponentConfig
   bbar?: Array<ComponentConfig | string> | ComponentConfig
 
+  // ---- ウィンドウ ----
+  /** window: 閉じるボタンの表示 (見た目のみ)。false で非表示 */
+  closable?: boolean
+  /** window: ツリー内のどこに置いてもバックドロップ + 中央のオーバーレイ表示にする */
+  modal?: boolean
+
   // ---- サイズ・余白 ----
   width?: number | string
   height?: number | string

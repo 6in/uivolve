@@ -187,7 +187,7 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
     props: [...CONTAINER_PROPS, 'title', 'collapsible', 'collapsed', 'checkboxToggle'],
   },
   window: {
-    description: 'ダイアログ (ルート配置でモーダル風)',
+    description: 'ダイアログ (ルート配置でモーダル風。modal: true でどこでもオーバーレイ)',
     defaults: {
       title: 'ダイアログ',
       width: 400,
@@ -195,7 +195,7 @@ export const XTYPE_META: Record<string, XtypeMeta> = {
       items: [],
       bbar: ['->', { text: 'OK', ui: 'primary' }, { text: 'キャンセル' }],
     },
-    props: [...CONTAINER_PROPS, 'title', 'closable'],
+    props: [...CONTAINER_PROPS, 'title', 'closable', 'modal'],
   },
   treepanel: {
     description: '階層ツリー (root.children)。columns 指定でツリーグリッド',

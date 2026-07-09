@@ -73,16 +73,33 @@ function FitLayout({ items }: LayoutProps) {
 
 const REGIONS: Region[] = ['north', 'west', 'center', 'east', 'south']
 
+/** 画面全体に重ねるオーバーレイ系 config (border のリージョンに割り当てない) */
+function isOverlayConfig(c: ComponentConfig): boolean {
+  return (
+    c.xtype === 'toast' ||
+    c.xtype === 'messagebox' ||
+    c.xtype === 'msgbox' ||
+    (c.xtype === 'window' && c.modal === true)
+  )
+}
+
 /**
  * border: north/south/east/west/center の 5 領域レイアウト (CSS Grid で実現)。
  * split: true のリージョンは ExtJS 同様、スプリットバーのドラッグでリサイズできる。
+ * toast / messagebox / modal window はリージョン外で config を変えずに描画する
+ * (リージョン子の width 除去の影響を受けない)。
  */
 function BorderLayout({ items }: LayoutProps) {
   // ドラッグで確定したリージョンサイズ (px)。未ドラッグは config の width/height を使う
   const [sizes, setSizes] = useState<Partial<Record<Region, number>>>({})
 
+  const overlays: ComponentConfig[] = []
   const byRegion = new Map<Region, ComponentConfig[]>()
   for (const it of items) {
+    if (isOverlayConfig(it)) {
+      overlays.push(it)
+      continue
+    }
     const region = (it.region ?? 'center') as Region
     const list = byRegion.get(region) ?? []
     list.push(it)
@@ -154,6 +171,9 @@ function BorderLayout({ items }: LayoutProps) {
           </div>
         )
       })}
+      {overlays.map((it, i) => (
+        <XRender key={it.id ?? it.itemId ?? `overlay-${i}`} config={it} />
+      ))}
     </div>
   )
 }

@@ -1611,6 +1611,13 @@
     display: grid;
     place-items: center;
     background: color-mix(in srgb, var(--sx-text) 25%, transparent);
+
+    /* modal: true の window / messagebox は内容に応じた高さで中央表示 */
+    > .sx-window {
+      block-size: auto;
+      max-block-size: 90%;
+      max-inline-size: 90%;
+    }
   }
 
   .sx-msgbox {

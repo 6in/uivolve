@@ -1,5 +1,6 @@
-import { Component, useMemo, type ReactNode } from 'react'
+import { Component, useMemo, useState, type ReactNode } from 'react'
 import { XRender } from './XRender'
+import { OverlayTargetContext } from './overlay'
 import { parseDsl } from './parser'
 import type { ComponentConfig } from './types'
 import { cx, toCssSize } from './utils'
@@ -49,6 +50,8 @@ class RenderBoundary extends Component<BoundaryProps, BoundaryState> {
  * ```
  */
 export function ExtMockup({ code, config, height, theme, className }: ExtMockupProps) {
+  // オーバーレイ (messagebox / toast / modal window) のポータル先。ref 確定後に再描画させる
+  const [viewport, setViewport] = useState<HTMLDivElement | null>(null)
   const result = useMemo(() => {
     if (config) return { config, error: null as string | null }
     if (code === undefined) return { config: null, error: null }
@@ -68,8 +71,10 @@ export function ExtMockup({ code, config, height, theme, className }: ExtMockupP
         <div className="sx-error">構文エラー: {result.error}</div>
       ) : result.config ? (
         <RenderBoundary key={code}>
-          <div className="sx-viewport">
-            <XRender config={result.config} />
+          <div className="sx-viewport" ref={setViewport}>
+            <OverlayTargetContext.Provider value={viewport}>
+              <XRender config={result.config} />
+            </OverlayTargetContext.Provider>
           </div>
         </RenderBoundary>
       ) : null}

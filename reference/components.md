@@ -23,7 +23,7 @@
 | `image` / `imagecomponent` | Image | src 未指定時はプレースホルダを表示 |
 | `tabpanel` | TabPanel | タブ切替パネル。 各 item の title がタブ名になる。activeTab / closable に対応。 |
 | `fieldset` | FieldSet | フォームのグループ枠。 title が legend になる。collapsible / checkboxToggle に対応。 |
-| `window` | Window | ダイアログ風ウィンドウ。 モックなのでフロートはせず、ルートに置くと viewport 中央に配置される (.sx-viewport:has(> .sx-window) の CSS で実現)。閉じるボタンは見た目のみ。 |
+| `window` | Window | ダイアログ風ウィンドウ。 モックなのでフロートはせず、ルートに置くと viewport 中央に配置される (.sx-viewport:has(> .sx-window) の CSS で実現)。閉じるボタンは見た目のみ。 modal: true を指定するとツリー内のどこに置いても半透明バックドロップ + 中央表示のオーバーレイになる (一覧画面 + 編集ダイアログを 1 つの DSL で表現できる)。 |
 | `treepanel` / `tree` | TreePanel | 階層ツリー。 ExtJS の TreeStore 同様、root: { children: [...] } 形式のノードを描画する。 ノード: { text, leaf, expanded, children } columns (先頭または xtype: 'treecolumn' の列が階層表示になる) を指定すると **ツリーグリッド**になり、各ノードの任意のフィールドを列として表示できる。 columnLines はグリッド同様にカラム区切り線を表示する。 |
 | `menu` | Menu | メニューリスト。 items: { text, iconCls, menu(サブメニューは矢印表示のみ) } または '-'(区切り線)。 |
 | `splitbutton` | SplitButton | 本体と矢印部が分かれたボタン。menu でドロップダウンを表示。 |
@@ -55,7 +55,7 @@
 | `accordion` | AccordionLayout | accordion レイアウト: 子パネルを縦に積み、一度に 1 つだけ展開する。 ExtJS 同様、展開中のパネルが残り高さを占有する。 treepanel / grid などパネル派生の子は、ヘッダーを剥がして body に埋め込む。 |
 | `auto` / `anchor` / `form` | AutoLayout | 通常のブロックフローで順に並べる |
 | `fit` | FitLayout | 最初の子をコンテナいっぱいに広げる |
-| `border` | BorderLayout | north/south/east/west/center の 5 領域レイアウト (CSS Grid で実現)。 split: true のリージョンは ExtJS 同様、スプリットバーのドラッグでリサイズできる。 |
+| `border` | BorderLayout | north/south/east/west/center の 5 領域レイアウト (CSS Grid で実現)。 split: true のリージョンは ExtJS 同様、スプリットバーのドラッグでリサイズできる。 toast / messagebox / modal window はリージョン外で config を変えずに描画する (リージョン子の width 除去の影響を受けない)。 |
 | `grid` / `table` | GridLayout | CSS Grid による均等グリッド。layout: { type: 'grid', columns: 3 } |
 | `hbox` | HBoxLayout | 子を水平方向に並べる Flexbox。align / pack、子の flex による比率分配に対応 |
 | `vbox` | VBoxLayout | 子を垂直方向に並べる Flexbox。align / pack、子の flex による比率分配に対応 |

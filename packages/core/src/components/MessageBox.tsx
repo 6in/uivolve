@@ -1,4 +1,5 @@
 import type { ComponentConfig, RendererProps } from '../types'
+import { Overlay } from '../overlay'
 import { cx } from '../utils'
 import { Icon } from './Icon'
 import { PanelShell } from './Panel'
@@ -50,22 +51,24 @@ export function MessageBox({ config }: RendererProps) {
   }
 
   return (
-    <div className="sx-msgbox-overlay">
-      <PanelShell config={shell} className="sx-window sx-msgbox" bodyClassName="sx-msgbox-body">
-        {iconCls && (
-          <Icon iconCls={iconCls} className={cx('sx-msgbox-icon', `sx-msgbox-${config.icon}`)} />
-        )}
-        <div className="sx-msgbox-content">
-          {message && <div className="sx-msgbox-message">{message}</div>}
-          {config.prompt === true && (
-            <input
-              className="sx-input"
-              type="text"
-              defaultValue={config.value as string | undefined}
-            />
+    <Overlay>
+      <div className="sx-msgbox-overlay">
+        <PanelShell config={shell} className="sx-window sx-msgbox" bodyClassName="sx-msgbox-body">
+          {iconCls && (
+            <Icon iconCls={iconCls} className={cx('sx-msgbox-icon', `sx-msgbox-${config.icon}`)} />
           )}
-        </div>
-      </PanelShell>
-    </div>
+          <div className="sx-msgbox-content">
+            {message && <div className="sx-msgbox-message">{message}</div>}
+            {config.prompt === true && (
+              <input
+                className="sx-input"
+                type="text"
+                defaultValue={config.value as string | undefined}
+              />
+            )}
+          </div>
+        </PanelShell>
+      </div>
+    </Overlay>
   )
 }

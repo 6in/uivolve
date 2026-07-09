@@ -493,6 +493,7 @@
         "minimap": {
           "type": "boolean"
         },
+        "modal": {},
         "multiSelect": {
           "type": "boolean"
         },
