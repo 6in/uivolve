@@ -2028,6 +2028,274 @@ const attendanceSample = `// 業務画面: 勤怠管理
 }
 `
 
+const reportSample = `// 業務画面: 帳票 / 月次レポート
+// 出力ツールバー + チャート複数 (grid レイアウト) + 部門別集計グリッド
+{
+  xtype: 'panel',
+  itemId: 'reportScreen',
+  title: '月次売上レポート — 2026 年 6 月',
+  bodyPadding: 8,
+  layout: { type: 'grid', columns: 2, gap: 8 },
+  tbar: [
+    { xtype: 'combobox', itemId: 'periodCombo', fieldLabel: '期間', labelWidth: 40, width: 170, options: ['2026/04', '2026/05', '2026/06'], value: '2026/06' },
+    { xtype: 'combobox', itemId: 'deptCombo', fieldLabel: '部門', labelWidth: 40, width: 170, options: ['全社', '第一営業', '第二営業', 'EC'], value: '全社' },
+    '->',
+    { itemId: 'btnPrint', text: '印刷', iconCls: 'x-fa fa-print', handler: 'onPrint' },
+    { itemId: 'btnPdf', text: 'PDF', iconCls: 'x-fa fa-file-pdf', handler: 'onExportPdf' },
+    { itemId: 'btnExcel', text: 'Excel', ui: 'primary', iconCls: 'x-fa fa-file-excel', handler: 'onExportExcel' },
+  ],
+  items: [
+    {
+      xtype: 'panel',
+      itemId: 'trendPanel',
+      title: '売上・粗利の推移 (直近 6 ヶ月)',
+      bodyPadding: 8,
+      items: [
+        {
+          xtype: 'chart',
+          itemId: 'trendChart',
+          height: 200,
+          series: [{ type: 'line', xField: 'month', yField: ['sales', 'profit'], title: ['売上', '粗利'] }],
+          store: {
+            data: [
+              { month: '1 月', sales: 42.5, profit: 12.1 },
+              { month: '2 月', sales: 38.2, profit: 10.8 },
+              { month: '3 月', sales: 51.4, profit: 15.9 },
+              { month: '4 月', sales: 44.8, profit: 13.2 },
+              { month: '5 月', sales: 47.1, profit: 14.0 },
+              { month: '6 月', sales: 53.6, profit: 16.8 },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      xtype: 'panel',
+      itemId: 'sharePanel',
+      title: 'カテゴリ別売上構成 (6 月)',
+      bodyPadding: 8,
+      items: [
+        {
+          xtype: 'polar',
+          itemId: 'shareChart',
+          height: 200,
+          series: [{ type: 'pie', xField: 'category', yField: 'amount' }],
+          store: {
+            data: [
+              { category: '文具', amount: 18.2 },
+              { category: 'オフィス家具', amount: 15.4 },
+              { category: 'OA 機器', amount: 12.8 },
+              { category: '消耗品', amount: 7.2 },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      xtype: 'grid',
+      itemId: 'summaryGrid',
+      title: '部門別売上集計 (単位: 百万円)',
+      colspan: 2,
+      columnLines: true,
+      columns: [
+        { text: '部門', dataIndex: 'dept', flex: 1 },
+        { text: '4 月', dataIndex: 'apr', width: 100, align: 'right' },
+        { text: '5 月', dataIndex: 'may', width: 100, align: 'right' },
+        { text: '6 月', dataIndex: 'jun', width: 100, align: 'right' },
+        { text: '四半期計', dataIndex: 'total', width: 110, align: 'right' },
+        { text: '前年比', dataIndex: 'yoy', width: 90, align: 'right' },
+        { text: '達成率', dataIndex: 'achieve', width: 90, align: 'right' },
+      ],
+      store: {
+        data: [
+          { dept: '第一営業部', apr: 18.2, may: 19.5, jun: 22.1, total: 59.8, yoy: '+8.2%', achieve: '102%' },
+          { dept: '第二営業部', apr: 14.6, may: 15.1, jun: 16.8, total: 46.5, yoy: '+3.1%', achieve: '96%' },
+          { dept: 'EC 事業部', apr: 9.8, may: 10.2, jun: 12.4, total: 32.4, yoy: '+18.6%', achieve: '110%' },
+          { dept: '合計', apr: 42.6, may: 44.8, jun: 51.3, total: 138.7, yoy: '+9.0%', achieve: '103%' },
+        ],
+      },
+    },
+  ],
+}
+`
+
+const loginMenuSample = `// 業務画面: ログイン → メインメニュー (card レイアウト)
+// activeItem を 0 にするとログイン画面、1 にするとメニュー画面。
+// 画面遷移の前後を 1 つの DSL で表現し、handler で遷移の意図を伝える
+{
+  xtype: 'container',
+  itemId: 'appRoot',
+  layout: { type: 'card', activeItem: 1 },
+  items: [
+    // ---- card 0: ログイン ----
+    {
+      xtype: 'container',
+      itemId: 'loginCard',
+      layout: 'center',
+      items: [
+        {
+          xtype: 'window',
+          itemId: 'loginWindow',
+          title: '販売管理システム — ログイン',
+          width: 380,
+          closable: false,
+          bodyPadding: 16,
+          items: [
+            { xtype: 'textfield', itemId: 'loginUser', fieldLabel: 'ユーザーID', labelWidth: 90, allowBlank: false },
+            { xtype: 'textfield', itemId: 'loginPass', fieldLabel: 'パスワード', labelWidth: 90, inputType: 'password', allowBlank: false },
+            { xtype: 'checkbox', itemId: 'loginKeep', fieldLabel: '', labelWidth: 90, boxLabel: 'ログイン状態を保持' },
+          ],
+          bbar: ['->', { itemId: 'btnDoLogin', text: 'ログイン', ui: 'primary', handler: 'onLogin' }],
+        },
+      ],
+    },
+    // ---- card 1: メインメニュー ----
+    {
+      xtype: 'panel',
+      itemId: 'menuCard',
+      title: '販売管理システム — メインメニュー',
+      bodyPadding: 16,
+      tbar: [
+        { xtype: 'displayfield', itemId: 'loginInfo', fieldLabel: '', value: 'ログイン中: 佐藤 花子 (営業部)' },
+        '->',
+        { itemId: 'btnLogout', text: 'ログアウト', iconCls: 'x-fa fa-right-from-bracket', handler: 'onLogout' },
+      ],
+      layout: { type: 'grid', columns: 3, gap: 12 },
+      defaults: { bodyPadding: 16, height: 120 },
+      items: [
+        { itemId: 'menuOrder', title: '受注管理', iconCls: 'x-fa fa-cart-shopping', html: '受注の登録・照会・出荷指示', listeners: { click: 'onOpenOrders' } },
+        { itemId: 'menuInventory', title: '在庫管理', iconCls: 'x-fa fa-boxes-stacked', html: '在庫照会・入出庫・棚卸', listeners: { click: 'onOpenInventory' } },
+        { itemId: 'menuBilling', title: '請求管理', iconCls: 'x-fa fa-file-invoice', html: '請求書発行・入金消込', listeners: { click: 'onOpenBilling' } },
+        { itemId: 'menuCustomer', title: '顧客管理', iconCls: 'x-fa fa-address-book', html: '顧客マスタ・与信管理', listeners: { click: 'onOpenCustomers' } },
+        { itemId: 'menuReport', title: 'レポート', iconCls: 'x-fa fa-chart-line', html: '売上分析・月次帳票', listeners: { click: 'onOpenReports' } },
+        { itemId: 'menuSettings', title: '設定', iconCls: 'x-fa fa-gear', html: 'ユーザー・権限・マスタ設定', listeners: { click: 'onOpenSettings' } },
+      ],
+    },
+  ],
+}
+`
+
+const settingsSample = `// 業務画面: 設定 (タブ + フィールドセット + 保存確認)
+{
+  xtype: 'panel',
+  itemId: 'settingsScreen',
+  title: 'システム設定',
+  layout: 'fit',
+  items: [
+    {
+      xtype: 'tabpanel',
+      itemId: 'settingsTabs',
+      activeTab: 0,
+      items: [
+        {
+          title: '一般',
+          iconCls: 'x-fa fa-sliders',
+          bodyPadding: 16,
+          items: [
+            {
+              xtype: 'fieldset',
+              itemId: 'fsDisplay',
+              title: '表示',
+              items: [
+                { xtype: 'combobox', itemId: 'setTheme', fieldLabel: 'テーマ', value: 'Neptune', options: ['Neptune', 'Classic', 'Gray', 'Dark'] },
+                { xtype: 'combobox', itemId: 'setLang', fieldLabel: '言語', value: '日本語', options: ['日本語', 'English', '中文'] },
+                { xtype: 'combobox', itemId: 'setPageSize', fieldLabel: '一覧の件数', value: '50 件', options: ['25 件', '50 件', '100 件'] },
+              ],
+            },
+            {
+              xtype: 'fieldset',
+              itemId: 'fsStartup',
+              title: '起動時',
+              items: [
+                {
+                  xtype: 'radiogroup',
+                  itemId: 'setStartView',
+                  fieldLabel: '初期画面',
+                  items: [
+                    { boxLabel: 'メインメニュー', name: 'startView', checked: true },
+                    { boxLabel: '受注一覧', name: 'startView' },
+                    { boxLabel: '前回の画面', name: 'startView' },
+                  ],
+                },
+                { xtype: 'checkbox', itemId: 'setNews', fieldLabel: '', boxLabel: 'お知らせを起動時に表示する', checked: true },
+              ],
+            },
+          ],
+        },
+        {
+          title: '通知',
+          iconCls: 'x-fa fa-bell',
+          bodyPadding: 16,
+          items: [
+            {
+              xtype: 'fieldset',
+              itemId: 'fsNotify',
+              title: '通知チャネル',
+              items: [
+                {
+                  xtype: 'checkboxgroup',
+                  itemId: 'setChannels',
+                  fieldLabel: '受け取る通知',
+                  columns: 2,
+                  items: [
+                    { boxLabel: '承認依頼', checked: true },
+                    { boxLabel: '在庫アラート', checked: true },
+                    { boxLabel: '出荷遅延', checked: true },
+                    { boxLabel: 'システムお知らせ' },
+                  ],
+                },
+                { xtype: 'combobox', itemId: 'setMailDigest', fieldLabel: 'メール通知', value: '1 時間ごとにまとめる', options: ['即時', '1 時間ごとにまとめる', '1 日 1 回', '受け取らない'] },
+                { xtype: 'slider', itemId: 'setVolume', fieldLabel: '通知音量', value: 60 },
+              ],
+            },
+          ],
+        },
+        {
+          title: 'セキュリティ',
+          iconCls: 'x-fa fa-shield-halved',
+          bodyPadding: 16,
+          items: [
+            {
+              xtype: 'fieldset',
+              itemId: 'fsPassword',
+              title: 'パスワード変更',
+              items: [
+                { xtype: 'textfield', itemId: 'setPwCurrent', fieldLabel: '現在のパスワード', labelWidth: 130, inputType: 'password' },
+                { xtype: 'textfield', itemId: 'setPwNew', fieldLabel: '新しいパスワード', labelWidth: 130, inputType: 'password', minLength: 12 },
+                { xtype: 'textfield', itemId: 'setPwConfirm', fieldLabel: '確認', labelWidth: 130, inputType: 'password' },
+              ],
+            },
+            {
+              xtype: 'fieldset',
+              itemId: 'fsMfa',
+              title: '2 段階認証',
+              items: [
+                { xtype: 'checkbox', itemId: 'setMfa', fieldLabel: '', boxLabel: '2 段階認証を有効にする (推奨)', checked: true },
+                { xtype: 'displayfield', itemId: 'setMfaDevice', fieldLabel: '登録デバイス', labelWidth: 130, value: 'iPhone (登録: 2026/04/01)' },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    // 保存ボタンを押した想定の確認ダイアログ
+    {
+      xtype: 'messagebox',
+      itemId: 'saveConfirm',
+      title: '設定の保存',
+      message: '変更した設定を保存します。一部の設定は再ログイン後に反映されます。よろしいですか?',
+      buttons: 'okcancel',
+      icon: 'question',
+    },
+  ],
+  bbar: [
+    '->',
+    { itemId: 'btnCancelSettings', text: '元に戻す', handler: 'onRevertSettings' },
+    { itemId: 'btnSaveSettings', text: '保存', ui: 'primary', iconCls: 'x-fa fa-floppy-disk', handler: 'onSaveSettings' },
+  ],
+}
+`
+
 export const samples: Sample[] = [
   // ---- 基本 (レイアウト・記法) ----
   { category: '基本', name: 'Border レイアウト', code: borderSample },
@@ -2044,6 +2312,9 @@ export const samples: Sample[] = [
   { category: '業務画面', name: '監視ダッシュボード', code: monitoringSample },
   { category: '業務画面', name: 'コールセンター / CRM', code: crmSample },
   { category: '業務画面', name: '勤怠管理', code: attendanceSample },
+  { category: '業務画面', name: '帳票 / 月次レポート', code: reportSample },
+  { category: '業務画面', name: 'ログイン + メインメニュー (card)', code: loginMenuSample },
+  { category: '業務画面', name: '設定画面', code: settingsSample },
   { category: '業務画面', name: '問い合わせ管理 (ツリーグリッド)', code: supportSample },
   { category: '業務画面', name: 'チャットボット', code: chatSample },
   // ---- コンポーネントカタログ ----
