@@ -58,13 +58,17 @@ function AutoLayout({ items }: LayoutProps) {
 
 // ---------------------------------------------------------------- fit
 
-/** fit: 最初の子をコンテナいっぱいに広げる */
+/** fit: 最初の子をコンテナいっぱいに広げる。toast / messagebox / modal window は対象に数えず併せて描画する */
 function FitLayout({ items }: LayoutProps) {
-  const first = items[0]
-  if (!first) return null
+  const first = items.find((it) => !isOverlayConfig(it))
+  const overlays = items.filter(isOverlayConfig)
+  if (!first && overlays.length === 0) return null
   return (
     <div className="sx-layout-fit">
-      <XRender config={first} />
+      {first && <XRender config={first} />}
+      {overlays.map((it, i) => (
+        <XRender key={it.id ?? it.itemId ?? `overlay-${i}`} config={it} />
+      ))}
     </div>
   )
 }
@@ -73,7 +77,7 @@ function FitLayout({ items }: LayoutProps) {
 
 const REGIONS: Region[] = ['north', 'west', 'center', 'east', 'south']
 
-/** 画面全体に重ねるオーバーレイ系 config (border のリージョンに割り当てない) */
+/** 画面全体に重ねるオーバーレイ系 config (border のリージョンや fit の対象に数えない) */
 function isOverlayConfig(c: ComponentConfig): boolean {
   return (
     c.xtype === 'toast' ||

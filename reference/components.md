@@ -54,7 +54,7 @@
 |---|---|---|
 | `accordion` | AccordionLayout | accordion レイアウト: 子パネルを縦に積み、一度に 1 つだけ展開する。 ExtJS 同様、展開中のパネルが残り高さを占有する。 treepanel / grid などパネル派生の子は、ヘッダーを剥がして body に埋め込む。 |
 | `auto` / `anchor` / `form` | AutoLayout | 通常のブロックフローで順に並べる |
-| `fit` | FitLayout | 最初の子をコンテナいっぱいに広げる |
+| `fit` | FitLayout | 最初の子をコンテナいっぱいに広げる。toast / messagebox / modal window は対象に数えず併せて描画する |
 | `border` | BorderLayout | north/south/east/west/center の 5 領域レイアウト (CSS Grid で実現)。 split: true のリージョンは ExtJS 同様、スプリットバーのドラッグでリサイズできる。 toast / messagebox / modal window はリージョン外で config を変えずに描画する (リージョン子の width 除去の影響を受けない)。 |
 | `grid` / `table` | GridLayout | CSS Grid による均等グリッド。layout: { type: 'grid', columns: 3 } |
 | `hbox` | HBoxLayout | 子を水平方向に並べる Flexbox。align / pack、子の flex による比率分配に対応 |
