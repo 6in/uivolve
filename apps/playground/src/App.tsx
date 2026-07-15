@@ -63,6 +63,9 @@ export function App() {
   const [theme, setTheme] = useState<ThemeName>('neptune')
   // エディタペインの幅 (%) — スプリットバーでドラッグ調整
   const [editorPct, setEditorPct] = useState(42)
+  // 「反映」でインクリメントし、プレビューを remount する
+  // (入力やグリッドは非制御なので、store の data などは remount しないと反映されない)
+  const [renderEpoch, setRenderEpoch] = useState(0)
   const mainRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null)
 
@@ -112,7 +115,17 @@ export function App() {
   const selectSample = (index: number) => {
     setSampleIndex(index)
     setCode(samples[index].code)
+    setPreviewCode(samples[index].code)
+    setRenderEpoch((e) => e + 1)
   }
+
+  // デバウンスを待たずに反映し、プレビューを remount して非制御の状態も作り直す
+  const applyNow = () => {
+    setPreviewCode(code)
+    setRenderEpoch((e) => e + 1)
+  }
+  const applyNowRef = useRef(applyNow)
+  applyNowRef.current = applyNow
 
   const copyForAi = async () => {
     // 使用している部品のリファレンスを添付する (構文エラー中は DSL のみ)
@@ -149,6 +162,7 @@ export function App() {
 
   const onEditorMount: OnMount = (editor) => {
     editorRef.current = editor
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, () => applyNowRef.current())
     editor.onDidChangeCursorPosition((e) => {
       setCursor((prev) =>
         prev.line === e.position.lineNumber && prev.col === e.position.column
@@ -202,6 +216,13 @@ export function App() {
             ))}
           </select>
         </label>
+        <button
+          className="pg-btn"
+          onClick={applyNow}
+          title="テキストの内容でプレビューを描画し直す (Ctrl/Cmd+Enter)。store の data などコンポーネント内部に保持される値もリセットして反映する"
+        >
+          反映
+        </button>
         <button className="pg-btn" onClick={() => selectSample(sampleIndex)}>
           リセット
         </button>
@@ -259,7 +280,9 @@ export function App() {
           onPointerDown={startResize}
         />
         <section className="pg-preview" aria-label="プレビュー">
-          {shownConfig && <ExtMockup config={shownConfig} height="100%" theme={theme} />}
+          {shownConfig && (
+            <ExtMockup key={renderEpoch} config={shownConfig} height="100%" theme={theme} />
+          )}
         </section>
       </main>
       <footer className={`pg-status${parsed.error ? ' pg-status-error' : ''}`}>
