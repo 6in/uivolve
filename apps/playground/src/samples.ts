@@ -1865,6 +1865,169 @@ const monitoringSample = `// 業務画面: 監視ダッシュボード
 }
 `
 
+const crmSample = `// 業務画面: コールセンター / CRM
+// 応対チャット (chatpanel) + 顧客情報フォーム + 対応履歴グリッド
+{
+  xtype: 'panel',
+  itemId: 'crmScreen',
+  title: 'コールセンター — 応対コンソール',
+  layout: 'border',
+  items: [
+    {
+      region: 'west',
+      xtype: 'form',
+      itemId: 'customerForm',
+      title: '顧客情報',
+      width: 300,
+      split: true,
+      bodyPadding: 12,
+      items: [
+        { xtype: 'displayfield', itemId: 'custNo', fieldLabel: '顧客番号', value: 'C-102938', labelWidth: 70 },
+        { xtype: 'textfield', itemId: 'custName', fieldLabel: '氏名', value: '山田 太郎', labelWidth: 70 },
+        { xtype: 'textfield', itemId: 'custKana', fieldLabel: 'カナ', value: 'ヤマダ タロウ', labelWidth: 70 },
+        { xtype: 'textfield', itemId: 'custTel', fieldLabel: '電話', value: '090-1234-5678', labelWidth: 70, vtype: 'phone' },
+        { xtype: 'textfield', itemId: 'custMail', fieldLabel: 'メール', value: 'taro@example.com', labelWidth: 70, vtype: 'email' },
+        { xtype: 'combobox', itemId: 'custRank', fieldLabel: '会員ランク', value: 'ゴールド', labelWidth: 70, options: ['一般', 'シルバー', 'ゴールド', 'プラチナ'] },
+        { xtype: 'displayfield', itemId: 'custPlan', fieldLabel: '契約', value: 'プレミアム (2024/04〜)', labelWidth: 70 },
+        {
+          xtype: 'textareafield',
+          itemId: 'custMemo',
+          fieldLabel: 'メモ',
+          labelWidth: 70,
+          height: 72,
+          value: '前回、配送遅延のお詫びクーポン発行済み (6/28)',
+        },
+      ],
+      bbar: ['->', { itemId: 'btnSaveCustomer', text: '顧客情報を保存', iconCls: 'x-fa fa-floppy-disk', handler: 'onSaveCustomer' }],
+    },
+    {
+      region: 'center',
+      xtype: 'chatpanel',
+      itemId: 'sessionChat',
+      title: '応対中 — チャットセッション #48211 (山田 太郎 様)',
+      typing: true,
+      messages: [
+        { from: 'user', name: '山田様', time: '13:02', text: '注文した商品がまだ届かないのですが、状況を確認できますか?注文番号は SO-0001 です。' },
+        { from: 'bot', name: 'オペレーター 高橋', time: '13:03', text: 'お問い合わせありがとうございます。注文 **SO-0001** を確認いたします。少々お待ちください。' },
+        { from: 'bot', name: 'オペレーター 高橋', time: '13:04', text: '確認いたしました。**7/14 に出荷済み**で、本日 **7/15 の 18〜20 時**にお届け予定です。\\n\\n- 配送業者: 〇〇運輸\\n- 伝票番号: 4567-8901-2345' },
+        { from: 'user', name: '山田様', time: '13:05', text: 'わかりました。受け取り時間を 20〜21 時に変更できますか?' },
+      ],
+      bbar: [
+        { xtype: 'textfield', itemId: 'replyInput', emptyText: '返信を入力... (定型文: Ctrl+T)', flex: 1 },
+        { itemId: 'btnTemplate', text: '定型文', iconCls: 'x-fa fa-list', handler: 'onInsertTemplate' },
+        { itemId: 'btnReply', text: '送信', ui: 'primary', iconCls: 'x-fa fa-paper-plane', handler: 'onSendReply' },
+      ],
+    },
+    {
+      region: 'south',
+      xtype: 'grid',
+      itemId: 'contactHistory',
+      title: '対応履歴',
+      height: 190,
+      split: true,
+      columns: [
+        { text: '日時', dataIndex: 'ts', width: 140 },
+        { text: 'チャネル', dataIndex: 'channel', width: 90 },
+        { text: '担当', dataIndex: 'agent', width: 90 },
+        { text: '件名', dataIndex: 'subject', flex: 1 },
+        { text: '状態', dataIndex: 'status', width: 90 },
+      ],
+      store: {
+        data: [
+          { ts: '2026-07-15 13:02', channel: 'チャット', agent: '高橋', subject: '配送状況の確認 (SO-0001)', status: '対応中' },
+          { ts: '2026-06-28 10:15', channel: '電話', agent: '佐藤', subject: '配送遅延のお詫び・クーポン発行', status: '完了' },
+          { ts: '2026-06-25 09:40', channel: 'メール', agent: '田中', subject: '請求書の再発行依頼', status: '完了' },
+          { ts: '2026-05-12 16:20', channel: 'チャット', agent: '高橋', subject: 'プラン変更の相談', status: '完了' },
+        ],
+      },
+    },
+  ],
+}
+`
+
+const attendanceSample = `// 業務画面: 勤怠管理
+// カレンダー (datepicker) + 週次の勤怠グリッド (セル編集可) + 残業集計チャート
+{
+  xtype: 'panel',
+  itemId: 'attendanceScreen',
+  title: '勤怠管理 — 2026 年 7 月 (佐藤 花子)',
+  layout: 'border',
+  tbar: [
+    { xtype: 'combobox', itemId: 'monthCombo', fieldLabel: '対象月', labelWidth: 50, width: 170, options: ['2026/05', '2026/06', '2026/07'], value: '2026/07' },
+    '->',
+    { itemId: 'btnSubmit', text: '上長へ申請', ui: 'primary', iconCls: 'x-fa fa-paper-plane', handler: 'onSubmitTimesheet' },
+  ],
+  items: [
+    {
+      region: 'west',
+      xtype: 'panel',
+      itemId: 'calendarPane',
+      title: 'カレンダー',
+      width: 260,
+      bodyPadding: 8,
+      items: [
+        { xtype: 'datepicker', itemId: 'datePick', value: '2026-07-15' },
+        { xtype: 'displayfield', itemId: 'fldWorkDays', fieldLabel: '出勤日数', value: '10 / 22 日', labelWidth: 80, margin: '8 0 0 0' },
+        { xtype: 'displayfield', itemId: 'fldOvertime', fieldLabel: '残業時間', value: '12.5 h (上限 45h)', labelWidth: 80 },
+        { xtype: 'progressbar', itemId: 'overtimeBar', value: 0.28, text: '残業 28%', margin: '4 0 0 0' },
+      ],
+    },
+    {
+      region: 'center',
+      xtype: 'grid',
+      itemId: 'timesheetGrid',
+      title: '今週の勤怠 (7/13 週) — セルを直接編集できます',
+      columnLines: true,
+      columns: [
+        { text: '日付', dataIndex: 'date', width: 90 },
+        { text: '曜日', dataIndex: 'dow', width: 50 },
+        { text: '区分', dataIndex: 'kind', width: 110, editor: { xtype: 'combobox', options: ['出勤', '在宅', '休暇', '出張'] } },
+        { text: '出勤', dataIndex: 'start', width: 80, editor: true },
+        { text: '退勤', dataIndex: 'end', width: 80, editor: true },
+        { text: '休憩', dataIndex: 'rest', width: 70, editor: true },
+        { text: '実働', dataIndex: 'actual', width: 70, align: 'right' },
+        { text: '残業', dataIndex: 'overtime', width: 70, align: 'right' },
+        { text: '備考', dataIndex: 'note', flex: 1, editor: true },
+      ],
+      store: {
+        data: [
+          { date: '07/13', dow: '月', kind: '出勤', start: '09:00', end: '19:30', rest: '1:00', actual: '9:30', overtime: '1:30', note: '' },
+          { date: '07/14', dow: '火', kind: '在宅', start: '09:30', end: '18:00', rest: '1:00', actual: '7:30', overtime: '0:00', note: '' },
+          { date: '07/15', dow: '水', kind: '出勤', start: '09:00', end: '18:00', rest: '1:00', actual: '8:00', overtime: '0:00', note: '' },
+          { date: '07/16', dow: '木', kind: '出張', start: '08:00', end: '20:00', rest: '1:00', actual: '11:00', overtime: '3:00', note: '大阪 (○○商事)' },
+          { date: '07/17', dow: '金', kind: '休暇', start: '', end: '', rest: '', actual: '', overtime: '', note: '有給' },
+        ],
+      },
+    },
+    {
+      region: 'south',
+      xtype: 'panel',
+      itemId: 'overtimePanel',
+      title: '週別の実働 / 残業 (7 月)',
+      height: 200,
+      split: true,
+      bodyPadding: 8,
+      items: [
+        {
+          xtype: 'chart',
+          itemId: 'overtimeChart',
+          height: 150,
+          series: [{ type: 'bar', xField: 'week', yField: ['actual', 'overtime'], title: ['実働', '残業'] }],
+          store: {
+            data: [
+              { week: '6/29 週', actual: 40, overtime: 4.5 },
+              { week: '7/6 週', actual: 38, overtime: 2.0 },
+              { week: '7/13 週', actual: 36, overtime: 4.5 },
+              { week: '7/20 週', actual: 0, overtime: 0 },
+            ],
+          },
+        },
+      ],
+    },
+  ],
+}
+`
+
 export const samples: Sample[] = [
   // ---- 基本 (レイアウト・記法) ----
   { category: '基本', name: 'Border レイアウト', code: borderSample },
@@ -1879,6 +2042,8 @@ export const samples: Sample[] = [
   { category: '業務画面', name: '承認ワークフロー (YAML)', code: approvalSample },
   { category: '業務画面', name: '在庫・倉庫管理', code: inventorySample },
   { category: '業務画面', name: '監視ダッシュボード', code: monitoringSample },
+  { category: '業務画面', name: 'コールセンター / CRM', code: crmSample },
+  { category: '業務画面', name: '勤怠管理', code: attendanceSample },
   { category: '業務画面', name: '問い合わせ管理 (ツリーグリッド)', code: supportSample },
   { category: '業務画面', name: 'チャットボット', code: chatSample },
   // ---- コンポーネントカタログ ----
