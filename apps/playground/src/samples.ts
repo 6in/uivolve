@@ -1608,6 +1608,263 @@ items:
     align: tr
 `
 
+const inventorySample = `// 業務画面: 在庫・倉庫管理
+// ツリーグリッド (拠点 → 倉庫 → 棚、列付き) + 在庫グリッド + 入出庫チャート
+{
+  xtype: 'panel',
+  itemId: 'inventoryScreen',
+  title: '在庫管理 — 拠点別',
+  layout: 'border',
+  items: [
+    {
+      region: 'west',
+      xtype: 'treepanel',
+      itemId: 'locationTree',
+      title: '拠点 / 保管場所',
+      width: 320,
+      split: true,
+      columnLines: true,
+      // columns を指定するとツリーグリッドになる (先頭列が階層表示)
+      columns: [
+        { text: '場所', dataIndex: 'text', flex: 1 },
+        { text: '在庫数', dataIndex: 'qty', width: 80, align: 'right' },
+      ],
+      root: {
+        children: [
+          {
+            text: '東京 DC',
+            expanded: true,
+            qty: '12,480',
+            children: [
+              {
+                text: '第 1 倉庫',
+                expanded: true,
+                qty: '8,120',
+                children: [
+                  { text: 'A-01 (常温)', leaf: true, qty: '3,200' },
+                  { text: 'A-02 (常温)', leaf: true, qty: '2,880' },
+                  { text: 'B-01 (冷蔵)', leaf: true, qty: '2,040' },
+                ],
+              },
+              {
+                text: '第 2 倉庫',
+                qty: '4,360',
+                children: [{ text: 'C-01 (危険物)', leaf: true, qty: '4,360' }],
+              },
+            ],
+          },
+          {
+            text: '大阪 DC',
+            expanded: true,
+            qty: '6,930',
+            children: [
+              { text: 'D-01 (常温)', leaf: true, qty: '4,410' },
+              { text: 'D-02 (冷凍)', leaf: true, qty: '2,520' },
+            ],
+          },
+        ],
+      },
+      listeners: { select: 'onSelectLocation' },
+    },
+    {
+      region: 'center',
+      xtype: 'panel',
+      itemId: 'inventoryDetail',
+      layout: { type: 'vbox', align: 'stretch' },
+      items: [
+        {
+          xtype: 'grid',
+          itemId: 'stockGrid',
+          title: '在庫一覧 — 東京 DC / 第 1 倉庫 / A-01',
+          flex: 1,
+          columnLines: true,
+          tbar: [
+            { itemId: 'btnReceive', text: '入庫', ui: 'primary', iconCls: 'x-fa fa-arrow-down', handler: 'onReceive' },
+            { itemId: 'btnShip', text: '出庫', iconCls: 'x-fa fa-arrow-up', handler: 'onShip' },
+            { itemId: 'btnStocktake', text: '棚卸', iconCls: 'x-fa fa-clipboard-check', handler: 'onStocktake' },
+            '->',
+            { xtype: 'textfield', itemId: 'stockSearch', emptyText: '品名で検索', width: 150 },
+          ],
+          columns: [
+            { text: '品目コード', dataIndex: 'code', width: 110 },
+            { text: '品名', dataIndex: 'name', flex: 1 },
+            { text: 'ロット', dataIndex: 'lot', width: 100 },
+            { text: '現在庫', dataIndex: 'qty', width: 90, align: 'right' },
+            { text: '引当済', dataIndex: 'allocated', width: 90, align: 'right' },
+            { text: '安全在庫', dataIndex: 'safety', width: 90, align: 'right' },
+            { text: '状態', dataIndex: 'status', width: 100 },
+          ],
+          store: {
+            data: [
+              { code: 'ITM-1001', name: 'クリアファイル A4', lot: 'L26070101', qty: 1240, allocated: 300, safety: 500, status: '正常' },
+              { code: 'ITM-1002', name: 'コピー用紙 A4 (500 枚)', lot: 'L26070203', qty: 860, allocated: 520, safety: 400, status: '正常' },
+              { code: 'ITM-1003', name: 'ゲルインクボールペン 黒', lot: 'L26062801', qty: 420, allocated: 380, safety: 400, status: '⚠ 要補充' },
+              { code: 'ITM-1004', name: '付箋 75mm 5 色', lot: 'L26061502', qty: 96, allocated: 96, safety: 200, status: '✗ 欠品リスク' },
+              { code: 'ITM-1005', name: 'ラベルシール 24 面', lot: 'L26070501', qty: 584, allocated: 120, safety: 300, status: '正常' },
+            ],
+          },
+        },
+        {
+          xtype: 'panel',
+          itemId: 'movementPanel',
+          title: '入出庫推移 (直近 6 ヶ月)',
+          height: 220,
+          margin: '8 0 0 0',
+          bodyPadding: 8,
+          items: [
+            {
+              xtype: 'chart',
+              itemId: 'movementChart',
+              height: 170,
+              series: [{ type: 'bar', xField: 'month', yField: ['inbound', 'outbound'], title: ['入庫', '出庫'] }],
+              store: {
+                data: [
+                  { month: '2 月', inbound: 3200, outbound: 2900 },
+                  { month: '3 月', inbound: 4100, outbound: 4400 },
+                  { month: '4 月', inbound: 3800, outbound: 3500 },
+                  { month: '5 月', inbound: 2900, outbound: 3300 },
+                  { month: '6 月', inbound: 4600, outbound: 4200 },
+                  { month: '7 月', inbound: 2100, outbound: 1800 },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    },
+    // 欠品リスクの通知例
+    {
+      xtype: 'toast',
+      itemId: 'stockAlertToast',
+      title: '在庫アラート',
+      html: '<b>ITM-1004 付箋 75mm 5 色</b> が安全在庫を下回りました (残 96)',
+      iconCls: 'x-fa fa-triangle-exclamation',
+      align: 'br',
+    },
+  ],
+}
+`
+
+const monitoringSample = `// 業務画面: 監視ダッシュボード
+// リソース使用率 (progressbar) + メトリクスチャート + ログ (terminal) + アラート
+{
+  xtype: 'panel',
+  itemId: 'monitorScreen',
+  title: 'システム監視 — 本番環境',
+  bodyPadding: 8,
+  layout: { type: 'grid', columns: 3, gap: 8 },
+  tbar: [
+    { xtype: 'combobox', itemId: 'envCombo', fieldLabel: '環境', labelWidth: 40, width: 180, options: ['本番', 'ステージング', '開発'], value: '本番' },
+    { xtype: 'combobox', itemId: 'intervalCombo', fieldLabel: '更新', labelWidth: 40, width: 150, options: ['5 秒', '30 秒', '1 分', '手動'], value: '30 秒' },
+    '->',
+    { itemId: 'btnPause', text: '一時停止', iconCls: 'x-fa fa-pause', handler: 'onPauseRefresh' },
+  ],
+  items: [
+    {
+      xtype: 'panel',
+      itemId: 'cpuPanel',
+      title: 'CPU 使用率',
+      bodyPadding: 12,
+      items: [
+        { xtype: 'progressbar', itemId: 'cpuBar', value: 0.82, text: 'app-01: 82%' },
+        { xtype: 'progressbar', itemId: 'cpuBar2', value: 0.44, text: 'app-02: 44%', margin: '8 0 0 0' },
+      ],
+    },
+    {
+      xtype: 'panel',
+      itemId: 'memPanel',
+      title: 'メモリ使用率',
+      bodyPadding: 12,
+      items: [
+        { xtype: 'progressbar', itemId: 'memBar', value: 0.58, text: 'app-01: 9.3 / 16 GB' },
+        { xtype: 'progressbar', itemId: 'memBar2', value: 0.36, text: 'app-02: 5.8 / 16 GB', margin: '8 0 0 0' },
+      ],
+    },
+    {
+      xtype: 'panel',
+      itemId: 'diskPanel',
+      title: 'ディスク / DB 接続',
+      bodyPadding: 12,
+      items: [
+        { xtype: 'progressbar', itemId: 'diskBar', value: 0.71, text: 'data: 71%' },
+        { xtype: 'progressbar', itemId: 'connBar', value: 0.25, text: 'DB conn: 50 / 200', margin: '8 0 0 0' },
+      ],
+    },
+    {
+      xtype: 'panel',
+      itemId: 'reqPanel',
+      title: 'リクエスト数 / エラー数 (直近 30 分)',
+      colspan: 2,
+      bodyPadding: 8,
+      items: [
+        {
+          xtype: 'chart',
+          itemId: 'reqChart',
+          height: 180,
+          series: [{ type: 'line', xField: 'time', yField: ['requests', 'errors'], title: ['リクエスト', 'エラー'] }],
+          store: {
+            data: [
+              { time: '12:30', requests: 420, errors: 2 },
+              { time: '12:35', requests: 480, errors: 1 },
+              { time: '12:40', requests: 890, errors: 4 },
+              { time: '12:45', requests: 1240, errors: 38 },
+              { time: '12:50', requests: 1180, errors: 61 },
+              { time: '12:55', requests: 720, errors: 12 },
+              { time: '13:00', requests: 530, errors: 3 },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      xtype: 'grid',
+      itemId: 'alertGrid',
+      title: '発生中のアラート',
+      columns: [
+        { text: 'レベル', dataIndex: 'level', width: 80 },
+        { text: '内容', dataIndex: 'message', flex: 1 },
+        { text: '発生', dataIndex: 'since', width: 70 },
+      ],
+      store: {
+        data: [
+          { level: '✗ 重大', message: 'app-01 CPU 高負荷が 15 分継続', since: '12:45' },
+          { level: '⚠ 警告', message: 'API /orders p95 が 1.2s 超', since: '12:48' },
+          { level: '⚠ 警告', message: 'data ボリューム使用率 70% 超', since: '11:20' },
+        ],
+      },
+    },
+    {
+      xtype: 'terminal',
+      itemId: 'appLog',
+      title: 'app-01 — application.log',
+      colspan: 3,
+      height: 240,
+      speed: 400,
+      lines: [
+        '13:00:01 INFO  [http-nio-8080] GET /api/orders 200 (35ms)',
+        '13:00:02 INFO  [http-nio-8080] POST /api/orders 201 (120ms)',
+        '13:00:04 WARN  [pool-2] 在庫引当リトライ item=ITM-1003 (1/3)',
+        '13:00:05 INFO  [http-nio-8080] GET /api/customers 200 (18ms)',
+        '13:00:07 ERROR [http-nio-8080] GET /api/reports 500 — TimeoutException: DB query > 5s',
+        '13:00:08 INFO  [scheduler] バッチ BATCH-INV-SYNC 開始',
+        '13:00:11 INFO  [scheduler] バッチ BATCH-INV-SYNC 完了 (2,481 件)',
+        '13:00:12 WARN  [http-nio-8080] slow query: SELECT * FROM order_details ... (3.2s)',
+        '13:00:14 INFO  [http-nio-8080] GET /api/orders 200 (41ms)',
+      ],
+    },
+    // 重大アラートの通知例
+    {
+      xtype: 'toast',
+      itemId: 'criticalToast',
+      title: '重大アラート',
+      html: '<b>app-01</b> の CPU 使用率が 15 分間 80% を超えています',
+      iconCls: 'x-fa fa-circle-exclamation',
+      align: 'tr',
+    },
+  ],
+}
+`
+
 export const samples: Sample[] = [
   // ---- 基本 (レイアウト・記法) ----
   { category: '基本', name: 'Border レイアウト', code: borderSample },
@@ -1620,6 +1877,8 @@ export const samples: Sample[] = [
   // ---- 業務画面 ----
   { category: '業務画面', name: 'マスタメンテ (CRUD)', code: masterMaintSample },
   { category: '業務画面', name: '承認ワークフロー (YAML)', code: approvalSample },
+  { category: '業務画面', name: '在庫・倉庫管理', code: inventorySample },
+  { category: '業務画面', name: '監視ダッシュボード', code: monitoringSample },
   { category: '業務画面', name: '問い合わせ管理 (ツリーグリッド)', code: supportSample },
   { category: '業務画面', name: 'チャットボット', code: chatSample },
   // ---- コンポーネントカタログ ----
