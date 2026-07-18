@@ -1,6 +1,7 @@
 {
   "name": "@uivolve/remark-mock",
   "version": "0.1.0",
+  "license": "MIT",
   "description": "remark plugin: render ```uivolve fenced code blocks as uivolve mockups (like Mermaid)",
   "type": "module",
   "main": "./index.mjs",

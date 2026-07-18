@@ -1,6 +1,7 @@
 {
   "name": "@uivolve/core",
   "version": "0.1.0",
+  "license": "MIT",
   "description": "ExtJS-compatible DSL mockup renderer for React",
   "type": "module",
   "main": "./src/index.ts",
