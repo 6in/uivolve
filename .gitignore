@@ -4,3 +4,4 @@ site/
 .astro/
 *.log
 .DS_Store
+work/
