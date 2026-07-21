@@ -23,13 +23,16 @@ uivolve は ExtJS 互換の宣言的 DSL (JSON5 / YAML) で画面モックを描
 - 画面の領域構成 (メニューの有無、一覧 + 詳細か、ダイアログか)
 - 出力形式: **DSL 単体** (モックだけ欲しい) か **MDX 仕様書** (文書として残す) か
 
-### 2. 書き方の規約を確認する
+### 2. 規約とサンプルを確認する
 
-`references/dsl-guide.md` を読む (フォーマット選択・itemId 規約・レイアウト選定・
-高さの扱い・MDX 仕様書テンプレ・よくある失敗)。
-
-使う xtype に迷ったら `references/components.md` (全 xtype / layout / config の一覧) を
-参照する。**一覧にない xtype は使わない**。
+1. `references/dsl-guide.md` を読む (フォーマット選択・itemId 規約・レイアウト選定・
+   高さの扱い・MDX 仕様書テンプレ・よくある失敗)
+2. **`references/samples/INDEX.md`** で作りたい画面に近いサンプルを探し、**1〜2 本読む**。
+   カテゴリ別一覧 (基本 / 業務画面 / コンポーネントカタログ) に加えて
+   xtype / layout の逆引き表があるので、「grid の実例」「border の実例」から引ける。
+   MDX 仕様書の文書構成は `samples/doc-*.md` のフル例を参考にする
+3. 使う xtype に迷ったら `references/components.md` (全 xtype / layout / config の一覧) を
+   参照する。**一覧にない xtype は使わない**
 
 ### 3. 生成する
 

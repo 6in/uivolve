@@ -3,7 +3,8 @@
 uivolve は ExtJS の宣言的 config と互換な DSL で画面モックを描画するライブラリ。
 このガイドは「要件 → DSL / MDX 仕様書」を生成するときの規約をまとめたもの。
 使える xtype / layout / config の一覧は同じディレクトリの `components.md`、
-機械検証用の JSON Schema は `dsl.schema.json` を参照。
+機械検証用の JSON Schema は `dsl.schema.json`、実例集は `samples/INDEX.md`
+(カテゴリ別 26 画面 + xtype/layout 逆引き + MDX 仕様書フル例) を参照。
 
 ## フォーマット
 

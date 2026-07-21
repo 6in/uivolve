@@ -1,0 +1,151 @@
+---
+title: 受注管理システム 画面仕様書
+---
+
+# 受注管理システム 画面仕様書
+
+このドキュメントは **uivolve の MDX 統合デモ**。Mermaid.js と同じ感覚で、
+Markdown 内の ` ```uivolve ` コードフェンスに ExtJS 互換 DSL を書くと、
+その場に画面モックが描画される。モックは実際に操作できる
+(パネルの折りたたみ、タブ切替、スプリットバーのドラッグ、グリッドの行選択など)。
+
+各コンポーネントには `itemId` を付与して一意に識別できるようにしている。
+仕様書の記述や AI への実装指示で「`orderGrid` に列を追加」のように参照できる。
+
+> 📄 画面モック以外の使い方は **[障害対応報告書のデモ (リッチドキュメント)](runbook/)** を参照 —
+> チャート・Mermaid・ターミナルログ・コード差分・依存グラフを Markdown に埋め込む例。
+
+## 1. メイン画面
+
+アプリケーションのメイン画面。左のメニューから機能を選択し、中央のグリッドで受注を管理する。
+西リージョンはスプリットバーで幅を調整できること。
+
+```uivolve height=440
+{
+  xtype: 'panel',
+  itemId: 'orderApp',
+  title: '受注管理システム',
+  layout: 'border',
+  items: [
+    {
+      region: 'north',
+      xtype: 'container',
+      itemId: 'headerArea',
+      items: [{
+        xtype: 'toolbar',
+        itemId: 'mainToolbar',
+        items: [
+          { itemId: 'btnNew', text: '新規作成', ui: 'primary', iconCls: 'x-fa fa-plus' },
+          { itemId: 'btnEdit', text: '編集', iconCls: 'x-fa fa-pen' },
+          '-',
+          { itemId: 'btnDelete', text: '削除', iconCls: 'x-fa fa-trash' },
+          '->',
+          '検索:',
+          { xtype: 'textfield', itemId: 'searchField', emptyText: 'キーワード', width: 180 },
+        ],
+      }],
+    },
+    {
+      region: 'west',
+      itemId: 'menuPanel',
+      title: 'メニュー',
+      width: 180,
+      split: true,
+      collapsible: true,
+      bodyPadding: 8,
+      items: [{ xtype: 'listbox', itemId: 'menuList', size: 6, options: ['受注一覧', '出荷指示', '請求管理', '顧客マスタ'] }],
+    },
+    {
+      region: 'center',
+      xtype: 'grid',
+      itemId: 'orderGrid',
+      title: '受注一覧',
+      columnLines: true,
+      columns: [
+        { text: '受注番号', dataIndex: 'no', width: 110 },
+        { text: '顧客名', dataIndex: 'customer', flex: 1 },
+        { text: '金額', dataIndex: 'amount', width: 110, align: 'right' },
+        { text: '状態', dataIndex: 'status', width: 90 },
+      ],
+      store: { data: [
+        { no: 'SO-0001', customer: '山田商事', amount: '¥120,000', status: '出荷済' },
+        { no: 'SO-0002', customer: '鈴木工業', amount: '¥58,300', status: '受注' },
+        { no: 'SO-0003', customer: '田中物産', amount: '¥310,900', status: '請求済' },
+      ]},
+    },
+    {
+      region: 'south',
+      xtype: 'container',
+      itemId: 'footerArea',
+      items: [{ xtype: 'toolbar', itemId: 'statusBar', items: ['ステータス: 準備完了', '->', '3 件'] }],
+    },
+  ],
+}
+```
+
+### 画面仕様
+
+| itemId | 項目 | 内容 |
+|---|---|---|
+| `menuPanel` | メニュー (west) | 幅 180px、スプリットバーでリサイズ可、折りたたみ可 |
+| `orderGrid` | 受注一覧 (center) | 行クリックで選択。金額は右寄せ |
+| `statusBar` | ステータスバー (south) | 左に状態、右に件数 |
+
+## 2. 受注登録ダイアログ
+
+「新規作成」ボタン (`btnNew`) 押下で表示されるモーダルダイアログ。
+フェンスの meta に `theme=dark` を指定してダークテーマで表示している
+(`neptune` / `classic` / `gray` / `dark` が指定可能)。
+
+```uivolve height=380 theme=dark
+{
+  xtype: 'window',
+  itemId: 'orderEntryDialog',
+  title: '受注登録',
+  width: 420,
+  bodyPadding: 14,
+  items: [
+    { xtype: 'textfield', itemId: 'custField', fieldLabel: '顧客名', emptyText: '顧客を入力' },
+    { xtype: 'datefield', itemId: 'orderDateField', fieldLabel: '受注日' },
+    { xtype: 'combobox', itemId: 'repCombo', fieldLabel: '担当者', options: ['佐藤', '田中', '高橋'] },
+    { xtype: 'radiogroup', itemId: 'kindGroup', fieldLabel: '区分', columns: 2, items: [
+      { boxLabel: '通常', name: 'kind', checked: true },
+      { boxLabel: '緊急', name: 'kind' },
+    ]},
+    { xtype: 'textarea', itemId: 'entryMemoArea', fieldLabel: '備考', rows: 3 },
+  ],
+  bbar: [
+    '->',
+    { itemId: 'btnRegister', text: '登録', ui: 'primary', iconCls: 'x-fa fa-check' },
+    { itemId: 'btnEntryCancel', text: 'キャンセル' },
+  ],
+}
+```
+
+## 3. 補足: YAML 記法
+
+DSL は JSON5 だけでなく **YAML** でも書ける (先頭の文字から自動判別)。
+手書きするならこちらの方が楽。
+
+```uivolve height=260
+xtype: panel
+itemId: syncPanel
+title: YAML で書いたモック
+bodyPadding: 12
+items:
+  - xtype: displayfield
+    itemId: syncStatus
+    fieldLabel: 同期状況
+    value: 最終同期 2026-07-07 12:00
+  - xtype: progressbar
+    itemId: syncProgress
+    value: 0.7
+    text: 同期中... 70%
+```
+
+## 4. AI への引き渡し
+
+上のコードフェンスの DSL をそのまま AI に渡せば、任意の UI ライブラリで本実装できる。
+`itemId` があるので「`orderGrid` のソート仕様は…」のように仕様書の文章からモックの
+部品をピンポイントで参照できる。仕様書 (この MDX) とモック定義 (DSL) が
+同一ソースで管理されるのがポイント。

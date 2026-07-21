@@ -37,8 +37,9 @@ apps/mdx-demo/          Astro + MDX 統合デモ (Markdown 仕様書にモック
 reference/components.md      コンポーネント/レイアウトのリファレンス — JSDoc から自動生成。直接編集禁止
 reference/extjs-layouts.md   ExtJS 7.9 全レイアウトの調査資料と対応状況
 skills/uivolve-mock/         配布用の生成スキル (他プロジェクトで画面仕様書を書く用)。
-                             references/ の components.md と dsl.schema.json は
-                             npm run docs / schema が自動同期する — 直接編集禁止
+                             references/ (components.md / dsl.schema.json / samples/ —
+                             Playground 全サンプル + MDX 仕様書例を INDEX.md 付きで展開)
+                             は npm run docs / schema が自動生成・同期する — 直接編集禁止
 .github/workflows/pages.yml  main への push で Playground + MDX デモを GitHub Pages へ自動デプロイ
 scripts/gen-component-docs.mjs  reference/components.md の生成スクリプト
 scripts/validate-dsl.mjs     DSL / MDX の検証 (構文 + xtype/layout 照合)。npm run validate
