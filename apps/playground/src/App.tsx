@@ -195,6 +195,13 @@ export function App() {
         <h1 className="pg-title">
           uivolve <span className="pg-sub">Playground — ExtJS 互換 DSL モックビューア</span>
         </h1>
+        <a
+          className="pg-headerlink"
+          href="mdx-playground/"
+          title="MDX 仕様書を貼り付けてライブプレビューする"
+        >
+          MDX Playground →
+        </a>
         <a className="pg-headerlink" href="mdx/" title="Markdown 仕様書にモックを埋め込む例">
           MDX デモ →
         </a>

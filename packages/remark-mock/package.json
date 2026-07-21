@@ -5,7 +5,11 @@
   "description": "remark plugin: render ```uivolve fenced code blocks as uivolve mockups (like Mermaid)",
   "type": "module",
   "main": "./index.mjs",
+  "types": "./index.d.ts",
   "exports": {
-    ".": "./index.mjs"
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.mjs"
+    }
   }
 }

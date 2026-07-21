@@ -17,6 +17,8 @@
  * @param {string} [options.importSource] import 元 (default: '@uivolve/core')
  * @param {number|string} [options.defaultHeight] height 未指定時の高さ (default: 360)
  * @param {boolean} [options.clientLoad] Astro の client:load 属性を付ける (default: true)
+ * @param {boolean} [options.injectImport] import 文を自動注入する (default: true)。
+ *   ブラウザ内で mdx の evaluate() を使う場合は false にして components prop で渡す
  */
 export default function remarkUivolve(options = {}) {
   const {
@@ -25,6 +27,7 @@ export default function remarkUivolve(options = {}) {
     importSource = '@uivolve/core',
     defaultHeight = 360,
     clientLoad = true,
+    injectImport = true,
   } = options
 
   return (tree) => {
@@ -59,7 +62,7 @@ export default function remarkUivolve(options = {}) {
     })
 
     // 使われたページにだけ import を注入 (手書きの import があればスキップ)
-    if (used && !hasImport(tree, componentName)) {
+    if (injectImport && used && !hasImport(tree, componentName)) {
       tree.children.unshift(buildImportNode(componentName, importSource))
     }
   }

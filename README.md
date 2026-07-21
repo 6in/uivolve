@@ -44,7 +44,7 @@ npm run dev   # Playground (エディタ + ライブプレビュー) が http://
 ```
 packages/core/        — @uivolve/core: DSL パーサー + レンダラー (React)
 packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンスをモック描画する remark プラグイン
-apps/playground/      — エディタ + ビューア (Vite)
+apps/playground/      — エディタ + ビューア (Vite)。/mdx-playground/ に MDX Playground も同梱
 apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
 reference/            — リファレンス (components.md は JSDoc から自動生成)
 scripts/              — reference 生成スクリプト
@@ -57,6 +57,7 @@ scripts/              — reference 生成スクリプト
 main に push すると GitHub Actions (.github/workflows/pages.yml) が自動でビルド・デプロイする。
 
 - **Playground**: https://6in.github.io/uivolve/
+- **MDX Playground (MDX を貼り付けてライブプレビュー)**: https://6in.github.io/uivolve/mdx-playground/
 - **MDX デモ (画面仕様書の例)**: https://6in.github.io/uivolve/mdx/
 
 ```bash
@@ -249,6 +250,14 @@ npm run mdx:build   # 静的ビルド (apps/mdx-demo/dist/ に出力)
 
 Playground (5173) とはポートが別なので同時起動できる。
 デモの実体は `apps/mdx-demo/src/pages/index.mdx`。編集すればホットリロードで反映される。
+
+### MDX Playground (貼り付けてライブプレビュー)
+
+MDX ファイルを作らなくても、**MDX Playground** (`npm run dev` → http://localhost:5173/mdx-playground/ 、
+公開版は https://6in.github.io/uivolve/mdx-playground/ ) の左ペインに MDX / Markdown を
+貼り付ければ、右ペインに展開後のドキュメントがそのまま表示される。
+MDX のコンパイルはブラウザ内 (`@mdx-js/mdx` の `evaluate`) で完結し、frontmatter は無視、
+GFM のテーブルにも対応。手元の仕様書 MDX の書き捨て確認に使える。
 
 ### 書き方
 
