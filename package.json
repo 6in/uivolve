@@ -12,8 +12,9 @@
     "dev": "npm -w apps/playground run dev",
     "build": "npm -w apps/playground run build",
     "typecheck": "npm -w apps/playground run typecheck",
-    "docs": "node scripts/gen-component-docs.mjs",
-    "schema": "node --experimental-strip-types scripts/gen-dsl-schema.mjs",
+    "docs": "node scripts/gen-component-docs.mjs && node scripts/sync-skill-refs.mjs",
+    "schema": "node --experimental-strip-types scripts/gen-dsl-schema.mjs && node scripts/sync-skill-refs.mjs",
+    "validate": "node --experimental-strip-types scripts/validate-dsl.mjs",
     "mdx:dev": "npm -w apps/mdx-demo run dev",
     "mdx:build": "npm -w apps/mdx-demo run build",
     "pages": "npm -w apps/playground run build:pages && npm -w apps/mdx-demo run build:pages"

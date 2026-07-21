@@ -100,11 +100,10 @@ README.md の対応コンポーネント表にも 1 行追加する。
 npm run typecheck && npm run build
 ```
 
-さらに dev サーバー (`npm run dev`、ポート 5173) に対して headless Chromium で
-スクリーンショットを撮り、**目視で確認する**。Playwright は scratchpad に
-`playwright-core` を入れ、`~/Library/Caches/ms-playwright/chromium_headless_shell-*/`
-配下の chrome-headless-shell を executablePath に指定して使う (過去の検証スクリプト例:
-scratchpad の shot*.mjs)。確認ポイント:
+さらに dev サーバー (`npm run dev`、ポート 5173) を起動し、新 xtype を使った DSL を
+ファイルに書いて `node scripts/shot-uivolve.mjs <file>` でスクリーンショットを撮り、
+**目視で確認する** (playwright-core / Chromium は ms-playwright キャッシュから自動検出。
+詳細はスクリプト冒頭のコメント)。確認ポイント:
 
 - コンポーネント単体の描画
 - パネル body / border リージョン / hbox・vbox 内に置いたときの伸縮

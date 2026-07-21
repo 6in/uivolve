@@ -118,6 +118,17 @@ export function MdxApp() {
     return () => clearTimeout(timer)
   }, [code])
 
+  // 検証スクリプト (scripts/shot-uivolve.mjs) から MDX を流し込むためのフック
+  useEffect(() => {
+    ;(window as { __uivolve?: { setCode: (v: string) => void } }).__uivolve = {
+      setCode: (v: string) => {
+        setCode(v)
+        setPreviewCode(v)
+        setRenderEpoch((e) => e + 1)
+      },
+    }
+  }, [])
+
   // MDX をブラウザ内でコンパイル。エラー中は最後に成功した内容を表示し続ける
   useEffect(() => {
     let cancelled = false

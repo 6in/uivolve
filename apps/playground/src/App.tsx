@@ -76,6 +76,17 @@ export function App() {
     return () => clearTimeout(timer)
   }, [code])
 
+  // 検証スクリプト (scripts/shot-uivolve.mjs) から DSL を流し込むためのフック
+  useEffect(() => {
+    ;(window as { __uivolve?: { setCode: (v: string) => void } }).__uivolve = {
+      setCode: (v: string) => {
+        setCode(v)
+        setPreviewCode(v)
+        setRenderEpoch((e) => e + 1)
+      },
+    }
+  }, [])
+
   const parsed: ParseResult = useMemo(() => {
     try {
       return { config: parseDsl(previewCode), error: null }

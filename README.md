@@ -329,6 +329,28 @@ export default defineConfig({
 
 レイアウト側で `@uivolve/core/styles.css` (と必要なら Font Awesome) を読み込む。
 
+## AI 生成スキル (Claude Code)
+
+「○○画面のモックを作って」「画面仕様書を書いて」という依頼から uivolve DSL /
+MDX 仕様書を生成するための **Claude Code 用スキル**を同梱している。
+
+- **配布用** `skills/uivolve-mock/` — uivolve を使っていないプロジェクトでも動く自己完結版。
+  書き方規約 (`references/dsl-guide.md`) と xtype リファレンス・JSON Schema を同梱し、
+  生成物は公開 Playground に貼り付けて確認する。
+  導入はディレクトリごとコピーするだけ:
+
+  ```bash
+  cp -r skills/uivolve-mock <your-project>/.claude/skills/   # プロジェクト単位
+  cp -r skills/uivolve-mock ~/.claude/skills/                # ユーザー全体
+  ```
+
+- **このリポジトリ用** `.claude/skills/uivolve-mock/` — 上記に加えてローカルの検証ツール
+  (`npm run validate` による構文 + xtype 照合、`scripts/shot-uivolve.mjs` による
+  Playground 流し込みスクリーンショット) を使うワークフロー。
+
+`skills/uivolve-mock/references/` の components.md と dsl.schema.json は
+`npm run docs` / `npm run schema` が自動同期するので直接編集しない。
+
 ## JSON Schema
 
 `reference/dsl.schema.json` に DSL の JSON Schema がある (`npm run schema` で

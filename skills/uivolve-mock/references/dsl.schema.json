@@ -1,0 +1,816 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/uivolve/dsl.schema.json",
+  "title": "uivolve DSL",
+  "description": "ExtJS 互換の画面モック DSL。xtype / layout の一覧は reference/components.md を参照。このスキーマは packages/core/src/meta.ts から自動生成される (npm run schema)。",
+  "$ref": "#/$defs/component",
+  "$defs": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "activeTab": {
+          "type": "number"
+        },
+        "afterPageText": {},
+        "align": {
+          "enum": [
+            "tr",
+            "tl",
+            "br",
+            "bl",
+            "t",
+            "b"
+          ],
+          "description": "toast の表示位置"
+        },
+        "allowBlank": {
+          "type": "boolean",
+          "description": "false で必須入力 (ラベルに * 表示)"
+        },
+        "alt": {},
+        "autoplay": {
+          "type": "boolean"
+        },
+        "bbar": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/component"
+              },
+              {
+                "type": "string",
+                "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+              }
+            ]
+          }
+        },
+        "beforePageText": {},
+        "bodyPadding": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "boxLabel": {},
+        "branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "gitgraph のレーン並び (省略時はコミットの登場順)"
+        },
+        "buttons": {
+          "description": "messagebox のボタンセットまたは任意のラベル配列",
+          "anyOf": [
+            {
+              "enum": [
+                "ok",
+                "okcancel",
+                "yesno",
+                "yesnocancel"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "checkboxToggle": {
+          "type": "boolean"
+        },
+        "checked": {
+          "type": "boolean"
+        },
+        "children": {},
+        "clipboard": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "button: クリックでコピー (true = 自分の iconCls 定義、文字列 = そのテキスト)"
+        },
+        "closable": {
+          "type": "boolean"
+        },
+        "cls": {},
+        "collapsed": {
+          "type": "boolean"
+        },
+        "collapsible": {
+          "type": "boolean"
+        },
+        "colspan": {
+          "type": "number"
+        },
+        "columnLines": {
+          "type": "boolean"
+        },
+        "columnWidth": {
+          "type": "number"
+        },
+        "columns": {
+          "anyOf": [
+            {
+              "type": "number",
+              "description": "grid レイアウト / radiogroup の列数"
+            },
+            {
+              "type": "array",
+              "description": "データグリッドの列定義",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "xtype": {
+                    "enum": [
+                      "treecolumn",
+                      "checkcolumn",
+                      "actioncolumn",
+                      "widgetcolumn"
+                    ],
+                    "description": "列の種別 (階層 / チェックボックス / アイコンボタン / ウィジェット埋め込み)"
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "dataIndex": {
+                    "type": "string"
+                  },
+                  "width": {
+                    "type": [
+                      "number",
+                      "string"
+                    ]
+                  },
+                  "flex": {
+                    "type": "number"
+                  },
+                  "align": {
+                    "enum": [
+                      "left",
+                      "center",
+                      "right"
+                    ]
+                  },
+                  "items": {
+                    "type": "array",
+                    "description": "actioncolumn のアイコンボタン",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "iconCls": {
+                          "type": "string"
+                        },
+                        "tooltip": {
+                          "type": "string"
+                        },
+                        "handler": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "widget": {
+                    "$ref": "#/$defs/component",
+                    "description": "widgetcolumn に埋め込むコンポーネント (value に dataIndex の値が入る)"
+                  },
+                  "editor": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "$ref": "#/$defs/component"
+                      }
+                    ],
+                    "description": "セル編集。true = textfield、または numberfield / combobox など"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "commits": {
+          "type": "array",
+          "description": "gitgraph のコミット列 (上から古い順)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "branch": {
+                "type": "string"
+              },
+              "parents": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "message": {
+                "type": "string"
+              },
+              "tag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "controls": {
+          "type": "boolean"
+        },
+        "data": {},
+        "defaults": {
+          "type": "object"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "displayField": {},
+        "displayInfo": {},
+        "displayMsg": {},
+        "edges": {
+          "type": "array",
+          "description": "networkgraph のエッジ",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ]
+          }
+        },
+        "emptyMsg": {},
+        "emptyText": {},
+        "enableAlignments": {},
+        "enableFormat": {},
+        "enableLinks": {},
+        "enableLists": {},
+        "enableSourceEdit": {},
+        "fieldLabel": {},
+        "flex": {
+          "type": "number"
+        },
+        "fontSize": {
+          "type": "number"
+        },
+        "frame": {
+          "type": "boolean"
+        },
+        "handler": {
+          "type": "string",
+          "description": "クリック時ハンドラの参照名 ('onSaveClick' など)。モックでは実行されない。AI への仕様引き渡し用"
+        },
+        "header": {
+          "type": "boolean"
+        },
+        "height": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "html": {},
+        "icon": {
+          "enum": [
+            "info",
+            "question",
+            "warning",
+            "error"
+          ]
+        },
+        "iconCls": {},
+        "id": {},
+        "increment": {
+          "type": "number"
+        },
+        "inputType": {},
+        "itemId": {},
+        "items": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/component"
+              },
+              {
+                "type": "string",
+                "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+              }
+            ]
+          }
+        },
+        "labelWidth": {
+          "type": "number"
+        },
+        "language": {
+          "type": "string",
+          "description": "codeeditor の Monaco 言語 ID (javascript / typescript / yaml / sql など)"
+        },
+        "layout": {
+          "anyOf": [
+            {
+              "enum": [
+                "auto",
+                "anchor",
+                "form",
+                "fit",
+                "border",
+                "grid",
+                "table",
+                "hbox",
+                "vbox",
+                "card",
+                "accordion",
+                "center",
+                "column",
+                "absolute"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "enum": [
+                    "auto",
+                    "anchor",
+                    "form",
+                    "fit",
+                    "border",
+                    "grid",
+                    "table",
+                    "hbox",
+                    "vbox",
+                    "card",
+                    "accordion",
+                    "center",
+                    "column",
+                    "absolute"
+                  ]
+                },
+                "columns": {
+                  "type": "number"
+                },
+                "gap": {
+                  "type": [
+                    "number",
+                    "string"
+                  ]
+                },
+                "align": {
+                  "type": "string"
+                },
+                "pack": {
+                  "type": "string"
+                },
+                "activeItem": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          ]
+        },
+        "lineNumbers": {
+          "type": "boolean"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "terminal に流すテキスト行 (サイクリック再生)"
+        },
+        "listeners": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "イベント名 → ハンドラ参照名のマップ ({ select: 'onRowSelect' } など)。モックでは実行されない"
+        },
+        "loop": {
+          "type": "boolean"
+        },
+        "margin": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "maxLength": {
+          "type": "number"
+        },
+        "maxLines": {
+          "type": "number"
+        },
+        "maxValue": {
+          "type": "number"
+        },
+        "menu": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/component"
+                  },
+                  {
+                    "type": "string",
+                    "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+                  }
+                ]
+              }
+            },
+            {
+              "$ref": "#/$defs/component"
+            }
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "array",
+          "description": "チャットの会話。from: 'user' は右寄せ、text は Markdown 描画",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "time": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "minHeight": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "minLength": {
+          "type": "number"
+        },
+        "minValue": {
+          "type": "number"
+        },
+        "minWidth": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "minimap": {
+          "type": "boolean"
+        },
+        "modal": {},
+        "multiSelect": {
+          "type": "boolean"
+        },
+        "muted": {
+          "type": "boolean"
+        },
+        "name": {},
+        "nodes": {
+          "type": "array",
+          "description": "networkgraph のノード",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "group": {
+                "type": [
+                  "number",
+                  "string"
+                ]
+              },
+              "color": {
+                "type": "string"
+              },
+              "r": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "value": {},
+                  "text": {
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "original": {
+          "type": "string",
+          "description": "diffeditor の変更前コード (変更後は value)"
+        },
+        "padding": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "pageSize": {},
+        "posterUrl": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "boolean",
+          "description": "messagebox に入力欄を付ける (Ext.Msg.prompt 相当)"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "regex": {
+          "type": "string",
+          "description": "入力パターン (HTML の pattern として適用)"
+        },
+        "region": {
+          "enum": [
+            "north",
+            "south",
+            "east",
+            "west",
+            "center"
+          ]
+        },
+        "root": {
+          "type": "object"
+        },
+        "rootVisible": {
+          "type": "boolean"
+        },
+        "rows": {
+          "type": "number"
+        },
+        "rowspan": {
+          "type": "number"
+        },
+        "series": {
+          "description": "チャート系列。最初の 1 つだけ使用 ({ type: 'bar'|'line'|'area'|'pie', xField, yField })",
+          "type": [
+            "array",
+            "object"
+          ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "bar",
+                  "line",
+                  "area",
+                  "pie"
+                ]
+              },
+              "xField": {
+                "type": "string"
+              },
+              "yField": {
+                "type": [
+                  "string",
+                  "array"
+                ]
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "array"
+                ]
+              }
+            }
+          }
+        },
+        "showToday": {
+          "type": "boolean"
+        },
+        "sideBySide": {
+          "type": "boolean",
+          "description": "diffeditor の並列表示 (false でインライン)"
+        },
+        "size": {
+          "type": "number"
+        },
+        "speed": {
+          "type": "number",
+          "description": "terminal の行間隔 ms (±ランダム揺らぎ付き)"
+        },
+        "split": {
+          "type": "boolean"
+        },
+        "sprites": {
+          "description": "draw のスプライト定義 (Ext.draw 互換の fillStyle / strokeStyle / lineWidth など)",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "rect",
+                  "circle",
+                  "ellipse",
+                  "line",
+                  "path",
+                  "text"
+                ]
+              }
+            }
+          }
+        },
+        "src": {
+          "type": "string"
+        },
+        "store": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "style": {},
+        "tbar": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/component"
+              },
+              {
+                "type": "string",
+                "description": "ツールバーのショートハンド ('->' / '-' / ラベル)"
+              }
+            ]
+          }
+        },
+        "text": {},
+        "theme": {
+          "type": "string",
+          "description": "codeeditor のテーマ ('light' / 'dark' または Monaco のテーマ名)"
+        },
+        "title": {},
+        "todayText": {},
+        "total": {},
+        "typing": {
+          "type": "boolean",
+          "description": "チャット末尾に入力中インジケーターを表示"
+        },
+        "ui": {},
+        "url": {
+          "type": "string"
+        },
+        "value": {},
+        "valueField": {},
+        "vtype": {
+          "enum": [
+            "email",
+            "url",
+            "alpha",
+            "alphanum"
+          ],
+          "description": "入力種別のバリデーション"
+        },
+        "width": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "xtype": {
+          "enum": [
+            "panel",
+            "form",
+            "container",
+            "fieldcontainer",
+            "component",
+            "box",
+            "toolbar",
+            "button",
+            "splitbutton",
+            "textfield",
+            "numberfield",
+            "datefield",
+            "textarea",
+            "textareafield",
+            "checkbox",
+            "checkboxfield",
+            "radio",
+            "radiofield",
+            "combobox",
+            "combo",
+            "listbox",
+            "multiselect",
+            "displayfield",
+            "label",
+            "grid",
+            "gridpanel",
+            "image",
+            "imagecomponent",
+            "tabpanel",
+            "fieldset",
+            "window",
+            "treepanel",
+            "tree",
+            "menu",
+            "progressbar",
+            "progress",
+            "slider",
+            "sliderfield",
+            "radiogroup",
+            "checkboxgroup",
+            "datepicker",
+            "htmleditor",
+            "uxiframe",
+            "iframe",
+            "markdown",
+            "chart",
+            "cartesian",
+            "polar",
+            "draw",
+            "gitgraph",
+            "networkgraph",
+            "forcegraph",
+            "mermaid",
+            "messagebox",
+            "msgbox",
+            "toast",
+            "terminal",
+            "console",
+            "video",
+            "codeeditor",
+            "code",
+            "diffeditor",
+            "diff",
+            "chatpanel",
+            "chat",
+            "pagingtoolbar"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
