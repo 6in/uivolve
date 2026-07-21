@@ -12,6 +12,8 @@ title: ログイン画面 仕様書
 
 # ログイン画面 仕様書
 
+<!-- HTML コメントも書ける (プレビューには表示されない) -->
+
 Markdown の中に \`\`\`uivolve フェンスで ExtJS 互換 DSL を書くと、
 その場に**操作できる画面モック**が描画される。フェンスの meta で
 \`height=<高さ>\` と \`theme=<neptune|classic|gray|dark>\` を指定できる。

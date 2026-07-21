@@ -44,6 +44,45 @@ function toCompileError(e: unknown): CompileError {
   }
 }
 
+/**
+ * MDX は HTML コメント (<!-- -->) を構文エラーにするため、コンパイル前に取り除く。
+ * 素の Markdown を貼り付けても動くようにするための救済で、
+ * コードフェンス内とインラインコード内のコメントはそのまま残す。
+ * エラー位置がずれないよう、除去したコメント内の改行は残す。
+ */
+function stripHtmlComments(source: string): string {
+  const out: string[] = []
+  let buffer: string[] = []
+  let fenceMarker: string | null = null
+
+  const flush = () => {
+    if (!buffer.length) return
+    out.push(
+      // インラインコード (`...`) は保持し、HTML コメントだけ改行を残して除去する
+      buffer.join('\n').replace(/(`+)[\s\S]*?\1|<!--[\s\S]*?-->/g, (m) =>
+        m.startsWith('`') ? m : '\n'.repeat(m.split('\n').length - 1),
+      ),
+    )
+    buffer = []
+  }
+
+  for (const line of source.split('\n')) {
+    const fence = /^ {0,3}(`{3,}|~{3,})/.exec(line)
+    if (fenceMarker === null && fence) {
+      flush()
+      fenceMarker = fence[1][0]
+      out.push(line)
+    } else if (fenceMarker !== null) {
+      out.push(line)
+      if (fence && fence[1][0] === fenceMarker) fenceMarker = null
+    } else {
+      buffer.push(line)
+    }
+  }
+  flush()
+  return out.join('\n')
+}
+
 class PreviewBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state: { error: Error | null } = { error: null }
 
@@ -82,7 +121,7 @@ export function MdxApp() {
   // MDX をブラウザ内でコンパイル。エラー中は最後に成功した内容を表示し続ける
   useEffect(() => {
     let cancelled = false
-    evaluate(previewCode, {
+    evaluate(stripHtmlComments(previewCode), {
       ...jsxRuntime,
       remarkPlugins: [
         remarkFrontmatter,

@@ -14,10 +14,9 @@
   padding: 24px 20px 60px;
 }
 
-/* mdx-demo の DocLayout に寄せた「ドキュメント」の見た目 */
+/* mdx-demo の DocLayout に寄せた「ドキュメント」の見た目。
+   幅はペイン (スプリットバー / 画面幅) に追随させる */
 .mdxpg-doc {
-  max-width: 880px;
-  margin: 0 auto;
   padding: 32px 36px 48px;
   background: #f7f9fb;
   border: 1px solid #d9dfe5;
