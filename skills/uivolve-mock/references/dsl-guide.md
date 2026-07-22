@@ -51,6 +51,7 @@ items:
 - border の west/east には `split: true` (幅調整) と `collapsible: true` を付けると
   モックとして操作できて仕様が伝わりやすい。
 - 主要な操作ボタンは `tbar` (上) / `bbar` (下) に。`'->'` で右寄せ、`'-'` で区切り。
+  ダイアログの確定/キャンセルは `buttons` (下部右寄せのボタン群。`bbar: ['->', ...]` の糖衣) が簡潔。
 - アイコンは `iconCls: 'x-fa fa-plus'` (Font Awesome)。主ボタンは `ui: 'primary'`。
 
 ## 高さの扱い

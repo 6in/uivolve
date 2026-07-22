@@ -8,7 +8,7 @@
 
 | xtype | 実装 | 説明 |
 |---|---|---|
-| `panel` / `form` | Panel | タイトルバー付きの基本パネル。 collapsible / collapsed(折りたたみ)、tbar / bbar(ツールバー)、 bodyPadding / html / iconCls に対応。form は body がフォームスタイルになる。 |
+| `panel` / `form` | Panel | タイトルバー付きの基本パネル。 collapsible / collapsed(折りたたみ)、tbar / bbar(ツールバー)、 buttons(下部右寄せのボタン群 — bbar: ['->', ...] の糖衣)、 bodyPadding / html / iconCls に対応。form は body がフォームスタイルになる。 |
 | `container` / `fieldcontainer` | Container | ヘッダーなしの汎用コンテナ。layout と items で子を配置する。 パネル同様 tbar / bbar も置ける (ExtJS では Panel の config だが、ヘッダー不要の ツールバー領域を container + tbar だけで書けるよう緩和した独自拡張)。 |
 | `component` / `box` | RawComponent | html / text をそのまま描画 |
 | `toolbar` / `tbar` | Toolbar | ExtJS のショートハンドに対応: '->' = 右寄せ / '-' = セパレーター / ' ' = スペーサー / 文字列 = ラベル items の defaultType は button。 |

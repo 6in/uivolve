@@ -43,6 +43,7 @@ function collectUsage(
   walk(config.items, itemsDefault)
   walk(config.tbar, 'button')
   walk(config.bbar, 'button')
+  walk(config.buttons, 'button')
   walk(config.menu, 'button')
 }
 
@@ -83,7 +84,7 @@ export function buildAiReference(config: ComponentConfig): string {
     "- `handler` / `listeners`: イベントハンドラの参照名 (モックでは宣言のみ。この名前で実装すること。例: handler: 'onSaveClick')",
     "- `allowBlank: false` = 必須入力。`maxLength` / `minLength` / `regex` / `vtype` は入力バリデーションの仕様",
     '- `width` / `height` / `flex` / `margin` / `padding` / `hidden` / `disabled`: サイズ・状態の共通 config',
-    '- `items`: 子コンポーネント。`tbar` / `bbar` は上部/下部ツールバー',
+    '- `items`: 子コンポーネント。`tbar` / `bbar` は上部/下部ツールバー、`buttons` は下部右寄せのボタン群',
   )
   return sections.join('\n')
 }

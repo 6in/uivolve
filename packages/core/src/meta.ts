@@ -48,6 +48,7 @@ export const CONTAINER_PROPS: string[] = [
   'defaults',
   'tbar',
   'bbar',
+  'buttons',
   'bodyPadding',
   'html',
 ]

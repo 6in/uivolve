@@ -14,7 +14,22 @@ export function normalizeBar(
   return { xtype: 'toolbar', ...bar }
 }
 
-/** tbar / bbar の描画。pagingtoolbar など toolbar 以外の xtype はレジストリ経由で解決する */
+/**
+ * buttons (ExtJS の下部右寄せボタン群) を footer ツールバー config に変換する。
+ * 明示的な整列指定 ('->') がなければ pack: 'end' 相当として右寄せにする
+ */
+export function normalizeButtons(
+  buttons: ComponentConfig['buttons'],
+): ComponentConfig | undefined {
+  // 文字列は messagebox のボタンセット指定 (MessageBox 側で解釈する)
+  if (!buttons || typeof buttons === 'string') return undefined
+  if (Array.isArray(buttons)) {
+    return { xtype: 'toolbar', items: buttons.includes('->') ? buttons : ['->', ...buttons] }
+  }
+  return { xtype: 'toolbar', ...buttons }
+}
+
+/** tbar / bbar / buttons の描画。pagingtoolbar など toolbar 以外の xtype はレジストリ経由で解決する */
 export function Bar({ config }: { config: ComponentConfig }) {
   if (config.xtype === 'toolbar') return <Toolbar config={config} />
   return <XRender config={config} />
@@ -54,6 +69,7 @@ export function PanelShell({
     config.title !== undefined || config.header === true || collapsible || headerExtra !== undefined
   const tbar = normalizeBar(config.tbar)
   const bbar = normalizeBar(config.bbar)
+  const buttons = normalizeButtons(config.buttons)
 
   const rootStyle = styleOf(config)
   if (collapsed) {
@@ -109,6 +125,7 @@ export function PanelShell({
             )}
           </div>
           {bbar && <Bar config={bbar} />}
+          {buttons && <Bar config={buttons} />}
         </div>
       </div>
     </section>
@@ -118,6 +135,7 @@ export function PanelShell({
 /**
  * xtype: 'panel' | 'form' — タイトルバー付きの基本パネル。
  * collapsible / collapsed(折りたたみ)、tbar / bbar(ツールバー)、
+ * buttons(下部右寄せのボタン群 — bbar: ['->', ...] の糖衣)、
  * bodyPadding / html / iconCls に対応。form は body がフォームスタイルになる。
  */
 export function Panel({ config }: RendererProps) {
@@ -138,14 +156,16 @@ export function Panel({ config }: RendererProps) {
 export function Container({ config }: RendererProps) {
   const tbar = normalizeBar(config.tbar)
   const bbar = normalizeBar(config.bbar)
+  const buttons = normalizeButtons(config.buttons)
   return (
     <div
-      className={cx('sx-container', (tbar || bbar) && 'sx-container-bars', config.cls)}
+      className={cx('sx-container', (tbar || bbar || buttons) && 'sx-container-bars', config.cls)}
       style={{ ...styleOf(config), padding: toCssBox(config.padding) }}
     >
       {tbar && <Bar config={tbar} />}
       <LayoutBody config={config} />
       {bbar && <Bar config={bbar} />}
+      {buttons && <Bar config={buttons} />}
     </div>
   )
 }

@@ -63,6 +63,12 @@ export interface ComponentConfig {
   html?: string
   tbar?: Array<ComponentConfig | string> | ComponentConfig
   bbar?: Array<ComponentConfig | string> | ComponentConfig
+  /**
+   * 下部右寄せのボタン群 (ExtJS の buttons 相当。bbar: ['->', ...] の糖衣)。
+   * messagebox ではボタンセット ('ok' | 'okcancel' | 'yesno' | 'yesnocancel') または
+   * ラベル配列として解釈される
+   */
+  buttons?: string | Array<ComponentConfig | string> | ComponentConfig
 
   // ---- ウィンドウ ----
   /** window: 閉じるボタンの表示 (見た目のみ)。false で非表示 */
@@ -128,8 +134,6 @@ export interface ComponentConfig {
   // ---- messagebox / toast ----
   /** ダイアログ本文 (ExtJS の msg も可) */
   message?: string
-  /** ボタンセット ('ok' | 'okcancel' | 'yesno' | 'yesnocancel') または任意のラベル配列 */
-  buttons?: string | string[]
   /** ダイアログのアイコン ('info' | 'question' | 'warning' | 'error') */
   icon?: string
   /** messagebox に入力欄を付ける (Ext.Msg.prompt 相当) */

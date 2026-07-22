@@ -44,6 +44,8 @@ export function MessageBox({ config }: RendererProps) {
     header: true,
     width: config.width ?? 380,
     height: undefined,
+    // buttons はこの場でラベルに解釈して bbar に展開済み (PanelShell での二重描画を防ぐ)
+    buttons: undefined,
     bbar: [
       '->',
       ...labels.map((text, i) => ({ text, ui: i === 0 ? 'primary' : undefined })),

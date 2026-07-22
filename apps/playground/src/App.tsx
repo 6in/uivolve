@@ -43,7 +43,7 @@ function hasComments(code: string, format: DslFormat): boolean {
 function countComponents(config: ComponentConfig): number {
   let n = 1
   const kids: unknown[] = []
-  for (const key of ['items', 'tbar', 'bbar'] as const) {
+  for (const key of ['items', 'tbar', 'bbar', 'buttons'] as const) {
     const v = config[key]
     if (Array.isArray(v)) kids.push(...v)
   }

@@ -42,7 +42,7 @@ function collectUsage(node, acc) {
   if (typeof node.xtype === 'string') acc.xtypes.add(node.xtype)
   const layout = typeof node.layout === 'object' && node.layout ? node.layout.type : node.layout
   if (typeof layout === 'string') acc.layouts.add(layout)
-  for (const key of ['items', 'tbar', 'bbar', 'columns']) {
+  for (const key of ['items', 'tbar', 'bbar', 'buttons', 'columns']) {
     if (node[key] !== undefined) collectUsage(node[key], acc)
   }
   return acc

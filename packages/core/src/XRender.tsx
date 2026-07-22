@@ -4,7 +4,14 @@ import type { ComponentConfig, RendererProps } from './types'
 /** xtype 省略時の解決 (ExtJS のコンテナ defaultType は 'panel') */
 function effectiveXtype(config: ComponentConfig): string {
   if (config.xtype) return config.xtype
-  if (config.items || config.title !== undefined || config.layout || config.tbar || config.bbar) {
+  if (
+    config.items ||
+    config.title !== undefined ||
+    config.layout ||
+    config.tbar ||
+    config.bbar ||
+    config.buttons
+  ) {
     return 'panel'
   }
   return 'component'

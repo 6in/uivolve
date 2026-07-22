@@ -24,7 +24,7 @@ const LAYOUTS = new Set(allLayoutNames())
 const COLUMN_XTYPES = new Set(['checkcolumn', 'actioncolumn', 'widgetcolumn', 'treecolumn'])
 const FENCE_LANGS = new Set(['uivolve', 'extjs', 'sx'])
 // 子コンポーネントを持ちうるキー (columns は checkcolumn など xtype 付きの列のみ検証)
-const CHILD_KEYS = ['items', 'tbar', 'bbar', 'columns']
+const CHILD_KEYS = ['items', 'tbar', 'bbar', 'buttons', 'columns']
 
 /** Markdown / MDX から ```uivolve フェンスを抽出する。[{ code, line }] を返す */
 function extractFences(source) {
