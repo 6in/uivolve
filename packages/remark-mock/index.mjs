@@ -68,6 +68,49 @@ export default function remarkUivolve(options = {}) {
   }
 }
 
+/**
+ * MDX が構文エラーにする HTML コメント (<!-- -->) を除去するユーティリティ。
+ * 素の Markdown をブラウザ内 evaluate() でコンパイルする前の救済に使う
+ * (MDX Playground / VSCode 拡張のプレビュー)。
+ * コードフェンス内とインラインコード内のコメントはそのまま残し、
+ * エラー位置がずれないよう除去したコメント内の改行は残す。
+ *
+ * @param {string} source
+ * @returns {string}
+ */
+export function stripHtmlComments(source) {
+  const out = []
+  let buffer = []
+  let fenceMarker = null
+
+  const flush = () => {
+    if (!buffer.length) return
+    out.push(
+      // インラインコード (`...`) は保持し、HTML コメントだけ改行を残して除去する
+      buffer.join('\n').replace(/(`+)[\s\S]*?\1|<!--[\s\S]*?-->/g, (m) =>
+        m.startsWith('`') ? m : '\n'.repeat(m.split('\n').length - 1),
+      ),
+    )
+    buffer = []
+  }
+
+  for (const line of source.split('\n')) {
+    const fence = /^ {0,3}(`{3,}|~{3,})/.exec(line)
+    if (fenceMarker === null && fence) {
+      flush()
+      fenceMarker = fence[1][0]
+      out.push(line)
+    } else if (fenceMarker !== null) {
+      out.push(line)
+      if (fence && fence[1][0] === fenceMarker) fenceMarker = null
+    } else {
+      buffer.push(line)
+    }
+  }
+  flush()
+  return out.join('\n')
+}
+
 function normalizeHeight(v) {
   return /^\d+$/.test(String(v)) ? `${v}px` : String(v)
 }

@@ -1,7 +1,7 @@
 import { evaluate } from '@mdx-js/mdx'
 import Editor, { type OnMount } from '@monaco-editor/react'
 import { ExtMockup } from '@uivolve/core'
-import remarkUivolve from '@uivolve/remark-mock'
+import remarkUivolve, { stripHtmlComments } from '@uivolve/remark-mock'
 import {
   Component,
   useEffect,
@@ -42,45 +42,6 @@ function toCompileError(e: unknown): CompileError {
     line: err.line ?? err.place?.start?.line,
     column: err.column ?? err.place?.start?.column,
   }
-}
-
-/**
- * MDX は HTML コメント (<!-- -->) を構文エラーにするため、コンパイル前に取り除く。
- * 素の Markdown を貼り付けても動くようにするための救済で、
- * コードフェンス内とインラインコード内のコメントはそのまま残す。
- * エラー位置がずれないよう、除去したコメント内の改行は残す。
- */
-function stripHtmlComments(source: string): string {
-  const out: string[] = []
-  let buffer: string[] = []
-  let fenceMarker: string | null = null
-
-  const flush = () => {
-    if (!buffer.length) return
-    out.push(
-      // インラインコード (`...`) は保持し、HTML コメントだけ改行を残して除去する
-      buffer.join('\n').replace(/(`+)[\s\S]*?\1|<!--[\s\S]*?-->/g, (m) =>
-        m.startsWith('`') ? m : '\n'.repeat(m.split('\n').length - 1),
-      ),
-    )
-    buffer = []
-  }
-
-  for (const line of source.split('\n')) {
-    const fence = /^ {0,3}(`{3,}|~{3,})/.exec(line)
-    if (fenceMarker === null && fence) {
-      flush()
-      fenceMarker = fence[1][0]
-      out.push(line)
-    } else if (fenceMarker !== null) {
-      out.push(line)
-      if (fence && fence[1][0] === fenceMarker) fenceMarker = null
-    } else {
-      buffer.push(line)
-    }
-  }
-  flush()
-  return out.join('\n')
 }
 
 class PreviewBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {

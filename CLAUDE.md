@@ -34,6 +34,9 @@ apps/playground/        エディタ + ライブプレビュー (Vite + Monaco)
                           evaluate + remark-mock (injectImport: false) でその場プレビュー。
                           サンプルは mdx-demo の実ファイルを ?raw import して共有
 apps/mdx-demo/          Astro + MDX 統合デモ (Markdown 仕様書にモック埋め込み)
+apps/vscode-ext/        VSCode 拡張「uivolve Preview」— DSL / MDX 仕様書のライブプレビュー。
+                        esbuild で extension host と Webview (React + core + mdx) をバンドル。
+                        npm run ext:build / ext:vsix (VSIX 生成)
 reference/components.md      コンポーネント/レイアウトのリファレンス — JSDoc から自動生成。直接編集禁止
 reference/extjs-layouts.md   ExtJS 7.9 全レイアウトの調査資料と対応状況
 skills/uivolve-mock/         配布用の生成スキル (他プロジェクトで画面仕様書を書く用)。
@@ -58,6 +61,8 @@ npm run typecheck   # 型チェックのみ
 npm run docs        # JSDoc から reference/components.md を再生成 (スキルの references/ へも同期)
 npm run schema      # meta.ts から reference/dsl.schema.json を再生成 (同上)
 npm run validate -- <file>  # DSL / MDX の検証 (構文 + 未知 xtype/layout + itemId 警告)
+npm run ext:build   # VSCode 拡張をビルド (dist/)
+npm run ext:vsix    # VSCode 拡張を VSIX にパッケージ (apps/vscode-ext/uivolve-vscode.vsix)
 npm run mdx:dev     # MDX デモを http://localhost:4321 で起動
 npm run mdx:build   # MDX デモの静的ビルド (remark プラグインの検証を兼ねる)
 npm run pages       # Pages 用ビルドをローカル実行 (site/ へ出力。公開は main への push で Actions が自動実行)

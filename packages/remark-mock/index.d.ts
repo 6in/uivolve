@@ -20,3 +20,9 @@ export interface RemarkUivolveOptions {
  * Markdown / MDX 内の ```uivolve コードフェンスを <ExtMockup /> に変換する remark プラグイン
  */
 export default function remarkUivolve(options?: RemarkUivolveOptions): (tree: unknown) => void
+
+/**
+ * MDX が構文エラーにする HTML コメント (<!-- -->) を除去する。
+ * コードフェンス内・インラインコード内は保持し、除去部分の改行は残す
+ */
+export function stripHtmlComments(source: string): string

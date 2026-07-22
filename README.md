@@ -46,6 +46,7 @@ packages/core/        — @uivolve/core: DSL パーサー + レンダラー (Rea
 packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンスをモック描画する remark プラグイン
 apps/playground/      — エディタ + ビューア (Vite)。/mdx-playground/ に MDX Playground も同梱
 apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
+apps/vscode-ext/      — VSCode 拡張「uivolve Preview」(DSL / MDX のライブプレビュー)
 reference/            — リファレンス (components.md は JSDoc から自動生成)
 scripts/              — reference 生成スクリプト
 .github/workflows/    — GitHub Pages への自動デプロイ (pages.yml)
@@ -328,6 +329,19 @@ export default defineConfig({
 ```
 
 レイアウト側で `@uivolve/core/styles.css` (と必要なら Font Awesome) を読み込む。
+
+## VSCode 拡張 (uivolve Preview)
+
+エディタで開いた DSL (`.yaml` / `.json5`) や ` ```uivolve ` フェンス入りの
+Markdown / MDX を、エディタ横のパネルにライブプレビューする拡張。
+コマンドパレットまたはエディタ右上のアイコンから「uivolve: プレビューを開く」。
+
+```bash
+npm run ext:vsix
+code --install-extension apps/vscode-ext/uivolve-vscode.vsix
+```
+
+詳細は [apps/vscode-ext/README.md](apps/vscode-ext/README.md) を参照。
 
 ## AI 生成スキル (Claude Code)
 

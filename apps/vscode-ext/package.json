@@ -1,0 +1,62 @@
+{
+  "name": "uivolve-vscode",
+  "displayName": "uivolve Preview",
+  "description": "ExtJS 互換 DSL (uivolve) の画面モックと、```uivolve フェンス入り Markdown / MDX 仕様書をエディタ横にライブプレビューする",
+  "publisher": "6in",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/6in/uivolve"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "main": "./dist/extension.cjs",
+  "contributes": {
+    "commands": [
+      {
+        "command": "uivolve.showPreview",
+        "title": "uivolve: プレビューを開く",
+        "icon": "$(open-preview)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "uivolve.showPreview",
+          "when": "resourceExtname =~ /\\.(md|mdx|markdown|yaml|yml|json5|uivolve)$/",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit && node build.mjs",
+    "vsix": "npm run build && vsce package --no-dependencies -o uivolve-vscode.vsix"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.0",
+    "@mdx-js/mdx": "^3.1.0",
+    "@uivolve/core": "*",
+    "@uivolve/remark-mock": "*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.0"
+  }
+}
