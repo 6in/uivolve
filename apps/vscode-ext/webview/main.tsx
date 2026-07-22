@@ -6,15 +6,18 @@
  *   (MDX Playground と同じ仕組み。エラー中は最後に成功した内容を保持)
  */
 import { evaluate } from '@mdx-js/mdx'
-import { ExtMockup } from '@uivolve/core'
+import { ExtMockup, XRender, type ComponentConfig } from '@uivolve/core'
 import remarkUivolve, { stripHtmlComments } from '@uivolve/remark-mock'
 import {
   Component,
   StrictMode,
+  isValidElement,
   useEffect,
   useRef,
   useState,
+  type ComponentProps,
   type ComponentType,
+  type ReactElement,
   type ReactNode,
 } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -54,6 +57,30 @@ class PreviewBoundary extends Component<{ children: ReactNode }, { error: Error 
   }
 }
 
+/**
+ * ```mermaid フェンスを Mermaid.js で描画する pre の差し替え。
+ * MDX は ```mermaid を <pre><code class="language-mermaid"> にコンパイルするので、
+ * それを検出して core の Mermaid レンダラー (xtype: 'mermaid'、registry 経由) に渡す。
+ * それ以外のコードフェンスは通常の <pre> のまま。
+ */
+function PreOrMermaid(props: ComponentProps<'pre'>) {
+  const child = props.children as ReactElement<{ className?: string; children?: unknown }>
+  if (isValidElement(child) && /\blanguage-mermaid\b/.test(child.props.className ?? '')) {
+    const text = String(child.props.children ?? '').replace(/\n$/, '')
+    return (
+      <div className="uv-mermaid">
+        <XRender config={{ xtype: 'mermaid', value: text } as ComponentConfig} />
+      </div>
+    )
+  }
+  return <pre {...props} />
+}
+
+const MDX_COMPONENTS = {
+  ExtMockup: ExtMockup as ComponentType<never>,
+  pre: PreOrMermaid as ComponentType<never>,
+}
+
 function MdxPreview({ code }: { code: string }) {
   const [compiled, setCompiled] = useState<{ Content: MdxContent; id: number } | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -90,7 +117,7 @@ function MdxPreview({ code }: { code: string }) {
       {compiled && (
         <article className="uv-doc" key={compiled.id}>
           <PreviewBoundary>
-            <compiled.Content components={{ ExtMockup: ExtMockup as ComponentType<never> }} />
+            <compiled.Content components={MDX_COMPONENTS} />
           </PreviewBoundary>
         </article>
       )}
