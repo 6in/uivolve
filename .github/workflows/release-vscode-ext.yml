@@ -1,0 +1,57 @@
+# VSCode 拡張 (uivolve Preview) の VSIX をビルドして GitHub Release に添付する。
+#
+# 使い方:
+#   1. apps/vscode-ext/package.json の version を上げてコミット
+#   2. 同じバージョンのタグを push:  git tag vscode-ext-v0.2.0 && git push origin vscode-ext-v0.2.0
+#   → Release "vscode-ext-v0.2.0" が作られ、uivolve-vscode-0.2.0.vsix が添付される
+#
+# workflow_dispatch で手動実行した場合は Release を作らず、Artifacts に VSIX を置くだけ (動作確認用)
+name: Release VSCode Extension
+
+on:
+  push:
+    tags: ['vscode-ext-v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - id: meta
+        name: バージョンの確認 (タグと package.json の version が一致すること)
+        run: |
+          VERSION=$(node -p "require('./apps/vscode-ext/package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_REF_TYPE" == "tag" && "$GITHUB_REF_NAME" != "vscode-ext-v$VERSION" ]]; then
+            echo "::error::タグ $GITHUB_REF_NAME と apps/vscode-ext/package.json の version ($VERSION) が一致しません"
+            exit 1
+          fi
+
+      # tsc --noEmit + esbuild → apps/vscode-ext/uivolve-vscode-<version>.vsix
+      - run: npm -w apps/vscode-ext run vsix:release
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: uivolve-vscode-${{ steps.meta.outputs.version }}
+          path: apps/vscode-ext/uivolve-vscode-*.vsix
+          if-no-files-found: error
+
+      - if: github.ref_type == 'tag'
+        name: Release を作成して VSIX を添付
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" apps/vscode-ext/uivolve-vscode-*.vsix \
+            --title "uivolve Preview (VSCode 拡張) v${{ steps.meta.outputs.version }}" \
+            --generate-notes \
+            --notes "インストール: VSIX をダウンロードして \`code --install-extension uivolve-vscode-${{ steps.meta.outputs.version }}.vsix\`"

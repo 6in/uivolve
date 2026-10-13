@@ -46,6 +46,8 @@ skills/uivolve-mock/         配布用の生成スキル (他プロジェクト�
                              Playground 全サンプル + MDX 仕様書例を INDEX.md 付きで展開)
                              は npm run docs / schema が自動生成・同期する — 直接編集禁止
 .github/workflows/pages.yml  main への push で Playground + MDX デモを GitHub Pages へ自動デプロイ
+.github/workflows/release-vscode-ext.yml  vscode-ext-v<version> タグの push で VSIX をビルドし
+                             GitHub Release に添付 (apps/vscode-ext/package.json の version と一致必須)
 scripts/gen-component-docs.mjs  reference/components.md の生成スクリプト
 scripts/validate-dsl.mjs     DSL / MDX の検証 (構文 + xtype/layout 照合)。npm run validate
 scripts/shot-uivolve.mjs     DSL / MDX を Playground に流し込みスクリーンショットを撮る

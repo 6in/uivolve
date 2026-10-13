@@ -23,11 +23,33 @@ Markdown / MDX 仕様書を、エディタ横のパネルに**ライブプレビ
 
 ## インストール
 
+[GitHub Releases](https://github.com/6in/uivolve/releases) の `uivolve-vscode-<version>.vsix` をダウンロードして:
+
+```bash
+code --install-extension uivolve-vscode-<version>.vsix
+```
+
+(VSCode の拡張ビュー右上の「…」→「VSIX からのインストール」でも可)
+
+ソースからビルドする場合:
+
 ```bash
 npm install               # リポジトリルートで (初回のみ)
 npm run ext:vsix          # apps/vscode-ext/uivolve-vscode.vsix を生成
 code --install-extension apps/vscode-ext/uivolve-vscode.vsix
 ```
+
+## リリース (メンテナ向け)
+
+`package.json` の `version` を上げてコミットし、同じバージョンのタグを push する:
+
+```bash
+git tag vscode-ext-v0.2.0 && git push origin vscode-ext-v0.2.0
+```
+
+`.github/workflows/release-vscode-ext.yml` が VSIX をビルドし、Release `vscode-ext-v0.2.0` に
+`uivolve-vscode-0.2.0.vsix` を添付する (タグと version が不一致なら失敗する)。
+手元で同じファイルを作るには `npm -w apps/vscode-ext run vsix:release`。
 
 ## 開発
 

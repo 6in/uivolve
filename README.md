@@ -359,13 +359,25 @@ export default defineConfig({
 
 エディタで開いた DSL (`.yaml` / `.json5`) や ` ```uivolve ` フェンス / `<uivolve src>` 入りの
 Markdown / MDX を、エディタ横のパネルにライブプレビューする拡張。
-コマンドパレットまたはエディタ右上のアイコンから「uivolve: プレビューを開く」。
+
+- 開き方: エディタ右上のプレビューアイコン、`Ctrl+Shift+V` (`.mdx` / DSL)、`Ctrl+K U` (`.md` 含む全対応ファイル)、
+  またはコマンドパレットの「uivolve: プレビューを開く」
+- 一度開けば別の対応ファイルに切り替えたときも追従する。設定 `uivolve.preview.autoOpen` を on に
+  すると対応ファイルを開くだけでプレビューが開く
+- `<uivolve src>` の参照先は MDX 相対で読み、参照先を編集するとプレビューも更新される
+
+インストールは [Releases](https://github.com/6in/uivolve/releases) から VSIX をダウンロードするか、
+ソースからビルドする:
 
 ```bash
-npm run ext:vsix
+code --install-extension uivolve-vscode-<version>.vsix   # Releases から落とした場合
+
+npm run ext:vsix                                          # ソースからビルドする場合
 code --install-extension apps/vscode-ext/uivolve-vscode.vsix
 ```
 
+リリースは `apps/vscode-ext/package.json` の version を上げて `vscode-ext-v<version>` タグを push すると
+`.github/workflows/release-vscode-ext.yml` が VSIX をビルドして GitHub Release に添付する。
 詳細は [apps/vscode-ext/README.md](apps/vscode-ext/README.md) を参照。
 
 ## AI 生成スキル (Claude Code)
