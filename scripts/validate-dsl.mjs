@@ -2,7 +2,7 @@
 /**
  * uivolve DSL の検証スクリプト。
  * DSL ファイル (.yaml / .json5 / .uivolve) または Markdown / MDX
- * (```uivolve フェンスを抽出) を受け取り、以下をチェックする:
+ * (```uivolve フェンスと <uivolve src="..."> の参照先を抽出) を受け取り、以下をチェックする:
  *
  * 1. parseDsl で構文解析できること
  * 2. xtype / layout が登録済みのものであること (meta.ts と照合)
@@ -15,6 +15,7 @@
  * config キー単位の厳密な検証には reference/dsl.schema.json (JSON Schema) を使う。
  */
 import fs from 'node:fs'
+import path from 'node:path'
 import { allLayoutNames, allXtypeNames } from '../packages/core/src/meta.ts'
 import { parseDsl } from '../packages/core/src/parser.ts'
 
@@ -43,6 +44,36 @@ function extractFences(source) {
     }
   }
   return fences
+}
+
+/**
+ * コードフェンスの中身とインラインコード (`...`) を空白にする (行番号は維持)。
+ * 本文中のタグの例示を抽出対象から外す
+ */
+function blankCode(source) {
+  let marker = null
+  return source
+    .split('\n')
+    .map((line) => {
+      const m = /^ {0,3}(`{3,}|~{3,})/.exec(line)
+      if (marker === null && m) marker = m[1][0]
+      else if (marker !== null && m && m[1][0] === marker) marker = null
+      else if (marker !== null) return ''
+      return marker === null ? line.replace(/`[^`]*`/g, (c) => ' '.repeat(c.length)) : ''
+    })
+    .join('\n')
+}
+
+/** MDX から <uivolve src="..."> / <ExtMockup src="..."> タグを抽出する。[{ src, line }] を返す */
+function extractSrcRefs(source) {
+  const refs = []
+  const re = /<(?:uivolve|ExtMockup)\b[^>]*?\bsrc=(?:"([^"]*)"|'([^']*)')/g
+  const text = blankCode(source)
+  let m
+  while ((m = re.exec(text))) {
+    refs.push({ src: m[1] ?? m[2], line: text.slice(0, m.index).split('\n').length })
+  }
+  return refs
 }
 
 /** config ツリーを歩いて問題を集める */
@@ -112,13 +143,27 @@ let failed = false
 for (const file of files) {
   const source = fs.readFileSync(file, 'utf8')
   const results = /\.(md|mdx|markdown)$/i.test(file)
-    ? extractFences(source).map((f, i) =>
-        validateDsl(f.code, `${file} フェンス#${i + 1} (${f.line} 行目〜)`, f.line - 1),
-      )
+    ? [
+        ...extractFences(source).map((f, i) =>
+          validateDsl(f.code, `${file} フェンス#${i + 1} (${f.line} 行目〜)`, f.line - 1),
+        ),
+        // <uivolve src> は MDX ファイル相対で参照先を読んで検証する (URL はスキップ)
+        ...extractSrcRefs(source).map((r) => {
+          const label = `${file} ${r.line} 行目 <uivolve src="${r.src}">`
+          if (/^https?:\/\//.test(r.src)) {
+            return { label, errors: [], warnings: ['URL 参照は検証をスキップ'] }
+          }
+          const target = path.resolve(path.dirname(file), r.src)
+          if (!fs.existsSync(target)) {
+            return { label, errors: [`参照先が見つからない: ${target}`], warnings: [] }
+          }
+          return validateDsl(fs.readFileSync(target, 'utf8'), label)
+        }),
+      ]
     : [validateDsl(source, file)]
 
   if (!results.length) {
-    console.log(`- ${file}: uivolve コードフェンスが見つからない`)
+    console.log(`- ${file}: uivolve コードフェンス / <uivolve src> が見つからない`)
     continue
   }
   for (const { label, errors, warnings } of results) {

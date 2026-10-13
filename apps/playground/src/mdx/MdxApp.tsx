@@ -7,6 +7,7 @@ import {
   useEffect,
   useRef,
   useState,
+  type ComponentProps,
   type ComponentType,
   type ReactNode,
 } from 'react'
@@ -43,6 +44,56 @@ function toCompileError(e: unknown): CompileError {
     column: err.column ?? err.place?.start?.column,
   }
 }
+
+// MDX デモ (apps/mdx-demo) の DSL ファイルを仮想ファイルとして持ち、<uivolve src="..."> を
+// デモ由来のサンプルからの相対パスで解決する。ブラウザはファイルを読めないので、
+// それ以外の src は remark プラグインが code なしの <ExtMockup src> を出し、
+// MockupOrPlaceholder がプレースホルダ (SrcPlaceholder) を描画する
+const DEMO_ROOT = '../../../mdx-demo/src/'
+const demoFiles: Record<string, string> = Object.fromEntries(
+  Object.entries(
+    import.meta.glob('../../../mdx-demo/src/**/*.{yaml,yml,json5,uivolve}', {
+      query: '?raw',
+      import: 'default',
+      eager: true,
+    }) as Record<string, string>,
+  ).map(([key, text]) => [key.slice(DEMO_ROOT.length), text]),
+)
+
+/** 'pages/foo.mdx' からの相対 src を 'dsl/bar.yaml' に正規化して仮想ファイルを引く */
+function resolveDemoSrc(src: string, fromPath: string | undefined): string | null {
+  if (!fromPath?.startsWith(DEMO_ROOT)) return null
+  const base = `file:///${fromPath.slice(DEMO_ROOT.length)}`
+  const resolved = decodeURIComponent(new URL(src, base).pathname.slice(1))
+  return demoFiles[resolved] ?? null
+}
+
+/** 解決できなかった <uivolve src> の代わりに描画するプレースホルダ */
+function SrcPlaceholder({ src, height }: { src: string; height?: string | number }) {
+  return (
+    <div
+      className="mdxpg-srcplaceholder"
+      style={{ height: typeof height === 'number' ? `${height}px` : height }}
+    >
+      <strong>外部 DSL の参照</strong>
+      <code>{`<uivolve src="${src}" />`}</code>
+      <span>
+        MDX Playground はファイルを読めないためここには描画されません。VSCode 拡張 (uivolve
+        Preview) か Astro でプレビューするか、DSL を ```uivolve フェンスで直接埋め込んでください。
+      </span>
+    </div>
+  )
+}
+
+/** code がなく src だけ残った (解決できなかった) ものはプレースホルダ、それ以外は ExtMockup */
+function MockupOrPlaceholder(props: ComponentProps<typeof ExtMockup> & { src?: string }) {
+  if (props.code === undefined && props.config === undefined && props.src) {
+    return <SrcPlaceholder src={props.src} height={props.height} />
+  }
+  return <ExtMockup {...props} />
+}
+
+const MDX_COMPONENTS = { ExtMockup: MockupOrPlaceholder as ComponentType<never> }
 
 class PreviewBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state: { error: Error | null } = { error: null }
@@ -91,15 +142,25 @@ export function MdxApp() {
   }, [])
 
   // MDX をブラウザ内でコンパイル。エラー中は最後に成功した内容を表示し続ける
+  const samplePath = mdxSamples[sampleIndex]?.path
   useEffect(() => {
     let cancelled = false
+    // <uivolve src>: http(s) は fetch、デモ由来のサンプルは仮想ファイル。それ以外は null → プレースホルダ
+    const readFile = async (src: string) => {
+      if (/^https?:\/\//.test(src)) {
+        const res = await fetch(src)
+        if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`)
+        return res.text()
+      }
+      return resolveDemoSrc(src, samplePath)
+    }
     evaluate(stripHtmlComments(previewCode), {
       ...jsxRuntime,
       remarkPlugins: [
         remarkFrontmatter,
         remarkGfm,
         // import は evaluate では扱えないので注入せず、components prop で ExtMockup を渡す
-        [remarkUivolve, { clientLoad: false, injectImport: false }],
+        [remarkUivolve, { clientLoad: false, injectImport: false, readFile }],
       ],
     } as unknown as Parameters<typeof evaluate>[1]).then(
       (mod) => {
@@ -116,7 +177,7 @@ export function MdxApp() {
     return () => {
       cancelled = true
     }
-  }, [previewCode, renderEpoch])
+  }, [previewCode, renderEpoch, samplePath])
 
   // コンパイルエラーはエディタ上のマーカーとしても表示
   useEffect(() => {
@@ -221,6 +282,7 @@ export function MdxApp() {
         <span className="pg-tb-fill" />
         <span className="mdxpg-hint">
           ```uivolve フェンス付きの MDX / Markdown を貼り付けるとプレビューされます
+          (&lt;uivolve src="..." /&gt; の外部参照はデモサンプルのものだけ解決)
         </span>
       </div>
       <main
@@ -261,7 +323,7 @@ export function MdxApp() {
           {compiled && (
             <article className="mdxpg-doc" key={compiled.id}>
               <PreviewBoundary>
-                <compiled.Content components={{ ExtMockup: ExtMockup as ComponentType<never> }} />
+                <compiled.Content components={MDX_COMPONENTS} />
               </PreviewBoundary>
             </article>
           )}

@@ -1,8 +1,10 @@
 /**
  * MDX Playground のサンプル。
- * 「画面仕様書」「障害対応報告書」は apps/mdx-demo の実ファイルを ?raw で
- * そのまま読み込む (デモと Playground でサンプルがずれないように)。
+ * 「画面仕様書」「外部 DSL ファイルの参照」「障害対応報告書」は apps/mdx-demo の実ファイルを
+ * ?raw でそのまま読み込む (デモと Playground でサンプルがずれないように)。
+ * path は <uivolve src="..."> の相対パスを解決する基準 (MdxApp の仮想ファイル参照)。
  */
+import externalDoc from '../../../mdx-demo/src/pages/external.mdx?raw'
 import specDoc from '../../../mdx-demo/src/pages/index.mdx?raw'
 import runbookDoc from '../../../mdx-demo/src/pages/runbook.mdx?raw'
 
@@ -52,10 +54,23 @@ Markdown の中に \`\`\`uivolve フェンスで ExtJS 互換 DSL を書くと�
 export interface MdxSample {
   name: string
   code: string
+  /** 元ファイルのパス (apps/playground/src/mdx からの相対)。<uivolve src> の解決基準 */
+  path?: string
 }
+
+const DEMO_PAGES = '../../../mdx-demo/src/pages/'
 
 export const mdxSamples: MdxSample[] = [
   { name: 'はじめての MDX モック', code: starter },
-  { name: '画面仕様書 (MDX デモと同じもの)', code: specDoc },
-  { name: '障害対応報告書 (リッチドキュメント)', code: runbookDoc },
+  { name: '画面仕様書 (MDX デモと同じもの)', code: specDoc, path: `${DEMO_PAGES}index.mdx` },
+  {
+    name: '外部 DSL ファイルの参照 (<uivolve src>)',
+    code: externalDoc,
+    path: `${DEMO_PAGES}external.mdx`,
+  },
+  {
+    name: '障害対応報告書 (リッチドキュメント)',
+    code: runbookDoc,
+    path: `${DEMO_PAGES}runbook.mdx`,
+  },
 ]

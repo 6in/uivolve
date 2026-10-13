@@ -3,7 +3,9 @@
  * extension host からの postMessage ({ type: 'update', mode, code }) を受けて、
  * - mode 'dsl': DSL 1 枚を ExtMockup で描画
  * - mode 'mdx': MDX / Markdown を @mdx-js/mdx の evaluate でコンパイルして描画
- *   (MDX Playground と同じ仕組み。エラー中は最後に成功した内容を保持)
+ *   (MDX Playground と同じ仕組み。エラー中は最後に成功した内容を保持)。
+ *   <uivolve src="./dsl/foo.yaml"> の参照先は Webview からは読めないので、
+ *   extension host に readFile を要求して返してもらう
  */
 import { evaluate } from '@mdx-js/mdx'
 import { ExtMockup, XRender, type ComponentConfig } from '@uivolve/core'
@@ -40,7 +42,40 @@ interface UpdateMessage {
   fileName: string
 }
 
+interface ReadFileResult {
+  type: 'readFileResult'
+  id: number
+  text?: string
+  error?: string
+}
+
 type MdxContent = ComponentType<{ components?: Record<string, ComponentType<never>> }>
+
+// <uivolve src> の読み込みは extension host に依頼する (要求 id で応答を対応付ける)
+const pendingReads = new Map<
+  number,
+  { resolve: (text: string) => void; reject: (e: Error) => void }
+>()
+let readSeq = 0
+
+function readSrcViaHost(src: string): Promise<string> {
+  if (typeof acquireVsCodeApi !== 'function') {
+    return Promise.reject(new Error('VSCode 外では src を解決できません'))
+  }
+  return new Promise((resolve, reject) => {
+    const id = ++readSeq
+    pendingReads.set(id, { resolve, reject })
+    vscodeApi.postMessage({ type: 'readFile', id, src })
+  })
+}
+
+function settleRead(result: ReadFileResult) {
+  const pending = pendingReads.get(result.id)
+  if (!pending) return
+  pendingReads.delete(result.id)
+  if (result.error != null) pending.reject(new Error(result.error))
+  else pending.resolve(result.text ?? '')
+}
 
 class PreviewBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state: { error: Error | null } = { error: null }
@@ -93,7 +128,7 @@ function MdxPreview({ code }: { code: string }) {
       remarkPlugins: [
         remarkFrontmatter,
         remarkGfm,
-        [remarkUivolve, { clientLoad: false, injectImport: false }],
+        [remarkUivolve, { clientLoad: false, injectImport: false, readFile: readSrcViaHost }],
       ],
     } as unknown as Parameters<typeof evaluate>[1]).then(
       (mod) => {
@@ -130,8 +165,9 @@ function App() {
 
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
-      const data = e.data as UpdateMessage
+      const data = e.data as UpdateMessage | ReadFileResult
       if (data?.type === 'update') setMsg(data)
+      else if (data?.type === 'readFileResult') settleRead(data)
     }
     window.addEventListener('message', onMessage)
     // extension host に準備完了を通知して初回の内容をもらう

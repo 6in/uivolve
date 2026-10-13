@@ -34,6 +34,35 @@
           "group": "navigation"
         }
       ]
+    },
+    "keybindings": [
+      {
+        "command": "uivolve.showPreview",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v",
+        "when": "editorTextFocus && resourceExtname =~ /\\.(mdx|yaml|yml|json5|uivolve)$/"
+      },
+      {
+        "command": "uivolve.showPreview",
+        "key": "ctrl+k u",
+        "mac": "cmd+k u",
+        "when": "editorTextFocus && resourceExtname =~ /\\.(md|mdx|markdown|yaml|yml|json5|uivolve)$/"
+      }
+    ],
+    "configuration": {
+      "title": "uivolve Preview",
+      "properties": {
+        "uivolve.preview.autoOpen": {
+          "type": "boolean",
+          "default": false,
+          "description": "DSL (.yaml / .json5 / .uivolve) や MDX ファイルをアクティブにしたとき、プレビューを自動で開く"
+        },
+        "uivolve.preview.followActiveEditor": {
+          "type": "boolean",
+          "default": true,
+          "description": "プレビューを開いたあと、別の対応ファイルに切り替えるとプレビューも追従する"
+        }
+      }
     }
   },
   "scripts": {

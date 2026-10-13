@@ -1,0 +1,36 @@
+// 出荷指示ダイアログ — pages/external.mdx から <uivolve src="../dsl/shipping-dialog.json5" /> で参照される
+{
+  xtype: 'window',
+  itemId: 'shippingDialog',
+  title: '出荷指示',
+  width: 460,
+  bodyPadding: 14,
+  items: [
+    { xtype: 'displayfield', itemId: 'shipOrderNo', fieldLabel: '受注番号', value: 'SO-0002' },
+    { xtype: 'displayfield', itemId: 'shipCustomer', fieldLabel: '顧客名', value: '鈴木工業' },
+    { xtype: 'datefield', itemId: 'shipDate', fieldLabel: '出荷予定日' },
+    {
+      xtype: 'combobox',
+      itemId: 'carrierCombo',
+      fieldLabel: '配送業者',
+      options: ['ヤマト運輸', '佐川急便', '日本郵便', 'チャーター便'],
+    },
+    {
+      xtype: 'radiogroup',
+      itemId: 'shipMethodGroup',
+      fieldLabel: '出荷区分',
+      columns: 3,
+      items: [
+        { boxLabel: '一括', name: 'method', checked: true },
+        { boxLabel: '分納', name: 'method' },
+        { boxLabel: '直送', name: 'method' },
+      ],
+    },
+    { xtype: 'checkbox', itemId: 'notifyCheck', boxLabel: '出荷完了を顧客へメール通知する', checked: true },
+    { xtype: 'textarea', itemId: 'shipMemoArea', fieldLabel: '備考', rows: 3, emptyText: '荷姿・納品先の注意事項など' },
+  ],
+  buttons: [
+    { itemId: 'btnShipConfirm', text: '出荷指示を確定', ui: 'primary', iconCls: 'x-fa fa-truck' },
+    { itemId: 'btnShipCancel', text: 'キャンセル' },
+  ],
+}

@@ -1,0 +1,52 @@
+# 顧客マスタ 一覧画面 — pages/external.mdx から <uivolve src="../dsl/customer-list.yaml" /> で参照される
+xtype: panel
+itemId: customerApp
+title: 顧客マスタ
+layout: border
+items:
+  - region: north
+    xtype: toolbar
+    itemId: customerToolbar
+    items:
+      - { itemId: btnCustNew, text: 新規登録, ui: primary, iconCls: x-fa fa-plus }
+      - { itemId: btnCustEdit, text: 編集, iconCls: x-fa fa-pen }
+      - '-'
+      - { itemId: btnCustExport, text: CSV 出力, iconCls: x-fa fa-file-csv }
+      - '->'
+      - 絞り込み:
+      - { xtype: combobox, itemId: rankFilter, emptyText: ランク, width: 120, options: [すべて, A, B, C] }
+      - { xtype: textfield, itemId: custSearch, emptyText: 顧客名 / コード, width: 200 }
+  - region: center
+    xtype: grid
+    itemId: customerGrid
+    columnLines: true
+    columns:
+      - { text: 顧客コード, dataIndex: code, width: 110 }
+      - { text: 顧客名, dataIndex: name, flex: 1 }
+      - { text: ランク, dataIndex: rank, width: 80, align: center }
+      - { text: 担当者, dataIndex: rep, width: 110 }
+      - { text: 最終取引日, dataIndex: lastOrder, width: 120 }
+      - { xtype: checkcolumn, text: 有効, dataIndex: active, width: 70 }
+    store:
+      data:
+        - { code: C-1001, name: 山田商事, rank: A, rep: 佐藤, lastOrder: 2026-09-30, active: true }
+        - { code: C-1002, name: 鈴木工業, rank: B, rep: 田中, lastOrder: 2026-09-12, active: true }
+        - { code: C-1003, name: 田中物産, rank: A, rep: 高橋, lastOrder: 2026-08-28, active: true }
+        - { code: C-1004, name: 佐々木製作所, rank: C, rep: 佐藤, lastOrder: 2026-03-02, active: false }
+  - region: east
+    itemId: customerDetail
+    title: 顧客詳細
+    width: 300
+    split: true
+    collapsible: true
+    bodyPadding: 12
+    items:
+      - { xtype: displayfield, itemId: detailCode, fieldLabel: 顧客コード, value: C-1001 }
+      - { xtype: displayfield, itemId: detailName, fieldLabel: 顧客名, value: 山田商事 }
+      - { xtype: displayfield, itemId: detailAddress, fieldLabel: 住所, value: 東京都千代田区 1-2-3 }
+      - { xtype: displayfield, itemId: detailTel, fieldLabel: 電話, value: 03-0000-0000 }
+      - { xtype: textarea, itemId: detailMemo, fieldLabel: メモ, rows: 4, value: 月末締め・翌月末払い }
+  - region: south
+    xtype: toolbar
+    itemId: customerStatusBar
+    items: ['4 件 (有効 3 件)', '->', '最終更新 2026-10-01 09:12']

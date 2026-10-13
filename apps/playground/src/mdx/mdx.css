@@ -82,6 +82,27 @@
   }
 }
 
+/* <uivolve src> を解決できないときのプレースホルダ (ファイルはブラウザから読めない) */
+.mdxpg-srcplaceholder {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  min-height: 120px;
+  margin-block: 20px;
+  padding: 20px;
+  color: #5a6774;
+  font-size: 13px;
+  text-align: center;
+  background: repeating-linear-gradient(135deg, #f0f3f6 0 10px, #e9edf1 10px 20px);
+  border: 1px dashed #b4bec8;
+  border-radius: 8px;
+
+  & code {
+    font-size: 12px;
+  }
+}
+
 .mdxpg-rendererror {
   color: #b3261e;
   background: #fdf3f2;

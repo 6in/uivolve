@@ -43,7 +43,7 @@ npm run dev   # Playground (エディタ + ライブプレビュー) が http://
 
 ```
 packages/core/        — @uivolve/core: DSL パーサー + レンダラー (React)
-packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンスをモック描画する remark プラグイン
+packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンス / <uivolve src> をモック描画する remark プラグイン
 apps/playground/      — エディタ + ビューア (Vite)。/mdx-playground/ に MDX Playground も同梱
 apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
 apps/vscode-ext/      — VSCode 拡張「uivolve Preview」(DSL / MDX のライブプレビュー)
@@ -295,6 +295,31 @@ title: ○○画面 仕様書
 
 例: ` ```uivolve height=380 theme=dark `
 
+### DSL を別ファイルに置く (`<uivolve src>`)
+
+フェンスに書かず、`.yaml` / `.json5` に分けた DSL ファイルをタグで参照できる (MDX のみ)。
+パスは **MDX ファイルからの相対パス** (http(s) URL も可)。`src` 以外の属性はそのまま
+`ExtMockup` に渡るので、`height` / `theme` はフェンスの meta と同じ感覚で書ける。
+
+```mdx
+<uivolve src="./dsl/order-main.yaml" height={440} />
+<uivolve src="./dsl/order-entry.json5" height="380" theme="dark" />
+```
+
+参照先は remark プラグインがコンパイル時に読み込んで `code` 属性へインライン展開するので、
+描画結果はフェンスと同じ。同じモックを複数の仕様書から参照したいときや、DSL 単体を
+エディタ / Playground で編集したいときに便利。デモ: https://6in.github.io/uivolve/mdx/external/
+
+| 環境 | `<uivolve src>` の解決 |
+|---|---|
+| Astro (ビルド) | MDX ファイル相対で fs から読む (既定動作) |
+| VSCode 拡張 | extension host が読んで返す。参照先を編集するとプレビューも追従 |
+| MDX Playground | ブラウザはファイルを読めないのでプレースホルダ表示 (デモサンプルの参照と URL は解決) |
+
+ブラウザ内 `evaluate()` など独自環境では、プラグインの `readFile` オプションで読み込み方法を差し替える
+(`null` を返すと `code` なしの `<ExtMockup src="..." />` が出力されるので、`components` で ExtMockup を
+ラップしてプレースホルダを描画できる)。
+
 フェンスではなく React コンポーネントとして直接使うこともできる (props で細かく制御したい場合):
 
 ```mdx
@@ -332,7 +357,7 @@ export default defineConfig({
 
 ## VSCode 拡張 (uivolve Preview)
 
-エディタで開いた DSL (`.yaml` / `.json5`) や ` ```uivolve ` フェンス入りの
+エディタで開いた DSL (`.yaml` / `.json5`) や ` ```uivolve ` フェンス / `<uivolve src>` 入りの
 Markdown / MDX を、エディタ横のパネルにライブプレビューする拡張。
 コマンドパレットまたはエディタ右上のアイコンから「uivolve: プレビューを開く」。
 

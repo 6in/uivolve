@@ -1,0 +1,78 @@
+---
+layout: ../layouts/DocLayout.astro
+title: 外部 DSL ファイルの参照 (uivolve src)
+---
+
+# 外部 DSL ファイルの参照
+
+DSL は ` ```uivolve ` コードフェンスで MDX に直接書くほか、**別ファイルに置いて
+`<uivolve src="..." />` タグで参照**できる。画面ごとに DSL を `.yaml` / `.json5` に分けておくと、
+
+- 同じモックを複数の仕様書から参照できる (一覧画面とダイアログの組み合わせなど)
+- DSL ファイル単体を Playground / VSCode 拡張で開いて編集できる
+- AI に渡すときも「この YAML を実装して」とファイル単位で指示できる
+
+書き方 (パスは **この MDX ファイルからの相対パス**。`height` / `theme` などの属性は
+フェンスの meta と同じ意味で、`src` 以外はそのまま `ExtMockup` に渡される):
+
+```mdx
+<uivolve src="../dsl/customer-list.yaml" height={440} />
+<uivolve src="../dsl/shipping-dialog.json5" height="380" theme="dark" />
+```
+
+参照先はビルド時 (remark プラグイン) に読み込んでインライン展開されるので、
+描画結果はフェンスで書いた場合と同じになる。
+
+> 💡 MDX Playground はブラウザ内でコンパイルするためファイルを読めない。このデモの
+> サンプルは例外的に解決されるが、手元の MDX を貼った場合はプレースホルダ表示になる。
+> ファイル参照込みのライブプレビューは **VSCode 拡張 (uivolve Preview)** を使う
+> (参照先の DSL を編集すると、こちらのプレビューも追従する)。
+
+## 1. 顧客マスタ 一覧画面
+
+[`dsl/customer-list.yaml`](https://github.com/6in/uivolve/blob/main/apps/mdx-demo/src/dsl/customer-list.yaml)
+を参照。顧客の検索・一覧・詳細表示を 1 画面で行う。
+
+<uivolve src="../dsl/customer-list.yaml" height={440} />
+
+### 画面仕様
+
+| itemId | 項目 | 内容 |
+|---|---|---|
+| `rankFilter` / `custSearch` | 絞り込み | ランクと顧客名 / コードで一覧を絞り込む |
+| `customerGrid` | 顧客一覧 (center) | 行クリックで `customerDetail` に詳細を表示。「有効」列はチェック列 |
+| `customerDetail` | 顧客詳細 (east) | 幅 300px、スプリットバーでリサイズ・折りたたみ可 |
+| `btnCustExport` | CSV 出力 | 絞り込み後の一覧を CSV でダウンロード |
+
+## 2. 出荷指示ダイアログ
+
+[`dsl/shipping-dialog.json5`](https://github.com/6in/uivolve/blob/main/apps/mdx-demo/src/dsl/shipping-dialog.json5)
+を参照。受注一覧から「出荷指示」を選ぶと開くモーダル。`theme="dark"` で表示している。
+
+<uivolve src="../dsl/shipping-dialog.json5" height="380" theme="dark" />
+
+### 画面仕様
+
+| itemId | 項目 | 内容 |
+|---|---|---|
+| `shipDate` | 出荷予定日 | 必須。当日以降のみ選択可 |
+| `carrierCombo` | 配送業者 | マスタから選択。「チャーター便」選択時は備考必須 |
+| `shipMethodGroup` | 出荷区分 | 一括 / 分納 / 直送。分納時は数量入力行を追加表示 (別仕様) |
+| `btnShipConfirm` | 出荷指示を確定 | 確定後は受注状態を「出荷指示済」に更新 |
+
+## 3. フェンスとの併用
+
+同じドキュメント内でフェンスとタグは自由に混在できる。小さな補足モックはフェンス、
+本体画面は別ファイル、という使い分けが扱いやすい。
+
+```uivolve height=200
+xtype: panel
+itemId: hintPanel
+title: フェンスで書いた補足モック
+bodyPadding: 12
+items:
+  - xtype: displayfield
+    itemId: hintText
+    fieldLabel: 補足
+    value: 本体は ../dsl/*.yaml、ちょっとした説明用モックはフェンスで。
+```

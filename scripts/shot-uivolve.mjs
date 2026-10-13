@@ -6,6 +6,7 @@
  *   node scripts/shot-uivolve.mjs <file> [out.png] [--bottom] [--base=http://localhost:5173]
  *
  * - <file> が .md / .mdx なら MDX Playground、それ以外 (.yaml / .json5) は DSL Playground に流す
+ *   (<uivolve src="..."> の外部参照は Playground では読めないので、流し込む前にフェンスに展開する)
  * - --bottom はプレビューを最下部までスクロールしてから撮る (長い MDX の後半確認用)
  * - playwright-core の場所は $PLAYWRIGHT_CORE、Chromium は $UIVOLVE_CHROME で上書き可能。
  *   未指定なら ms-playwright キャッシュ (Linux / macOS) から自動検出する
@@ -87,7 +88,48 @@ const out = args[1] ?? `${file.replace(/\.[^.]+$/, '')}.png`
 const base = flags.find((f) => f.startsWith('--base='))?.slice('--base='.length) ?? 'http://localhost:5173'
 const isMdx = /\.(md|mdx|markdown)$/i.test(file)
 const url = `${base.replace(/\/$/, '')}${isMdx ? '/mdx-playground/' : '/'}`
-const source = fs.readFileSync(file, 'utf8')
+const raw = fs.readFileSync(file, 'utf8')
+const source = isMdx ? inlineSrcTags(raw, path.dirname(file)) : raw
+
+/**
+ * <uivolve src="x" height=... theme=... /> を ```uivolve フェンスに展開する。
+ * コードフェンス内 (タグの例示) は触らず、参照先がないものや URL はそのまま残す
+ */
+function inlineSrcTags(text, baseDir) {
+  const expand = (line) =>
+    line.replace(
+      /<(?:uivolve|ExtMockup)\b([^>]*?)\bsrc=(?:"([^"]+)"|'([^']+)')([^>]*?)\/>/g,
+      (m, pre, s1, s2, post) => {
+        const src = s1 ?? s2
+        if (/^https?:\/\//.test(src)) return m
+        const target = path.resolve(baseDir, src)
+        if (!fs.existsSync(target)) return m
+        const attrs = `${pre} ${post}`
+        const height = /\bheight=(?:"([^"]+)"|'([^']+)'|\{\s*(\d+)\s*\})/.exec(attrs)
+        const theme = /\btheme=(?:"([^"]+)"|'([^']+)')/.exec(attrs)
+        const meta = [
+          'uivolve',
+          height && `height=${height[1] ?? height[2] ?? height[3]}`,
+          theme && `theme=${theme[1] ?? theme[2]}`,
+        ]
+          .filter(Boolean)
+          .join(' ')
+        const code = fs.readFileSync(target, 'utf8').replace(/\n$/, '')
+        return `\`\`\`${meta}\n${code}\n\`\`\``
+      },
+    )
+  let marker = null
+  return text
+    .split('\n')
+    .map((line) => {
+      const m = /^ {0,3}(`{3,}|~{3,})/.exec(line)
+      if (marker === null && m) marker = m[1][0]
+      else if (marker !== null && m && m[1][0] === marker) marker = null
+      else if (marker === null) return expand(line)
+      return line
+    })
+    .join('\n')
+}
 
 const { chromium } = await import(pathToFileURL(findPlaywrightCore()).href)
 const browser = await chromium.launch({ executablePath: findChromium() })

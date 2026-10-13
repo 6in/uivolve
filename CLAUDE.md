@@ -25,7 +25,8 @@ packages/core/          @uivolve/core — DSL パーサー + レンダラー本�
   src/layouts/index.tsx    レイアウトエンジン + レジストリ (registerLayout)
   src/components/          各 xtype の実装 (Panel, GridPanel, fields, misc など)
   src/styles.css           テーマ (@layer sx、CSS カスタムプロパティ --sx-*)
-packages/remark-mock/   ```uivolve フェンスを <ExtMockup/> に変換する remark プラグイン (依存ゼロ)
+packages/remark-mock/   ```uivolve フェンスと <uivolve src="./dsl/x.yaml"/> (外部 DSL 参照。readFile
+                        オプションで読込を差し替え可) を <ExtMockup/> に変換する remark プラグイン (依存ゼロ)
 apps/playground/        エディタ + ライブプレビュー (Vite + Monaco)
   src/monaco-setup.ts     Monaco のローカルバンドル設定 (worker / 診断オフ)
   src/dsl-completion.ts   xtype/layout/プロパティの入力補完とスニペット (meta.ts から生成)
@@ -33,7 +34,8 @@ apps/playground/        エディタ + ライブプレビュー (Vite + Monaco)
   src/mdx/                MDX Playground 本体 — MDX を貼るとブラウザ内で @mdx-js/mdx の
                           evaluate + remark-mock (injectImport: false) でその場プレビュー。
                           サンプルは mdx-demo の実ファイルを ?raw import して共有
-apps/mdx-demo/          Astro + MDX 統合デモ (Markdown 仕様書にモック埋め込み)
+apps/mdx-demo/          Astro + MDX 統合デモ (Markdown 仕様書にモック埋め込み)。src/dsl/ は
+                        pages/external.mdx が <uivolve src> で参照する外部 DSL ファイル
 apps/vscode-ext/        VSCode 拡張「uivolve Preview」— DSL / MDX 仕様書のライブプレビュー。
                         esbuild で extension host と Webview (React + core + mdx) をバンドル。
                         npm run ext:build / ext:vsix (VSIX 生成)

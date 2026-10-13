@@ -69,6 +69,19 @@ Markdown / MDX の ` ```uivolve ` コードフェンスに DSL を書くと、�
 - `height=440` — 表示高さ (省略時 360px)
 - `theme=dark` — テーマ (`neptune` 既定 / `classic` / `gray` / `dark`)
 
+DSL を別ファイル (`.yaml` / `.json5`) に分ける場合は、フェンスの代わりにタグで参照する (MDX のみ)。
+パスは MDX ファイル相対。`height` / `theme` は属性で指定する:
+
+```mdx
+<uivolve src="./dsl/main-screen.yaml" height={440} />
+<uivolve src="./dsl/entry-dialog.json5" height="380" theme="dark" />
+```
+
+- 使い分け: 画面本体は別ファイル + タグ、小さな補足モックはフェンス、が扱いやすい
+- 外部参照は Astro ビルドと VSCode 拡張で解決される。MDX Playground (ブラウザ) では
+  プレースホルダ表示になるので、Playground で確認してもらう前提の成果物はフェンスで書く
+- `npm run validate -- spec.mdx` はフェンスとともに参照先ファイルも検証する
+
 仕様書は「モック + itemId 対応表」をセットにするのが基本形:
 
 ````mdx
