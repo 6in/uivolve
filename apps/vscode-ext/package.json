@@ -3,7 +3,7 @@
   "displayName": "uivolve Preview",
   "description": "ExtJS 互換 DSL (uivolve) の画面モックと、```uivolve フェンス入り Markdown / MDX 仕様書をエディタ横にライブプレビューする",
   "publisher": "6in",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "license": "MIT",
   "repository": {
