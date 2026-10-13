@@ -65,6 +65,9 @@ export function PanelShell({
   const collapsed = collapsedProp ?? internalCollapsed
   const toggle = onToggleCollapse ?? (() => setInternalCollapsed((c) => !c))
   const collapsible = !!config.collapsible || collapsedProp !== undefined
+  // border の east / west リージョンは ExtJS 同様、横方向 (幅) に折りたたむ
+  const region = config.region
+  const horizontal = collapsible && (region === 'east' || region === 'west')
   const hasHeader =
     config.title !== undefined || config.header === true || collapsible || headerExtra !== undefined
   const tbar = normalizeBar(config.tbar)
@@ -84,6 +87,7 @@ export function PanelShell({
         'sx-panel',
         config.frame && 'sx-panel-framed',
         collapsed && 'sx-collapsed',
+        horizontal && 'sx-collapse-h',
         className,
         config.cls,
       )}
@@ -99,7 +103,13 @@ export function PanelShell({
           <span className="sx-panel-title">{config.title}</span>
           {collapsible && (
             <span className="sx-tool" aria-hidden>
-              {collapsed ? '▸' : '▾'}
+              {horizontal
+                ? collapsed === (region === 'east')
+                  ? '◂'
+                  : '▸'
+                : collapsed
+                  ? '▸'
+                  : '▾'}
             </span>
           )}
           {headerExtra}
@@ -134,7 +144,8 @@ export function PanelShell({
 
 /**
  * xtype: 'panel' | 'form' — タイトルバー付きの基本パネル。
- * collapsible / collapsed(折りたたみ)、tbar / bbar(ツールバー)、
+ * collapsible / collapsed(折りたたみ。border の east / west リージョンでは横方向に畳み、
+ * 縦書きタイトルの細い帯になる)、tbar / bbar(ツールバー)、
  * buttons(下部右寄せのボタン群 — bbar: ['->', ...] の糖衣)、
  * bodyPadding / html / iconCls に対応。form は body がフォームスタイルになる。
  */

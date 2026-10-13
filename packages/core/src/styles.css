@@ -233,6 +233,34 @@
     }
   }
 
+  /* east / west の横折りたたみ: リージョン幅をヘッダー帯の幅まで縮め、スプリットバーを隠す */
+  .sx-region:has(> .sx-collapse-h.sx-collapsed) {
+    inline-size: auto !important;
+
+    > .sx-splitbar {
+      display: none;
+    }
+  }
+
+  .sx-collapse-h.sx-collapsed {
+    flex: 1 1 auto;
+
+    > .sx-panel-bodywrap {
+      display: none;
+    }
+
+    > .sx-panel-header {
+      flex: 1 1 auto;
+      writing-mode: vertical-rl;
+      padding: 10px 7px;
+
+      .sx-tool {
+        order: -1;
+        writing-mode: horizontal-tb;
+      }
+    }
+  }
+
   .sx-region-north { grid-area: north; }
   .sx-region-south { grid-area: south; }
   .sx-region-west  { grid-area: west; }
