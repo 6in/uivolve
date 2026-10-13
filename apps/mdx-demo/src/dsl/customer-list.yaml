@@ -1,7 +1,7 @@
 # 顧客マスタ 一覧画面 — pages/external.mdx から <uivolve src="../dsl/customer-list.yaml" /> で参照される
 xtype: panel
 itemId: customerApp
-title: 顧客マスタ
+title: 顧客マスター
 layout: border
 items:
   - region: north
@@ -21,12 +21,12 @@ items:
     itemId: customerGrid
     columnLines: true
     columns:
+      - { xtype: checkcolumn, text: 有効, dataIndex: active, width: 70 }
       - { text: 顧客コード, dataIndex: code, width: 110 }
       - { text: 顧客名, dataIndex: name, flex: 1 }
       - { text: ランク, dataIndex: rank, width: 80, align: center }
       - { text: 担当者, dataIndex: rep, width: 110 }
       - { text: 最終取引日, dataIndex: lastOrder, width: 120 }
-      - { xtype: checkcolumn, text: 有効, dataIndex: active, width: 70 }
     store:
       data:
         - { code: C-1001, name: 山田商事, rank: A, rep: 佐藤, lastOrder: 2026-09-30, active: true }
