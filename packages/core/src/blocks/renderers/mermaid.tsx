@@ -20,6 +20,7 @@ export function mermaidThemeConfig(p: SxPalette): MermaidConfig {
       tertiaryColor: mixHex(p.panelBg, p.bg, 0.6),
       lineColor: p.muted,
       textColor: p.text,
+      edgeLabelBackground: p.panelBg,
       noteBkgColor: mixHex(p.panelBg, p.series[4], 0.2),
       noteTextColor: p.text,
       noteBorderColor: p.series[4],
