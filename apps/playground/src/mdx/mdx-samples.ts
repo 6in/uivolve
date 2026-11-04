@@ -1,9 +1,10 @@
 /**
  * MDX Playground のサンプル。
- * 「画面仕様書」「外部 DSL ファイルの参照」「障害対応報告書」は apps/mdx-demo の実ファイルを
- * ?raw でそのまま読み込む (デモと Playground でサンプルがずれないように)。
+ * 「画面仕様書」「外部 DSL ファイルの参照」「障害対応報告書」「図・表フェンス」は apps/mdx-demo の
+ * 実ファイルを ?raw でそのまま読み込む (デモと Playground でサンプルがずれないように)。
  * path は <uivolve src="..."> の相対パスを解決する基準 (MdxApp の仮想ファイル参照)。
  */
+import blocksDoc from '../../../mdx-demo/src/pages/blocks.mdx?raw'
 import externalDoc from '../../../mdx-demo/src/pages/external.mdx?raw'
 import specDoc from '../../../mdx-demo/src/pages/index.mdx?raw'
 import runbookDoc from '../../../mdx-demo/src/pages/runbook.mdx?raw'
@@ -72,5 +73,10 @@ export const mdxSamples: MdxSample[] = [
     name: '障害対応報告書 (リッチドキュメント)',
     code: runbookDoc,
     path: `${DEMO_PAGES}runbook.mdx`,
+  },
+  {
+    name: '図・表フェンス (mermaid / dbml / echarts / csv ...)',
+    code: blocksDoc,
+    path: `${DEMO_PAGES}blocks.mdx`,
   },
 ]
