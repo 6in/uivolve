@@ -66,7 +66,10 @@ export function WaveDromFence({ data }: FenceRendererProps) {
     if (!palette) return
     let alive = true
     Promise.all([import('wavedrom'), import('wavedrom/skins/dark.js')])
-      .then(([wd, dark]) => {
+      .then(([mod, dark]) => {
+        // CommonJS なので、バンドラにより exports が名前付き (Vite) / default (esbuild) のどちらかに入る
+        type WaveDrom = typeof import('wavedrom')
+        const wd = (mod as unknown as { default?: WaveDrom }).default ?? (mod as WaveDrom)
         if (data === null || typeof data !== 'object' || Array.isArray(data)) {
           throw new Error('WaveJSON はオブジェクト ({ signal: [...] } / { reg: [...] }) で書いてください')
         }
