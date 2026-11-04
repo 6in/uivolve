@@ -18,10 +18,18 @@
  * 描画側 (ExtMockup) はフェンスと同じ扱いになる。src 以外の属性はそのまま引き継ぐ。
  * 必要な import (ExtMockup) は自動で注入される。
  *
+ * 図・表のフェンス (```mermaid / ```echarts / ```csv など fenceLangs の言語) は
+ * <FenceBlock lang="mermaid" code="..." meta="..." /> に変換する。本文はその言語の DSL
+ * (データ型は JSON5 / YAML) をそのまま書けばよく、uivolve の YAML で包む必要はない。
+ * meta (height=320 theme=dark など) は解釈せずそのまま渡し、描画側 (FenceBlock) が解釈する。
+ *
  * @param {object} [options]
  * @param {string[]} [options.langs] 対象のフェンス言語 (default: ['uivolve', 'extjs', 'sx'])
  * @param {string[]} [options.tagNames] src 参照に使うタグ名 (default: ['uivolve'])。
  *   componentName (ExtMockup) に src 属性を付けた場合も同様に展開される
+ * @param {string[] | false} [options.fenceLangs] FenceBlock に変換するフェンス言語
+ *   (default: DEFAULT_FENCE_LANGS)。false で無効化 (通常のコードブロックのまま)
+ * @param {string} [options.fenceComponentName] 図・表フェンスの JSX コンポーネント名 (default: 'FenceBlock')
  * @param {string} [options.componentName] 出力する JSX コンポーネント名 (default: 'ExtMockup')
  * @param {string} [options.importSource] import 元 (default: '@uivolve/core')
  * @param {number|string} [options.defaultHeight] height 未指定時の高さ (default: 360)
@@ -40,6 +48,8 @@ export default function remarkUivolve(options = {}) {
   const {
     langs = ['uivolve', 'extjs', 'sx'],
     tagNames = ['uivolve'],
+    fenceLangs = DEFAULT_FENCE_LANGS,
+    fenceComponentName = 'FenceBlock',
     componentName = 'ExtMockup',
     importSource = '@uivolve/core',
     defaultHeight = 360,
@@ -51,12 +61,31 @@ export default function remarkUivolve(options = {}) {
   const isSrcTag = (node) =>
     (node.type === 'mdxJsxFlowElement' || node.type === 'mdxJsxTextElement') &&
     (tagNames.includes(node.name) || (node.name === componentName && findAttr(node, 'src')))
+  const fenceSet = new Set((fenceLangs || []).map((l) => l.toLowerCase()))
 
   return async (tree, file) => {
     let used = false
+    let fenceUsed = false
     const pending = []
 
     walk(tree, (node, index, parent) => {
+      if (node.type === 'code' && !langs.includes(node.lang) && fenceSet.has(node.lang?.toLowerCase())) {
+        fenceUsed = true
+        const attributes = [
+          { type: 'mdxJsxAttribute', name: 'lang', value: node.lang },
+          { type: 'mdxJsxAttribute', name: 'code', value: node.value },
+        ]
+        if (node.meta) attributes.push({ type: 'mdxJsxAttribute', name: 'meta', value: node.meta })
+        if (clientLoad) attributes.push({ type: 'mdxJsxAttribute', name: 'client:load', value: null })
+        parent.children[index] = {
+          type: 'mdxJsxFlowElement',
+          name: fenceComponentName,
+          attributes,
+          children: [],
+        }
+        return
+      }
+
       if (node.type === 'code' && langs.includes(node.lang)) {
         used = true
 
@@ -98,6 +127,9 @@ export default function remarkUivolve(options = {}) {
     // 使われたページにだけ import を注入 (手書きの import があればスキップ)
     if (injectImport && used && !hasImport(tree, componentName)) {
       tree.children.unshift(buildImportNode(componentName, importSource))
+    }
+    if (injectImport && fenceUsed && !hasImport(tree, fenceComponentName)) {
+      tree.children.unshift(buildImportNode(fenceComponentName, importSource))
     }
 
     /** <uivolve src> を <ExtMockup code> に置き換える (解決できなければ <ExtMockup src>)。常に true */
@@ -155,6 +187,12 @@ export default function remarkUivolve(options = {}) {
     }
   }
 }
+
+/**
+ * FenceBlock に変換する既定のフェンス言語 (@uivolve/core の registerFence と対応させる)
+ * @type {string[]}
+ */
+export const DEFAULT_FENCE_LANGS = ['mermaid']
 
 /**
  * MDX が構文エラーにする HTML コメント (<!-- -->) を除去するユーティリティ。
