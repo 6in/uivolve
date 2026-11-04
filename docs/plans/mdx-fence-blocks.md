@@ -235,3 +235,7 @@ dbml のパーサはサイズが大きいので、バンドル後の分割チャ
 - 外部ファイル参照 (`<mermaid src>`, `<table src="./codes.csv">`)
 - d2 / nomnoml / markmap / svgbob / chartjs / gantt / jsontree
 - ビルド時 SVG 化 (静的サイト高速化)
+- 描画ライブラリの依存の持ち方 (code-review 指摘 8、2026-11-04 に保留と決定):
+  現状 echarts / vega / @hpcc-js/wasm-graphviz / katex / @dbml/parse / wavedrom は @uivolve/core の
+  通常の dependencies で、画面モックだけ使う場合も npm install される (描画時の読み込みは動的 import 済み)。
+  core を npm に公開すると決めた時点で、optional peerDependencies 化か @uivolve/blocks への分離を検討する
