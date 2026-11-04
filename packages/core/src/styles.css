@@ -1630,6 +1630,71 @@
     white-space: pre-wrap;
   }
 
+  /* ---------------------------------- MDX フェンスブロック (FenceBlock) */
+
+  /* sx-root を流用してテーマ変数を効かせるが、高さは中身なり (height= 指定時のみ固定) */
+  .sx-root.sx-fence {
+    block-size: auto;
+    margin-block: 1em;
+    padding: 12px;
+    background: var(--sx-panel-bg);
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    overflow: auto;
+
+    &.sx-fence-sized {
+      display: flex;
+      flex-direction: column;
+
+      & > * {
+        flex: 1 1 auto;
+        min-block-size: 0;
+      }
+    }
+  }
+
+  .sx-fence-svg {
+    text-align: center;
+
+    & svg {
+      max-inline-size: 100%;
+      block-size: auto;
+    }
+  }
+
+  .sx-fence-error {
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+    text-align: start;
+
+    & pre {
+      margin: 0;
+      padding: 8px 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border-radius: var(--sx-radius);
+    }
+  }
+
+  .sx-fence-error-head {
+    font-weight: bold;
+    color: #b3261e;
+  }
+
+  .sx-fence-error-message {
+    color: #b3261e;
+    background: color-mix(in srgb, #b3261e 8%, var(--sx-panel-bg));
+    border: 1px solid color-mix(in srgb, #b3261e 40%, var(--sx-panel-bg));
+  }
+
+  .sx-fence-error-source {
+    color: var(--sx-text);
+    background: var(--sx-bg);
+    border: 1px solid var(--sx-border);
+  }
+
   /* ------------------------------------------ メッセージボックス */
 
   .sx-msgbox-overlay {

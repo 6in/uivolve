@@ -3,6 +3,19 @@ import './components'
 import './layouts'
 
 export { ExtMockup, type ExtMockupProps, type ThemeName } from './ExtMockup'
+export {
+  FenceBlock,
+  parseFenceMeta,
+  readSxPalette,
+  registerFence,
+  registeredFences,
+  resolveFence,
+  type FenceBlockProps,
+  type FenceDefinition,
+  type FenceOptions,
+  type FenceRendererProps,
+  type SxPalette,
+} from './blocks'
 export { XRender } from './XRender'
 export { parseDsl, stringifyDsl, detectFormat, DslParseError, type DslFormat } from './parser'
 export { buildAiReference } from './ai'

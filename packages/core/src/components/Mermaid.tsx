@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
+import { renderMermaidSvg } from '../blocks/mermaidCore'
 import type { RendererProps } from '../types'
 import { cx, styleOf } from '../utils'
-
-// mermaid.render に渡す一意 ID 用の連番
-let seq = 0
 
 /**
  * xtype: 'mermaid' — Mermaid.js ダイアグラム描画 (ExtJS にはない独自拡張)。
@@ -19,25 +17,18 @@ export function Mermaid({ config }: RendererProps) {
 
   useEffect(() => {
     let alive = true
-    const id = `sx-mermaid-${++seq}`
-    ;(async () => {
-      try {
-        const mermaid = (await import('mermaid')).default
-        mermaid.initialize({ startOnLoad: false, theme: 'default' })
-        const result = await mermaid.render(id, value)
-        if (alive) {
-          setSvg(result.svg)
-          setError(null)
-        }
-      } catch (e) {
-        // mermaid は失敗時に作業用要素を残すことがあるので掃除する
-        document.getElementById(id)?.remove()
-        if (alive) {
-          setSvg('')
-          setError(e instanceof Error ? e.message : String(e))
-        }
-      }
-    })()
+    renderMermaidSvg(value, { theme: 'default' }).then(
+      (s) => {
+        if (!alive) return
+        setSvg(s)
+        setError(null)
+      },
+      (e) => {
+        if (!alive) return
+        setSvg('')
+        setError(e instanceof Error ? e.message : String(e))
+      },
+    )
     return () => {
       alive = false
     }
