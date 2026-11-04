@@ -33,6 +33,10 @@ description: 画面要件から uivolve DSL の画面モック・MDX 画面仕�
 - YAML 推奨、全部品に camelCase の itemId、store.data に現実的なサンプル 3〜5 行
 - ルートに height を書かない (フェンス meta / ExtMockup の height で決める)
 - MDX はフェンス meta で `height=` `theme=` を指定し、itemId 対応表をセットで書く
+- 画面遷移・テーブル定義・コード値一覧・計算式・グラフなどモック以外の図や表は、
+  図・表フェンス (` ```mermaid ` ` ```dbml ` ` ```dot ` ` ```math ` ` ```csv ` ` ```table `
+  ` ```echarts ` ` ```vega-lite ` ` ```wavedrom `) にその言語の記法だけを書く
+  (uivolve の YAML で包まない。使い分けは dsl-guide.md の「図・表フェンス」)
 
 ### 4. 機械検証
 
@@ -41,7 +45,9 @@ npm run validate -- <file>
 ```
 
 構文 + 未知 xtype/layout の検出 + itemId 付与漏れの警告。MDX を渡すと
-```uivolve フェンスを抽出して個別に検証する。エラー 0 になるまで直す。
+```uivolve フェンスを抽出して個別に検証する。図・表フェンスは echarts / vega-lite / table /
+wavedrom の構文と csv / tsv の引用符・列数を検証し、mermaid / dbml / dot / math は
+「検証対象外」と表示される (次のスクリーンショットで確認する)。エラー 0 になるまで直す。
 
 ### 5. スクリーンショット目視
 
@@ -54,6 +60,8 @@ node scripts/shot-uivolve.mjs <file> [out.png] [--bottom]
 - ステータスバーが `✓ OK` で exit 0。スクリーンショットを**必ず目視**する:
   未知 xtype のプレースホルダ、border / vbox 内での潰れ、オーバーフロー、
   コンソールエラー (出力の problems) がないこと
+- 図・表フェンスは記法を誤るとブロック内に「○○ の描画エラー」とソースが出る。
+  validate 対象外の mermaid / dbml / dot / math は特にここで確認する
 - 長い MDX は `--bottom` で後半も確認する
 
 ### 6. 仕上げ

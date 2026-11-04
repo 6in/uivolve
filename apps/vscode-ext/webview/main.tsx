@@ -8,18 +8,15 @@
  *   extension host に readFile を要求して返してもらう
  */
 import { evaluate } from '@mdx-js/mdx'
-import { ExtMockup, XRender, type ComponentConfig } from '@uivolve/core'
+import { ExtMockup, FenceBlock } from '@uivolve/core'
 import remarkUivolve, { stripHtmlComments } from '@uivolve/remark-mock'
 import {
   Component,
   StrictMode,
-  isValidElement,
   useEffect,
   useRef,
   useState,
-  type ComponentProps,
   type ComponentType,
-  type ReactElement,
   type ReactNode,
 } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -92,28 +89,10 @@ class PreviewBoundary extends Component<{ children: ReactNode }, { error: Error 
   }
 }
 
-/**
- * ```mermaid フェンスを Mermaid.js で描画する pre の差し替え。
- * MDX は ```mermaid を <pre><code class="language-mermaid"> にコンパイルするので、
- * それを検出して core の Mermaid レンダラー (xtype: 'mermaid'、registry 経由) に渡す。
- * それ以外のコードフェンスは通常の <pre> のまま。
- */
-function PreOrMermaid(props: ComponentProps<'pre'>) {
-  const child = props.children as ReactElement<{ className?: string; children?: unknown }>
-  if (isValidElement(child) && /\blanguage-mermaid\b/.test(child.props.className ?? '')) {
-    const text = String(child.props.children ?? '').replace(/\n$/, '')
-    return (
-      <div className="uv-mermaid">
-        <XRender config={{ xtype: 'mermaid', value: text } as ComponentConfig} />
-      </div>
-    )
-  }
-  return <pre {...props} />
-}
-
+// ```mermaid などの図・表フェンスは remark-mock が <FenceBlock> に変換する
 const MDX_COMPONENTS = {
   ExtMockup: ExtMockup as ComponentType<never>,
-  pre: PreOrMermaid as ComponentType<never>,
+  FenceBlock: FenceBlock as ComponentType<never>,
 }
 
 function MdxPreview({ code }: { code: string }) {

@@ -18,5 +18,8 @@
     "astro": "^7.3.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/markdown-remark": "^7.3.5"
   }
 }

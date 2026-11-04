@@ -112,6 +112,53 @@ items:
 - 画面モック以外も埋め込める: `chart` (グラフ)、`mermaid` (ダイアグラム)、
   `terminal` (ログ再生)、`codeeditor` / `diffeditor` (コード・差分)、
   `networkgraph` (依存グラフ) など — 報告書・ランブック用途。
+  図・表だけを置くなら、次節の図・表フェンスの方が短く書ける。
+
+### 図・表フェンス
+
+図・チャート・表は、フェンスに **その言語の記法だけ**を書けば描画される (uivolve の YAML で包まない)。
+言語名を書いたフェンスは必ず図になるので、記法の例をソースのまま見せたいときは
+` ```text ` か、外側を ```` ````md ```` で囲む。
+
+| 仕様書で書きたいもの | フェンス | 本文 |
+|---|---|---|
+| 画面遷移・処理フロー・シーケンス・状態遷移 | ` ```mermaid ` | Mermaid 記法 |
+| テーブル定義と ER 図 | ` ```dbml ` | DBML (`Table` / `Ref`)。列の型・PK・FK・UK・NOT NULL・note が図に出る |
+| システム構成・依存関係 | ` ```dot ` | DOT 言語 |
+| 料金・集計などの計算式 | ` ```math ` | TeX (本文全体で 1 つの式。複数行は `\\` や `aligned`) |
+| コード値一覧・項目定義 (Excel から貼る) | ` ```csv ` / ` ```tsv ` | 1 行目が見出し |
+| 列幅や寄せを決めたい表 | ` ```table ` | `columns` (`dataIndex` / `text` / `width` / `flex` / `align`) + `data` |
+| KPI・グラフ | ` ```echarts ` | ECharts の option (JSON5 / YAML) |
+| 集計グラフ (宣言的) | ` ```vega-lite ` | Vega-Lite の spec (JSON5 / YAML) |
+| 外部連携のタイミング・ビット配置 | ` ```wavedrom ` | WaveJSON |
+
+````mdx
+### 受注状態
+
+```csv
+コード,名称,在庫引当
+draft,下書き,しない
+confirmed,確定,する
+```
+
+```mermaid
+stateDiagram-v2
+  [*] --> draft
+  draft --> confirmed: 確定
+```
+````
+
+- meta は ` ```uivolve ` と同じ `height=` / `theme=` (`height` 省略時は中身なり、チャートは 320px)
+- 表 (csv / tsv / table) は見出しクリックで並べ替え、入力欄で絞り込みできる
+  (`sort=false` / `filter=false` で無効化)。数値だけの列は自動で右寄せ
+- 項目定義の表は、GFM の表 (`| a | b |`) でも ` ```table ` でもよい。列が多い・並べ替えたい・
+  CSV から貼りたい場合はフェンスにする
+- グラフは echarts を基本にする (vega-lite は spec が短く書ける集計グラフ向け)
+- 記法の誤りはブロック内にエラーとして出る。`npm run validate -- spec.mdx` は
+  echarts / vega-lite / table / wavedrom の構文と形、csv / tsv の閉じていない引用符と列数を検証する
+  (mermaid / dbml / dot / math は Playground か VSCode 拡張で表示して確認する)
+- 言語名は小文字で書く。` ```Uivolve ` のように大文字を混ぜると画面モックとして描画されない
+  (validate はエラーにする)
 - HTML コメント `<!-- -->` は MDX 本来は不可だが、uivolve の MDX Playground は
   除去してくれる。配布物として残す MDX には書かないのが安全。
 
@@ -130,6 +177,8 @@ items:
 ## よくある失敗
 
 - フェンス内の DSL に ` ``` ` を含めてしまい途中で閉じる → フェンスを 4 連 ` ```` ` にする
+- 記法を説明するつもりで ` ```mermaid ` と書いたら図になった → 例示は ` ```text ` か ```` ````md ```` で囲む
+- csv の値にカンマを含めて列がずれる → その値を `"..."` で囲む (`"東京, 本社"`)
 - 未知の xtype (`datagrid` など) → 正しくは `grid`。必ず components.md で確認
 - vbox の子全部に `flex: 1` → 表・フォームなど内容依存の高さは flex を付けない
 - ルートに `width` / `height` の決め打ち → 埋め込み先の幅に追随しなくなる

@@ -1,6 +1,6 @@
 import { evaluate } from '@mdx-js/mdx'
 import Editor, { type OnMount } from '@monaco-editor/react'
-import { ExtMockup } from '@uivolve/core'
+import { ExtMockup, FenceBlock } from '@uivolve/core'
 import remarkUivolve, { stripHtmlComments } from '@uivolve/remark-mock'
 import {
   Component,
@@ -93,7 +93,11 @@ function MockupOrPlaceholder(props: ComponentProps<typeof ExtMockup> & { src?: s
   return <ExtMockup {...props} />
 }
 
-const MDX_COMPONENTS = { ExtMockup: MockupOrPlaceholder as ComponentType<never> }
+// ```mermaid などの図・表フェンスは remark-mock が <FenceBlock> に変換する
+const MDX_COMPONENTS = {
+  ExtMockup: MockupOrPlaceholder as ComponentType<never>,
+  FenceBlock: FenceBlock as ComponentType<never>,
+}
 
 class PreviewBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
   state: { error: Error | null } = { error: null }

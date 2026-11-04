@@ -44,6 +44,9 @@ uivolve は ExtJS 互換の宣言的 DSL (JSON5 / YAML) で画面モックを描
   参照する (書き方は dsl-guide.md)。指示がなければフェンス埋め込みを既定にする
   (外部参照は公開 MDX Playground ではプレースホルダ表示になり、Astro ビルドや
   VSCode 拡張での確認が前提になるため)
+- 画面遷移・テーブル定義・コード値一覧・計算式・KPI グラフなど、モック以外の図や表は
+  図・表フェンス (` ```mermaid ` / ` ```dbml ` / ` ```csv ` / ` ```math ` / ` ```echarts ` など) で書く
+  (どれを使うかは dsl-guide.md の「図・表フェンス」)。uivolve の YAML で包まない
 - サンプルデータは日本語の現実的な値を 3〜5 行入れる (空のグリッドは仕様が伝わらない)
 
 ### 4. 検証する
@@ -65,7 +68,7 @@ uivolve は ExtJS 互換の宣言的 DSL (JSON5 / YAML) で画面モックを描
 ローカルにより強力な検証ツールがある。公開 Playground の代わりにこちらを使う:
 
 ```bash
-npm run validate -- <file>            # 構文 + xtype/layout 照合 + itemId 警告 (MDX は <uivolve src> の参照先も)
+npm run validate -- <file>            # 構文 + xtype/layout 照合 + itemId 警告 (MDX は <uivolve src> の参照先と図・表フェンスも)
 npm run dev                            # dev サーバー起動 (5173)
 node scripts/shot-uivolve.mjs <file>   # Playground に流し込んでスクリーンショット
 ```

@@ -6,6 +6,8 @@
 @layer sx {
   .sx-root {
     --sx-accent: #157fcc;
+    /* エラー表示 (構文エラー・描画エラー) の色 */
+    --sx-danger: #b3261e;
     --sx-accent-dark: color-mix(in srgb, var(--sx-accent) 80%, black);
     --sx-border: #d0d5db;
     --sx-bg: #f4f6f8;
@@ -71,6 +73,7 @@
     --sx-toolbar-bg: linear-gradient(to bottom, #2a3542, #232c36);
     --sx-input-bg: #1d252e;
     --sx-btn-bg: linear-gradient(to bottom, #354251, #2a3542);
+    --sx-danger: #f28b82;
   }
 
   .sx-viewport {
@@ -1623,11 +1626,206 @@
   .sx-mermaid-error {
     text-align: start;
     padding: 8px 10px;
-    color: #b3261e;
-    border: 1px dashed #b3261e;
+    color: var(--sx-danger);
+    border: 1px dashed var(--sx-danger);
     border-radius: var(--sx-radius);
     font-size: 12px;
     white-space: pre-wrap;
+  }
+
+  /* ---------------------------------- MDX フェンスブロック (FenceBlock) */
+
+  /* sx-root を流用してテーマ変数を効かせるが、高さは中身なり (height= 指定時のみ固定) */
+  .sx-root.sx-fence {
+    block-size: auto;
+    margin-block: 1em;
+    padding: 12px;
+    background: var(--sx-panel-bg);
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+    overflow: auto;
+
+    &.sx-fence-sized {
+      display: flex;
+      flex-direction: column;
+
+      & > * {
+        flex: 1 1 auto;
+        min-block-size: 0;
+      }
+    }
+  }
+
+  .sx-fence-svg {
+    text-align: center;
+
+    & svg {
+      max-inline-size: 100%;
+      block-size: auto;
+    }
+  }
+
+  /* チャートは高さが必要: 既定 320px、height= 指定時はブロックの高さに合わせる */
+  .sx-fence-chart {
+    block-size: 320px;
+    min-inline-size: 0;
+
+    .sx-fence-sized > & {
+      block-size: auto;
+    }
+  }
+
+  .sx-fence-vega {
+    block-size: auto;
+
+    .sx-fence-sized > & {
+      block-size: auto;
+    }
+  }
+
+  .sx-fence-math {
+    overflow-x: auto;
+    font-size: 1.15em;
+
+    & math {
+      color: var(--sx-text);
+    }
+  }
+
+  .sx-fence-table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-block-size: 0;
+  }
+
+  /* 表本体: 行は subgrid で列幅を共有する */
+  .sx-fence-grid {
+    display: grid;
+    font-size: 13px;
+  }
+
+  .sx-fence-grid-row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+
+    & > [role='cell'],
+    & > [role='columnheader'] {
+      padding: 6px 10px;
+      text-align: start;
+      border-block-end: 1px solid color-mix(in srgb, var(--sx-border) 60%, transparent);
+      overflow-wrap: anywhere;
+      white-space: pre-line;
+    }
+
+    &:not(.sx-fence-grid-head):hover > [role='cell'] {
+      background: color-mix(in srgb, var(--sx-accent) 7%, transparent);
+    }
+  }
+
+  .sx-fence-grid-head {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+
+    & > [role='columnheader'] {
+      font-weight: bold;
+      white-space: nowrap;
+      background: color-mix(in srgb, var(--sx-bg) 70%, var(--sx-panel-bg));
+      border-block-end-color: var(--sx-border);
+
+      &.sx-sortable {
+        cursor: pointer;
+        user-select: none;
+
+        &:hover,
+        &:focus-visible {
+          color: var(--sx-accent);
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .sx-fence-table-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sx-fence-table-filter {
+    inline-size: min(240px, 100%);
+    padding: 4px 8px;
+    font: inherit;
+    color: var(--sx-text);
+    background: var(--sx-input-bg);
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+
+    &:focus {
+      outline: none;
+      border-color: var(--sx-accent);
+    }
+  }
+
+  .sx-fence-table-count {
+    font-size: 12px;
+    color: var(--sx-muted);
+  }
+
+  .sx-fence-table-scroll {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow: auto;
+  }
+
+  .sx-fence-table-sort {
+    display: inline-block;
+    min-inline-size: 1.2em;
+    margin-inline-start: 4px;
+    font-size: 10px;
+    color: var(--sx-accent);
+  }
+
+  .sx-fence-table-empty {
+    grid-column: 1 / -1;
+    color: var(--sx-muted);
+    text-align: center !important;
+  }
+
+  .sx-fence-error {
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+    text-align: start;
+
+    & .sx-fence-error-message,
+    & .sx-fence-error-source {
+      margin: 0;
+      padding: 8px 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border-radius: var(--sx-radius);
+    }
+  }
+
+  .sx-fence-error-head {
+    font-weight: bold;
+    color: var(--sx-danger);
+  }
+
+  .sx-fence-error-message {
+    color: var(--sx-danger);
+    background: color-mix(in srgb, var(--sx-danger) 8%, var(--sx-panel-bg));
+    border: 1px solid color-mix(in srgb, var(--sx-danger) 40%, var(--sx-panel-bg));
+  }
+
+  .sx-fence-error-source {
+    color: var(--sx-text);
+    background: var(--sx-bg);
+    border: 1px solid var(--sx-border);
   }
 
   /* ------------------------------------------ メッセージボックス */
@@ -1937,19 +2135,19 @@
   .sx-unknown {
     padding: 8px;
     margin: 2px;
-    color: #b3261e;
-    border: 1px dashed #b3261e;
+    color: var(--sx-danger);
+    border: 1px dashed var(--sx-danger);
     border-radius: var(--sx-radius);
-    background: color-mix(in srgb, #b3261e 6%, var(--sx-panel-bg));
+    background: color-mix(in srgb, var(--sx-danger) 6%, var(--sx-panel-bg));
     font-size: 12px;
   }
 
   .sx-error {
     margin: 8px;
     padding: 10px 12px;
-    color: #b3261e;
-    background: color-mix(in srgb, #b3261e 8%, var(--sx-panel-bg));
-    border: 1px solid color-mix(in srgb, #b3261e 40%, var(--sx-panel-bg));
+    color: var(--sx-danger);
+    background: color-mix(in srgb, var(--sx-danger) 8%, var(--sx-panel-bg));
+    border: 1px solid color-mix(in srgb, var(--sx-danger) 40%, var(--sx-panel-bg));
     border-radius: var(--sx-radius);
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 12px;

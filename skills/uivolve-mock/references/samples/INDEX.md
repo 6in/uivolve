@@ -54,6 +54,7 @@ Playground の全サンプルを 1 ファイル 1 画面で収録したもの。
 |---|---|---|
 | [doc-order-spec.md](doc-order-spec.md) | 受注管理システム 画面仕様書 | 画面モック + itemId 対応表で構成する仕様書のフル例 |
 | [doc-incident-runbook.md](doc-incident-runbook.md) | 障害対応報告書 | chart / mermaid / terminal / diffeditor / networkgraph を使うリッチドキュメント例 |
+| [doc-diagram-blocks.md](doc-diagram-blocks.md) | 図・表フェンス | mermaid / dbml / dot / math / csv / table / echarts / vega-lite / wavedrom フェンスの書き方と実例 |
 
 ## xtype 逆引き (この xtype の実例が見たい)
 

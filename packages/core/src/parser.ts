@@ -39,23 +39,7 @@ export function detectFormat(source: string): DslFormat {
  */
 export function parseDsl(source: string, format?: DslFormat): ComponentConfig {
   const fmt = format ?? detectFormat(source)
-  let value: unknown
-
-  if (fmt === 'json5') {
-    try {
-      value = JSON5.parse(source)
-    } catch (e) {
-      const err = e as { message: string; lineNumber?: number; columnNumber?: number }
-      throw new DslParseError(err.message, err.lineNumber, err.columnNumber)
-    }
-  } else {
-    try {
-      value = YAML.parse(source)
-    } catch (e) {
-      const err = e as { message: string; linePos?: Array<{ line: number; col: number }> }
-      throw new DslParseError(err.message, err.linePos?.[0]?.line, err.linePos?.[0]?.col)
-    }
-  }
+  const value = parseAs(source, fmt)
 
   if (value === null || typeof value !== 'object' || Array.isArray(value)) {
     throw new DslParseError(
@@ -65,6 +49,34 @@ export function parseDsl(source: string, format?: DslFormat): ComponentConfig {
     )
   }
   return value as ComponentConfig
+}
+
+/** JSON5 / YAML として解釈し、エラーは行・列つきの DslParseError にする */
+function parseAs(source: string, fmt: DslFormat): unknown {
+  if (fmt === 'json5') {
+    try {
+      return JSON5.parse(source)
+    } catch (e) {
+      const err = e as { message: string; lineNumber?: number; columnNumber?: number }
+      throw new DslParseError(err.message, err.lineNumber, err.columnNumber)
+    }
+  }
+  try {
+    return YAML.parse(source)
+  } catch (e) {
+    const err = e as { message: string; linePos?: Array<{ line: number; col: number }> }
+    throw new DslParseError(err.message, err.linePos?.[0]?.line, err.linePos?.[0]?.col)
+  }
+}
+
+/**
+ * 図・表フェンスのデータ (```echarts / ```table など) を JSON5 / YAML として解釈する。
+ * parseDsl と違いルートが配列やスカラーでもよい (`[` で始まる場合も JSON5 とみなす)。
+ * 描画 (FenceBlock) と validate-dsl の両方から使う
+ */
+export function parseData(source: string): unknown {
+  const fmt = source.trimStart().startsWith('[') ? 'json5' : detectFormat(source)
+  return parseAs(source, fmt)
 }
 
 /**

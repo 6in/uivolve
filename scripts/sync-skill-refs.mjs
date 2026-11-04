@@ -107,6 +107,12 @@ const docs = [
     name: '障害対応報告書',
     note: 'chart / mermaid / terminal / diffeditor / networkgraph を使うリッチドキュメント例',
   },
+  {
+    src: 'apps/mdx-demo/src/pages/blocks.mdx',
+    file: 'doc-diagram-blocks.md',
+    name: '図・表フェンス',
+    note: 'mermaid / dbml / dot / math / csv / table / echarts / vega-lite / wavedrom フェンスの書き方と実例',
+  },
 ]
 for (const doc of docs) {
   const raw = fs

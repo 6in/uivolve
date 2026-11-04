@@ -1,0 +1,73 @@
+---
+title: 図・表フェンスのエラー表示確認 (検証用)
+---
+
+# 図・表フェンスのエラー表示確認
+
+各フェンスにわざと構文エラーを入れた検証用ファイル。
+描画側: 各ブロックにエラー文と元ソースが出て、ほかのブロックは正常に描画されること
+(csv / tsv の列数不一致だけは描画できるので表として出る)。
+`npm run validate`: データ型 (echarts / vega-lite / table / wavedrom) の構文エラーと
+csv / tsv の閉じていない引用符・列数不一致をそれぞれ検出し、終了コードが 0 以外になること。
+
+```mermaid
+graph LR
+  A -->>
+```
+
+```dbml
+Table x {
+  id int [pk
+}
+```
+
+```dot
+digraph { a -> }
+```
+
+```math
+\frac{1}{
+```
+
+CSV の構文エラー (閉じていないダブルクォート) — 描画側でエラーになる:
+
+```csv
+コード,名称
+A1,"東京
+```
+
+列数の不一致 — 描画はできる (validate で警告):
+
+```csv
+コード,名称
+A1,東京,余分な列
+```
+
+```tsv
+コード	名称
+A1
+```
+
+```table
+- [1, 2
+```
+
+```echarts
+{ xAxis: { type: 'category' }, series: [ { type: 'bar' }
+```
+
+```vega-lite
+mark: bar
+  encoding: x
+```
+
+```wavedrom
+{ signal: [ { name: 'clk', wave: 'p...' }
+```
+
+正常なブロック (エラーの影響を受けないこと):
+
+```csv
+コード,名称
+A1,東京
+```

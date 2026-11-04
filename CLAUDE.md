@@ -24,9 +24,14 @@ packages/core/          @uivolve/core — DSL パーサー + レンダラー本�
   src/types.ts             ComponentConfig (ExtJS 互換 config の型)
   src/layouts/index.tsx    レイアウトエンジン + レジストリ (registerLayout)
   src/components/          各 xtype の実装 (Panel, GridPanel, fields, misc など)
+  src/blocks/              MDX の図・表フェンス (```mermaid / dbml / dot / math / csv / tsv / table /
+                          echarts / vega-lite / wavedrom) を描く <FenceBlock lang code meta/> と
+                          registerFence。renderers/ が各言語の実装 (ライブラリは動的 import)、
+                          theme.ts が --sx-* を実色に解決してライブラリへ渡す。xtype とは別系統
   src/styles.css           テーマ (@layer sx、CSS カスタムプロパティ --sx-*)
 packages/remark-mock/   ```uivolve フェンスと <uivolve src="./dsl/x.yaml"/> (外部 DSL 参照。readFile
-                        オプションで読込を差し替え可) を <ExtMockup/> に変換する remark プラグイン (依存ゼロ)
+                        オプションで読込を差し替え可) を <ExtMockup/> に、図・表フェンス
+                        (DEFAULT_FENCE_LANGS) を <FenceBlock/> に変換する remark プラグイン (依存ゼロ)
 apps/playground/        エディタ + ライブプレビュー (Vite + Monaco)
   src/monaco-setup.ts     Monaco のローカルバンドル設定 (worker / 診断オフ)
   src/dsl-completion.ts   xtype/layout/プロパティの入力補完とスニペット (meta.ts から生成)
@@ -35,9 +40,12 @@ apps/playground/        エディタ + ライブプレビュー (Vite + Monaco)
                           evaluate + remark-mock (injectImport: false) でその場プレビュー。
                           サンプルは mdx-demo の実ファイルを ?raw import して共有
 apps/mdx-demo/          Astro + MDX 統合デモ (Markdown 仕様書にモック埋め込み)。src/dsl/ は
-                        pages/external.mdx が <uivolve src> で参照する外部 DSL ファイル
+                        pages/external.mdx が <uivolve src> で参照する外部 DSL ファイル。
+                        pages/blocks.mdx は図・表フェンスの紹介。Astro 7 は既定プロセッサが remark
+                        プラグインを実行しないので、astro.config の markdown.processor: unified() で通す
 apps/vscode-ext/        VSCode 拡張「uivolve Preview」— DSL / MDX 仕様書のライブプレビュー。
                         esbuild で extension host と Webview (React + core + mdx) をバンドル。
+                        Webview は ESM + コード分割 (図・表の描画ライブラリは dist/chunks/)。
                         npm run ext:build / ext:vsix (VSIX 生成)
 reference/components.md      コンポーネント/レイアウトのリファレンス — JSDoc から自動生成。直接編集禁止
 reference/extjs-layouts.md   ExtJS 7.9 全レイアウトの調査資料と対応状況
@@ -49,7 +57,9 @@ skills/uivolve-mock/         配布用の生成スキル (他プロジェクト�
 .github/workflows/release-vscode-ext.yml  vscode-ext-v<version> タグの push で VSIX をビルドし
                              GitHub Release に添付 (apps/vscode-ext/package.json の version と一致必須)
 scripts/gen-component-docs.mjs  reference/components.md の生成スクリプト
-scripts/validate-dsl.mjs     DSL / MDX の検証 (構文 + xtype/layout 照合)。npm run validate
+scripts/validate-dsl.mjs     DSL / MDX の検証 (構文 + xtype/layout 照合、図・表フェンスのデータ構文と
+                             csv の列数)。npm run validate
+scripts/fixtures/            検証用ファイル (blocks-error.mdx: 各フェンスにわざと構文エラーを入れたもの)
 scripts/shot-uivolve.mjs     DSL / MDX を Playground に流し込みスクリーンショットを撮る
 ```
 
@@ -119,3 +129,7 @@ core はビルド不要 (exports が src/index.ts を直接指す。Vite が処�
   (collapsed / onToggleCollapse — accordion レイアウトが使用)。
 - **循環 import**: layouts → components 方向の依存は不可。PanelShell に依存するレイアウトは
   components/ 側に置いて registerLayout する (例: components/Accordion.tsx)。
+- **図・表フェンスの追加**: blocks/renderers/ に実装して blocks/index.ts で registerFence し、
+  remark-mock の DEFAULT_FENCE_LANGS にも言語名を足す (validate-dsl もここを参照する)。
+  埋め込み先ページの table / pre などの CSS は @layer sx より強いので、それらの要素で組まない。
+  ライブラリが出す SVG に <style> や固定 id があればページから隔離する (renderers/wavedrom.tsx 参照)。

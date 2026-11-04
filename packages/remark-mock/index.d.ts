@@ -15,6 +15,13 @@ export interface RemarkUivolveOptions {
    * componentName (ExtMockup) に src 属性を付けた場合も同様に展開される
    */
   tagNames?: string[]
+  /**
+   * <FenceBlock lang code meta /> に変換する図・表のフェンス言語
+   * (default: DEFAULT_FENCE_LANGS)。false で無効化し、通常のコードブロックのままにする
+   */
+  fenceLangs?: string[] | false
+  /** 図・表フェンスの JSX コンポーネント名 (default: 'FenceBlock') */
+  fenceComponentName?: string
   /** 出力する JSX コンポーネント名 (default: 'ExtMockup') */
   componentName?: string
   /** import 元 (default: '@uivolve/core') */
@@ -41,9 +48,12 @@ export interface RemarkUivolveOptions {
   ) => string | null | undefined | Promise<string | null | undefined>
 }
 
+/** FenceBlock に変換する既定のフェンス言語 (@uivolve/core の registerFence と対応) */
+export const DEFAULT_FENCE_LANGS: string[]
+
 /**
  * Markdown / MDX 内の ```uivolve コードフェンスと <uivolve src="..." /> タグを
- * <ExtMockup /> に変換する remark プラグイン
+ * <ExtMockup /> に、図・表のフェンス (```mermaid など) を <FenceBlock /> に変換する remark プラグイン
  */
 export default function remarkUivolve(
   options?: RemarkUivolveOptions,
