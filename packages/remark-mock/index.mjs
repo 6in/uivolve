@@ -192,7 +192,7 @@ export default function remarkUivolve(options = {}) {
  * FenceBlock に変換する既定のフェンス言語 (@uivolve/core の registerFence と対応させる)
  * @type {string[]}
  */
-export const DEFAULT_FENCE_LANGS = ['mermaid', 'table', 'csv', 'tsv']
+export const DEFAULT_FENCE_LANGS = ['mermaid', 'table', 'csv', 'tsv', 'math', 'dot', 'graphviz', 'wavedrom']
 
 /**
  * MDX が構文エラーにする HTML コメント (<!-- -->) を除去するユーティリティ。

@@ -57,6 +57,18 @@ export function mixHex(a: string, b: string, t: number): string {
     .join('')}`
 }
 
+/**
+ * 既定の黒 (stroke="black" / fill="black") で描く SVG をテーマの文字色に置き換える。
+ * 色を明示した要素はそのまま。fill 属性のない文字は svg ルートの fill を継承させる
+ * (Graphviz / WaveDrom のビットフィールドなど、テーマ指定の手段がないライブラリ向け)
+ */
+export function inkSvg(svg: string, p: SxPalette): string {
+  return svg
+    .replace(/<svg\b/, `<svg style="fill:${p.text}"`)
+    .replaceAll('stroke="black"', `stroke="${p.text}"`)
+    .replaceAll('fill="black"', `fill="${p.text}"`)
+}
+
 export function readSxPalette(el: HTMLElement): SxPalette {
   const panelBg = resolveColor(el, 'var(--sx-panel-bg)')
   const accent = resolveColor(el, 'var(--sx-accent)')
