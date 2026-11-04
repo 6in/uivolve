@@ -3,6 +3,7 @@ import { cx } from '../../utils'
 import { parseCsv } from '../csv'
 import { optionFlag } from '../meta'
 import type { FenceRendererProps } from '../registry'
+import { tableRows } from '../shapes'
 
 /** 列定義 (名前は uivolve の grid = ExtJS の column config に合わせる) */
 interface TableColumn {
@@ -20,8 +21,10 @@ interface TableModel {
   rows: Row[]
 }
 
+/** 数値か (文字列は 1234 / -1,234,567.89 のような 3 桁区切りまで。"1,2,3" のような列挙は文字列扱い) */
 const isNumeric = (v: unknown) =>
-  typeof v === 'number' || (typeof v === 'string' && /^-?[\d,]+(\.\d+)?$/.test(v.trim()))
+  typeof v === 'number' ||
+  (typeof v === 'string' && /^-?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?$/.test(v.trim()))
 
 /** 全行が数値の列は右寄せにする (align 未指定時) */
 function autoAlign(columns: TableColumn[], rows: Row[]): TableColumn[] {
@@ -40,17 +43,9 @@ function fromCsv(source: string, delimiter: string): TableModel {
 }
 
 function fromData(data: unknown): TableModel {
-  const spec = (Array.isArray(data) ? { data } : (data ?? {})) as {
-    columns?: Array<TableColumn | string>
-    data?: unknown
-    store?: { data?: unknown } | unknown[]
-  }
-  // grid と同じく store.data / store (配列) も受け付ける
-  const store = spec.store
-  const rawRows = spec.data ?? (Array.isArray(store) ? store : (store as { data?: unknown })?.data)
-  if (!Array.isArray(rawRows)) {
-    throw new Error('table には行の配列 (data: [...]) か、行の配列そのものを指定してください')
-  }
+  const spec = (Array.isArray(data) ? {} : (data ?? {})) as { columns?: Array<TableColumn | string> }
+  // 行の取り出し方 (store.data なども可) と形の確認は shapes.ts に集約 (FenceBlock が確認済み)
+  const rawRows = tableRows(data) ?? []
   // 行が配列なら列番号をキーにする (列定義は先頭から順に対応させる)
   const arrayRows = Array.isArray(rawRows[0])
   const rows: Row[] = rawRows.map((r) =>

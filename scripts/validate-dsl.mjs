@@ -23,6 +23,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { allLayoutNames, allXtypeNames } from '../packages/core/src/meta.ts'
 import { parseCsv } from '../packages/core/src/blocks/csv.ts'
+import { checkFenceData, DATA_FENCE_LANGS } from '../packages/core/src/blocks/shapes.ts'
 import { parseData, parseDsl } from '../packages/core/src/parser.ts'
 import { DEFAULT_FENCE_LANGS } from '../packages/remark-mock/index.mjs'
 
@@ -33,27 +34,31 @@ const COLUMN_XTYPES = new Set(['checkcolumn', 'actioncolumn', 'widgetcolumn', 't
 const UIVOLVE_LANGS = new Set(['uivolve', 'extjs', 'sx'])
 // 図・表フェンス (FenceBlock に変換されるもの)
 const BLOCK_LANGS = new Set(DEFAULT_FENCE_LANGS)
-// ルートがオブジェクトである必要があるデータ型フェンス (描画側と同じ条件)
-const OBJECT_DATA_LANGS = new Set(['echarts', 'vega-lite', 'wavedrom'])
 // 子コンポーネントを持ちうるキー (columns は checkcolumn など xtype 付きの列のみ検証)
 const CHILD_KEYS = ['items', 'tbar', 'bbar', 'buttons', 'columns']
 
 /**
- * Markdown / MDX から ```uivolve と図・表のフェンスを抽出する。[{ lang, code, line }] を返す。
+ * Markdown / MDX から ```uivolve と図・表のフェンスを抽出する。[{ lang, code, line, miscased }] を返す。
+ * 言語名の扱いは remark-mock と同じ: uivolve / extjs / sx は大文字小文字を区別し、
+ * 図・表フェンスは区別しない。```Uivolve のように描画されない書き方は miscased として返す。
  * 対象外のフェンス (````md など) も開閉を追跡し、その中に例示されたフェンスは拾わない
  */
 function extractFences(source) {
   const fences = []
   const lines = source.split('\n')
-  let open = null // { marker, fence, lang, start, buf }
+  let open = null // { marker, fence, raw, start, buf }
   for (let i = 0; i < lines.length; i++) {
     const m = /^ {0,3}(`{3,}|~{3,})\s*(\S*)/.exec(lines[i])
     if (!open && m) {
-      const lang = m[2].split(/\s/)[0].toLowerCase()
-      open = { marker: m[1][0], fence: m[1], lang, start: i + 2, buf: [] }
+      open = { marker: m[1][0], fence: m[1], raw: m[2].split(/\s/)[0], start: i + 2, buf: [] }
     } else if (open && m && m[1][0] === open.marker && m[1].length >= open.fence.length && !m[2]) {
-      if (UIVOLVE_LANGS.has(open.lang) || BLOCK_LANGS.has(open.lang)) {
-        fences.push({ lang: open.lang, code: open.buf.join('\n'), line: open.start })
+      const { raw } = open
+      const lower = raw.toLowerCase()
+      const code = open.buf.join('\n')
+      if (UIVOLVE_LANGS.has(raw) || BLOCK_LANGS.has(lower)) {
+        fences.push({ lang: UIVOLVE_LANGS.has(raw) ? raw : lower, code, line: open.start })
+      } else if (UIVOLVE_LANGS.has(lower)) {
+        fences.push({ lang: raw, code, line: open.start, miscased: true })
       }
       open = null
     } else if (open) {
@@ -81,7 +86,7 @@ function validateBlock(lang, code, label, lineOffset) {
     })
     return { label, errors, warnings: [] }
   }
-  if (!['table', ...OBJECT_DATA_LANGS].includes(lang)) {
+  if (!DATA_FENCE_LANGS.includes(lang)) {
     return { label, errors, warnings: [], skipped: true }
   }
   let data
@@ -91,14 +96,9 @@ function validateBlock(lang, code, label, lineOffset) {
     const line = e.line != null ? ` (${e.line + lineOffset} 行目付近)` : ''
     return { label, errors: [`構文エラー${line}: ${e.message}`], warnings: [] }
   }
-  const isObject = data !== null && typeof data === 'object' && !Array.isArray(data)
-  if (OBJECT_DATA_LANGS.has(lang) && !isObject) {
-    errors.push(`${lang} の本文はオブジェクト ({ ... } / キー: 値) で書く`)
-  }
-  if (lang === 'table') {
-    const rows = Array.isArray(data) ? data : (data?.data ?? data?.store?.data ?? data?.store)
-    if (!Array.isArray(rows)) errors.push('table には行の配列 (data: [...]) か、行の配列そのものを書く')
-  }
+  // 形の条件は描画側 (FenceBlock) と同じ shapes.ts を使う
+  const problem = checkFenceData(lang, data)
+  if (problem) errors.push(problem)
   return { label, errors, warnings: [] }
 }
 
@@ -202,6 +202,10 @@ for (const file of files) {
     ? [
         ...extractFences(source).map((f, i) => {
           const label = `${file} フェンス#${i + 1} ${f.lang} (${f.line} 行目〜)`
+          if (f.miscased) {
+            const msg = `言語名は小文字で書く (\`\`\`${f.lang.toLowerCase()})。このままでは画面モックとして描画されない`
+            return { label, errors: [msg], warnings: [] }
+          }
           return UIVOLVE_LANGS.has(f.lang)
             ? validateDsl(f.code, label, f.line - 1)
             : validateBlock(f.lang, f.code, label, f.line - 1)

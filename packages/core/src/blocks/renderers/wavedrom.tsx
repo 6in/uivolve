@@ -12,7 +12,7 @@ let seq = 0
  * - スキンのクラス名 (.s1 など) に連番の接尾辞を付ける。波形のグリフは <use> で複製され
  *   shadow tree 内に入るため、祖先を使うセレクタ (`[data-sx-wd] .s1`) では届かない
  * - クラス以外のセレクタ (text など) はこの SVG の属性セレクタで修飾する
- * - id と参照 (href="#...") に連番の接尾辞を付ける
+ * - id と参照 (href="#..." / url(#...)) に連番の接尾辞を付ける
  * - レーンの白背景を透明にする (dark スキンの白い線が見えるように)
  */
 function isolateSvg(svg: string, n: number): string {
@@ -49,6 +49,8 @@ function isolateSvg(svg: string, n: number): string {
     .replace(/\b(id="|href="#)([^"]+)"/g, (m, attr: string, id: string) =>
       ids.has(id) ? `${attr}${id}${suffix}"` : m,
     )
+    // 矢印 (edge) は style="marker-end:url(#arrowhead)" で参照するので、こちらも付け替える
+    .replace(/url\(#([^)]+)\)/g, (m, id: string) => (ids.has(id) ? `url(#${id}${suffix})` : m))
     .replaceAll('style="stroke:none;fill:white"', 'style="stroke:none;fill:none"')
 }
 
@@ -70,9 +72,7 @@ export function WaveDromFence({ data }: FenceRendererProps) {
         // CommonJS なので、バンドラにより exports が名前付き (Vite) / default (esbuild) のどちらかに入る
         type WaveDrom = typeof import('wavedrom')
         const wd = (mod as unknown as { default?: WaveDrom }).default ?? (mod as WaveDrom)
-        if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-          throw new Error('WaveJSON はオブジェクト ({ signal: [...] } / { reg: [...] }) で書いてください')
-        }
+        // data の形 (オブジェクト) は FenceBlock が shapes.ts で確認済み
         // CommonJS の dark.js は環境により default にくるまれる/くるまれないの両方がある
         const darkSkins = (dark as { default?: Record<string, unknown> }).default ?? dark
         const skins = { ...wd.waveSkin, ...darkSkins }

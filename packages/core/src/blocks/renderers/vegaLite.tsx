@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { fenceHeight } from '../meta'
 import type { FenceRendererProps } from '../registry'
 import { useAsyncError, useSxPalette, type SxPalette } from '../theme'
 
@@ -32,18 +33,19 @@ export function VegaLiteFence({ data, options }: FenceRendererProps) {
   const ref = useRef<HTMLDivElement>(null)
   const palette = useSxPalette(ref)
   const throwAsync = useAsyncError()
-  const sized = options.height !== undefined
+  // 値なしの `height` (true) は高さ指定とみなさない (FenceBlock も高さを固定しない)
+  const sized = fenceHeight(options.height) !== undefined
 
   useEffect(() => {
+    // data の形 (オブジェクト) は FenceBlock が shapes.ts で確認済み
     if (!palette) return
-    if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-      throwAsync(new Error('Vega-Lite の spec はオブジェクト ({ mark: ..., encoding: ... }) で書いてください'))
-      return
-    }
     const spec = { ...(data as Record<string, unknown>) }
-    spec.width ??= 'container'
-    if (sized) spec.height ??= 'container'
     const mode = String(spec.$schema ?? '').includes('/vega/') ? 'vega' : 'vega-lite'
+    // 'container' は Vega-Lite だけの指定 (Vega の spec に入れると幅が壊れる)
+    if (mode === 'vega-lite') {
+      spec.width ??= 'container'
+      if (sized) spec.height ??= 'container'
+    }
 
     let alive = true
     let finalize = () => {}
@@ -51,6 +53,8 @@ export function VegaLiteFence({ data, options }: FenceRendererProps) {
       .then(({ default: embed }) => {
         const el = ref.current
         if (!alive || !el) return
+        // Vega の width は数値のみ (未指定だと 0)。ブロック幅を数値で渡す (左右の余白ぶん引く)
+        if (mode === 'vega' && spec.width === undefined) spec.width = Math.max(100, el.clientWidth - 40)
         return embed(el, spec as never, {
           mode,
           actions: false,

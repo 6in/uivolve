@@ -2,6 +2,7 @@ import { Component, useMemo, type ReactNode } from 'react'
 import { cx } from '../utils'
 import { fenceHeight, parseFenceData, parseFenceMeta } from './meta'
 import { resolveFence, type FenceDefinition, type FenceOptions } from './registry'
+import { checkFenceData } from './shapes'
 
 export interface FenceBlockProps {
   /** フェンスの言語名 (mermaid / echarts / csv ...) */
@@ -58,7 +59,7 @@ class FenceBoundary extends Component<BoundaryProps, { error: Error | null }> {
   }
 }
 
-/** kind: 'data' はここで解釈する (解釈エラーも境界に拾わせる) */
+/** kind: 'data' はここで解釈し、形 (shapes.ts) も確かめる (どちらのエラーも境界に拾わせる) */
 function FenceContent({
   def,
   lang,
@@ -70,10 +71,13 @@ function FenceContent({
   source: string
   options: FenceOptions
 }) {
-  const data = useMemo(
-    () => (def.kind === 'data' ? parseFenceData(source) : undefined),
-    [def, source],
-  )
+  const data = useMemo(() => {
+    if (def.kind !== 'data') return undefined
+    const parsed = parseFenceData(source)
+    const problem = checkFenceData(lang.toLowerCase(), parsed)
+    if (problem) throw new Error(problem)
+    return parsed
+  }, [def, lang, source])
   const Renderer = def.component
   return <Renderer source={source} data={data} options={options} lang={lang} />
 }

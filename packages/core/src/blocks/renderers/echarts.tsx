@@ -41,11 +41,8 @@ export function EChartsFence({ data }: FenceRendererProps) {
   const throwAsync = useAsyncError()
 
   useEffect(() => {
+    // data の形 (オブジェクト) は FenceBlock が shapes.ts で確認済み
     if (!palette) return
-    if (data === null || typeof data !== 'object' || Array.isArray(data)) {
-      throwAsync(new Error('ECharts の option はオブジェクト ({ xAxis: ..., series: [...] }) で書いてください'))
-      return
-    }
     let alive = true
     let dispose = () => {}
     import('echarts')

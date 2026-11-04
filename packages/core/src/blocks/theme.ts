@@ -35,7 +35,9 @@ function resolveColor(el: HTMLElement, cssColor: string): string {
   probe.remove()
   canvasCtx ??= document.createElement('canvas').getContext('2d', { willReadFrequently: true })
   if (!canvasCtx) return '#000000'
-  canvasCtx.clearRect(0, 0, 1, 1)
+  // 半透明・透明な色は白の上に重ねた色として読む (透明な背景が黒 = ダークと誤判定されないように)
+  canvasCtx.fillStyle = '#fff'
+  canvasCtx.fillRect(0, 0, 1, 1)
   canvasCtx.fillStyle = '#000'
   canvasCtx.fillStyle = computed
   canvasCtx.fillRect(0, 0, 1, 1)

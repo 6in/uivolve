@@ -20,9 +20,47 @@ let measureCtx: CanvasRenderingContext2D | null = null
 
 /**
  * SVG の <title> (= DOT に書かれた ID そのまま。\n などのエスケープも残っている) を "..." で囲む。
- * バックスラッシュは二重にしない (二重にすると別のノードになる)
+ * バックスラッシュは二重にしない (二重にすると別のノードになる)。
+ * 末尾が \ の ID は閉じ引用符を壊すので null (そのノードは補正しない)
  */
-const dotQuote = (s: string) => `"${s.replace(/(^|[^\\])"/g, '$1\\"')}"`
+function dotQuote(s: string): string | null {
+  if (/\\$/.test(s)) return null
+  return `"${s.replace(/\\?"/g, (m) => (m === '"' ? '\\"' : m))}"`
+}
+
+/**
+ * ルートのグラフを閉じる } の位置。文字列 ("...")・コメント (// # /* *\/)・HTML ラベル (<...>) の
+ * 中の括弧は数えない。末尾のコメントに } があっても正しい位置を返す。見つからなければ -1
+ */
+function rootCloseIndex(src: string): number {
+  let depth = 0
+  for (let i = 0; i < src.length; i++) {
+    const ch = src[i]
+    if (ch === '"') {
+      for (i++; i < src.length && src[i] !== '"'; i++) if (src[i] === '\\') i++
+    } else if (ch === '/' && src[i + 1] === '/') {
+      while (i < src.length && src[i] !== '\n') i++
+    } else if (ch === '#' && (i === 0 || src[i - 1] === '\n')) {
+      while (i < src.length && src[i] !== '\n') i++
+    } else if (ch === '/' && src[i + 1] === '*') {
+      const close = src.indexOf('*/', i + 2)
+      i = close < 0 ? src.length : close + 1
+    } else if (ch === '<') {
+      for (let nest = 1, j = i + 1; j < src.length; j++) {
+        if (src[j] === '<') nest++
+        else if (src[j] === '>' && --nest === 0) {
+          i = j
+          break
+        }
+      }
+    } else if (ch === '{') {
+      depth++
+    } else if (ch === '}' && --depth === 0) {
+      return i
+    }
+  }
+  return -1
+}
 
 /**
  * Graphviz (wasm) は文字幅を内蔵のフォント表で見積もるため、日本語などの全角文字を
@@ -59,14 +97,20 @@ function layoutWithMeasuredLabels(gv: Graphviz, source: string, engine: string):
       const xs = (polygon!.getAttribute('points') ?? '').split(/\s+/).map((p) => Number(p.split(',')[0]))
       current = Math.max(...xs) - Math.min(...xs)
     }
-    if (required > current + 0.5) fixes.push(`${dotQuote(id)} [width=${(required / 72).toFixed(3)}]`)
+    const quoted = dotQuote(id)
+    if (quoted && required > current + 0.5) fixes.push(`${quoted} [width=${(required / 72).toFixed(3)}]`)
   }
   if (!fixes.length) return first
 
-  // ルートのグラフの閉じ括弧の直前にノード属性を足す (既存ノードへの属性追加になる)
-  const end = source.lastIndexOf('}')
+  // ルートのグラフの閉じ括弧の直前にノード属性を足す (既存ノードへの属性追加になる)。
+  // 補正は見た目の改善にすぎないので、2 回目が失敗したら 1 回目の結果を使う
+  const end = rootCloseIndex(source)
   if (end < 0) return first
-  return gv.layout(`${source.slice(0, end)}\n${fixes.join('\n')}\n${source.slice(end)}`, 'svg', engine as 'dot')
+  try {
+    return gv.layout(`${source.slice(0, end)}\n${fixes.join('\n')}\n${source.slice(end)}`, 'svg', engine as 'dot')
+  } catch {
+    return first
+  }
 }
 
 /** Graphviz の既定色 (黒の線・文字、白の背景) だけをテーマ色に置き換える */
