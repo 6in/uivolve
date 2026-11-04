@@ -203,6 +203,7 @@ export const DEFAULT_FENCE_LANGS = [
   'wavedrom',
   'echarts',
   'vega-lite',
+  'dbml',
 ]
 
 /**

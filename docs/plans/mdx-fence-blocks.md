@@ -57,7 +57,7 @@ packages/core/src/blocks/
     mermaid.tsx       既存 components/Mermaid.tsx の描画ロジックを関数に抽出して共用 (theme を --sx-* から)
     graphviz.tsx      @hpcc-js/wasm-graphviz (wasm を JS に内包 — 別ファイル配信不要)
     math.tsx          katex.renderToString(code, { displayMode: true, output: 'mathml' })
-    dbml.tsx          @dbml/core で解析 → mermaid erDiagram 文字列に変換 → mermaid renderer へ
+    dbml.tsx          @dbml/parse で解析 → mermaid erDiagram 文字列に変換 → mermaid renderer へ
     echarts.tsx       echarts.init(el, テーマ) + setOption(data)。ResizeObserver で追従
     vegaLite.tsx      vega-embed (actions: false)。config に --sx-* 由来の色を差し込む
     table.tsx         CSV/TSV/配列 → 表。見出しクリックで昇降順、上部に絞り込み入力
@@ -101,13 +101,14 @@ data:
 |---|---|---|
 | `@hpcc-js/wasm-graphviz` | Apache-2.0 | dot / graphviz |
 | `katex` | MIT | math |
-| `@dbml/core` | Apache-2.0 | dbml 解析 |
+| `@dbml/parse` | Apache-2.0 | dbml 解析 (当初案の `@dbml/core` は SQL 各方言のパーサ込みで 15MB あったため、DBML コンパイラ単体に変更。439KB) |
 | `echarts` | Apache-2.0 | echarts |
 | `vega` / `vega-lite` / `vega-embed` | BSD-3-Clause | vega-lite |
 | `wavedrom` | MIT | wavedrom |
 
 着手時に各最新版の実ライセンスとブラウザ動作 (Node 専用 API への依存がないか) を確認する。
-特に `@dbml/core` はサイズが大きいので、バンドル後の分割チャンクのサイズを記録する。
+dbml のパーサはサイズが大きいので、バンドル後の分割チャンクのサイズを記録する
+(実測: `@dbml/core` 15MB / gzip 2.6MB → `@dbml/parse` 439KB / gzip 111KB)。
 
 ## 3. 表示先ごとの作業
 

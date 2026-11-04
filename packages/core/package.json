@@ -11,6 +11,7 @@
     "./styles.css": "./src/styles.css"
   },
   "dependencies": {
+    "@dbml/parse": "^11.0.1",
     "@hpcc-js/wasm-graphviz": "^1.30.0",
     "@monaco-editor/react": "^4.7.0",
     "d3-force": "^3.0.0",

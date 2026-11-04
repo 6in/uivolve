@@ -1,4 +1,5 @@
 import { registerFence } from './registry'
+import { DbmlFence } from './renderers/dbml'
 import { EChartsFence } from './renderers/echarts'
 import { GraphvizFence } from './renderers/graphviz'
 import { MathFence } from './renderers/math'
@@ -16,6 +17,7 @@ registerFence(['dot', 'graphviz'], { kind: 'text', label: 'Graphviz', component:
 registerFence('wavedrom', { kind: 'data', label: 'WaveDrom', component: WaveDromFence })
 registerFence('echarts', { kind: 'data', label: 'ECharts', component: EChartsFence })
 registerFence('vega-lite', { kind: 'data', label: 'Vega-Lite', component: VegaLiteFence })
+registerFence('dbml', { kind: 'text', label: 'DBML', component: DbmlFence })
 
 export { FenceBlock, type FenceBlockProps } from './FenceBlock'
 export {
