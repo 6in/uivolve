@@ -20,5 +20,8 @@
     "mdx:dev": "npm -w apps/mdx-demo run dev",
     "mdx:build": "npm -w apps/mdx-demo run build",
     "pages": "npm -w apps/playground run build:pages && npm -w apps/mdx-demo run build:pages"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.1"
   }
 }

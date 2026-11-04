@@ -207,8 +207,7 @@ data:
 ### 5.4 確認手順
 
 - スクリーンショット: `npm run dev` を起動し `node scripts/shot-uivolve.mjs <file> [out.png] [--bottom]`。
-  現状この環境では playwright-core がリポジトリに無いため `$PLAYWRIGHT_CORE` で指定して実行する
-  (devDependencies への追加は別途判断)
+  playwright-core はルートの devDependencies に入っている (Chromium は ms-playwright キャッシュから自動検出)
 - mdx-demo: `npm run mdx:build` 後に成果物をプレビューして撮影
 - 通信の記録・ダークテーマ切替・table の操作は headless Chromium の使い捨てスクリプトで行う
   (両 Playground の `window.__uivolve.setCode(code)` を利用)
