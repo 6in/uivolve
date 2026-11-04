@@ -1662,6 +1662,24 @@
     }
   }
 
+  /* チャートは高さが必要: 既定 320px、height= 指定時はブロックの高さに合わせる */
+  .sx-fence-chart {
+    block-size: 320px;
+    min-inline-size: 0;
+
+    .sx-fence-sized > & {
+      block-size: auto;
+    }
+  }
+
+  .sx-fence-vega {
+    block-size: auto;
+
+    .sx-fence-sized > & {
+      block-size: auto;
+    }
+  }
+
   .sx-fence-math {
     overflow-x: auto;
     font-size: 1.15em;

@@ -1,8 +1,10 @@
 import { registerFence } from './registry'
+import { EChartsFence } from './renderers/echarts'
 import { GraphvizFence } from './renderers/graphviz'
 import { MathFence } from './renderers/math'
 import { MermaidFence } from './renderers/mermaid'
 import { TableFence } from './renderers/table'
+import { VegaLiteFence } from './renderers/vegaLite'
 import { WaveDromFence } from './renderers/wavedrom'
 
 // 組み込みフェンスの登録 (言語名は GitHub / 各ライブラリで一般的な名前に合わせる)
@@ -12,6 +14,8 @@ registerFence(['csv', 'tsv'], { kind: 'text', label: 'CSV', component: TableFenc
 registerFence('math', { kind: 'text', label: 'KaTeX', component: MathFence })
 registerFence(['dot', 'graphviz'], { kind: 'text', label: 'Graphviz', component: GraphvizFence })
 registerFence('wavedrom', { kind: 'data', label: 'WaveDrom', component: WaveDromFence })
+registerFence('echarts', { kind: 'data', label: 'ECharts', component: EChartsFence })
+registerFence('vega-lite', { kind: 'data', label: 'Vega-Lite', component: VegaLiteFence })
 
 export { FenceBlock, type FenceBlockProps } from './FenceBlock'
 export {
