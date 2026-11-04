@@ -135,20 +135,90 @@ data:
 10. `feat(scripts): validate-dsl でデータ型フェンスを検証`
 11. `docs(skills): uivolve-mock ガイドに図・表フェンスを追記` + CLAUDE.md 更新
 
-## 5. 検証
+## 5. 終了判定
 
-各コミットで:
-- `npm run typecheck && npm run build`
+### 5.1 基準値 (着手前に計測、2026-11-04 / main `4bf24dc` 相当)
 
-まとめて:
-- `npm run mdx:build` (Astro の静的ビルドで remark 変換と SSR が通ること。部品は SSR で window に触れない)
-- `npm run dev` + `node scripts/shot-uivolve.mjs apps/mdx-demo/src/pages/blocks.mdx <out> [--bottom]` で
-  全フェンスをスクリーンショット**目視確認** (ライト / ダーク両方)
-- エラー系: 各フェンスにわざと構文エラーを入れたサンプルで、エラー文 + ソースが出て他ブロックが無事なこと
-- コンソールエラーがないこと
-- `npm run validate -- apps/mdx-demo/src/pages/blocks.mdx` (正常系 0 件、壊したサンプルで検出)
-- `npm run ext:vsix` → VSCode で MDX プレビューを開き全フェンスが描けること (オフライン)、VSIX サイズを記録
-- 未使用ページで追加ライブラリのチャンクが読まれないこと (Playground の Network タブで確認)
+| 対象 | 値 |
+|---|---|
+| DSL Playground 入口 `main-*.js` | 29KB (gzip) |
+| MDX Playground 入口 `mdx-playground-*.js` | 155KB (gzip) |
+| VSCode webview `dist/webview.js` / `webview.css` | 4.2MB / 1.1MB (minify 済み) |
+
+### 5.2 各手順 (コミット) の完了条件
+
+すべて満たしたらコミットしてよい。満たせない場合はコミットせず、原因と対処案を報告して相談する。
+
+1. `npm run typecheck && npm run build` が成功する
+2. その手順で追加したフェンスを **MDX Playground でスクリーンショットし、画像を見て**描画を確認している
+   (手順 1〜3 は mermaid、手順 4 以降はそのフェンス)
+3. 既存のサンプル (`apps/mdx-demo/src/pages/index.mdx`) のスクリーンショットが着手前と同じ見た目である (回帰なし)
+4. ブラウザのコンソールにエラーが出ていない
+
+### 5.3 第 1 段全体の完了条件 (Definition of Done)
+
+**A. 機能**
+- [ ] 9 種のフェンス (`mermaid` `dot`/`graphviz` `math` `dbml` `echarts` `vega-lite` `table` `csv`/`tsv` `wavedrom`) が
+      サンプルページ `blocks.mdx` で描画される — **3 つの表示先すべて**で確認:
+      mdx-demo (`npm run mdx:build` の成果物をプレビュー)、MDX Playground、VSCode 拡張のプレビュー
+- [ ] メタ `height=` が全フェンスで効き、`theme=dark` と uivolve のダークテーマで背景・文字・罫線が
+      周囲と馴染む (ライト / ダーク両方のスクリーンショットで確認)
+- [ ] table / csv / tsv: 見出しクリックで昇順 → 降順が切り替わり、絞り込み入力で行が減る (実操作で確認)
+- [ ] `fenceLangs: false` を渡すと従来どおり ` ```mermaid ` がコードブロックとして表示される
+
+**B. エラー処理**
+- [ ] 9 種それぞれに構文エラーを入れたサンプル (`blocks-error.mdx`) で、各ブロックに **エラー文 + 元ソース**が出る
+- [ ] エラーのブロックがあっても、同じページの他のブロックは正常に描画される
+- [ ] 例外がページ全体 (MDX Playground の PreviewBoundary) まで伝わらない
+
+**C. 回帰なし**
+- [ ] 既存の `index.mdx` / `runbook.mdx` / `external.mdx` の見た目が着手前と変わらない (スクリーンショット比較)
+- [ ] ` ```uivolve ` フェンスと `<uivolve src>` が従来どおり動く
+- [ ] 既存の xtype `mermaid` (uivolve YAML 内) が従来どおり描ける
+
+**D. 読み込みの分割**
+- [ ] 追加ライブラリ (graphviz / katex / dbml / echarts / vega / wavedrom) は、Vite のビルド結果で
+      それぞれ**入口とは別のチャンク**になっている
+- [ ] 入口のサイズ増加が基準値比 **+10KB (gzip) 以内** (DSL Playground 入口・MDX Playground 入口とも)
+- [ ] 図・表フェンスを含まないページを開いたとき、追加ライブラリのチャンクが通信に出ない
+      (headless Chromium で通信を記録して確認)
+- [ ] VSCode webview の初期読み込み `webview.js` の増加が基準値比 **+200KB 以内**
+      (ライブラリ本体は分割チャンクとして `dist/` に同梱)
+
+**E. VSCode 拡張**
+- [ ] `npm run ext:vsix` が成功し、VSIX サイズを記録している
+- [ ] ネットワークを切った状態でも 9 種すべてがプレビューで描ける (外部への通信なし)
+- [ ] CSP 違反がコンソールに出ない
+
+**F. 検証スクリプト**
+- [ ] `npm run validate -- apps/mdx-demo/src/pages/blocks.mdx` がエラー 0 件で終了コード 0
+- [ ] `blocks-error.mdx` に対して、echarts / vega-lite / table / wavedrom の構文エラーと csv / tsv の列数不一致を
+      **それぞれ 1 件ずつ検出**し、終了コードが 0 以外
+
+**G. ビルド**
+- [ ] `npm run typecheck` / `npm run build` / `npm run mdx:build` / `npm run ext:build` がすべて成功
+
+**H. ドキュメント**
+- [ ] 追加した部品すべてに JSDoc があり、`npm run docs` / `npm run schema` 実行後に差分が残らない
+- [ ] `skills/uivolve-mock/references/dsl-guide.md` に図・表フェンスの節がある
+- [ ] CLAUDE.md の構成欄を更新している
+- [ ] 追加した依存のライセンスを実パッケージで確認し、この計画書の 2.4 の表と一致している
+
+### 5.4 確認手順
+
+- スクリーンショット: `npm run dev` を起動し `node scripts/shot-uivolve.mjs <file> [out.png] [--bottom]`。
+  現状この環境では playwright-core がリポジトリに無いため `$PLAYWRIGHT_CORE` で指定して実行する
+  (devDependencies への追加は別途判断)
+- mdx-demo: `npm run mdx:build` 後に成果物をプレビューして撮影
+- 通信の記録・ダークテーマ切替・table の操作は headless Chromium の使い捨てスクリプトで行う
+  (両 Playground の `window.__uivolve.setCode(code)` を利用)
+
+### 5.5 途中で止めて相談する条件
+
+- vega / @dbml/core がブラウザで動かず、代替が必要になったとき
+- VSCode webview の分割読み込みが CSP の調整で解決せず、分割なしに切り替える必要があるとき
+- D の容量基準を満たせないとき
+- 既存ページの見た目が変わる (C を満たせない) とき
 
 ## 6. リスクと対処
 
