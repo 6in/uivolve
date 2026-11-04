@@ -174,13 +174,14 @@ function buildHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
       Math.floor(Math.random() * 62),
     ),
   ).join('')
-  // 'unsafe-eval' は MDX のブラウザ内コンパイル (@mdx-js/mdx の evaluate) に必要
+  // 'unsafe-eval' は MDX のブラウザ内コンパイル (@mdx-js/mdx の evaluate) と
+  // Graphviz (wasm) / Vega の式評価に必要。cspSource は dist/chunks/ の分割チャンクの動的 import 用
   const csp = [
     "default-src 'none'",
     `img-src ${webview.cspSource} data:`,
     `style-src ${webview.cspSource} 'unsafe-inline'`,
     `font-src ${webview.cspSource} data:`,
-    `script-src 'nonce-${nonce}' 'unsafe-eval'`,
+    `script-src 'nonce-${nonce}' ${webview.cspSource} 'unsafe-eval'`,
   ].join('; ')
 
   return `<!doctype html>
@@ -193,7 +194,7 @@ function buildHtml(webview: vscode.Webview, extensionUri: vscode.Uri): string {
   </head>
   <body>
     <div id="root"></div>
-    <script nonce="${nonce}" src="${scriptUri}"></script>
+    <script type="module" nonce="${nonce}" src="${scriptUri}"></script>
   </body>
 </html>`
 }
