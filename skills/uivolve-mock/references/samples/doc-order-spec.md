@@ -17,6 +17,9 @@ Markdown 内の ` ```uivolve ` コードフェンスに ExtJS 互換 DSL を書�
 >
 > 📁 DSL を別ファイルに分けて `<uivolve src="./dsl/xxx.yaml" />` で参照する書き方は
 > **[外部 DSL ファイルの参照](external/)** を参照。
+>
+> 📊 ` ```mermaid ` ` ```dbml ` ` ```echarts ` ` ```csv ` など、図・チャート・表を
+> その言語の記法だけで書く方法は **[図・表フェンス](blocks/)** を参照。
 
 ## 1. メイン画面
 

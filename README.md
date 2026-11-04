@@ -43,7 +43,7 @@ npm run dev   # Playground (エディタ + ライブプレビュー) が http://
 
 ```
 packages/core/        — @uivolve/core: DSL パーサー + レンダラー (React)
-packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンス / <uivolve src> をモック描画する remark プラグイン
+packages/remark-mock/ — @uivolve/remark-mock: ```uivolve フェンス / <uivolve src> / 図・表フェンスを描画する remark プラグイン
 apps/playground/      — エディタ + ビューア (Vite)。/mdx-playground/ に MDX Playground も同梱
 apps/mdx-demo/        — Astro + MDX 統合デモ (Markdown 仕様書にモックを埋め込む)
 apps/vscode-ext/      — VSCode 拡張「uivolve Preview」(DSL / MDX のライブプレビュー)
@@ -295,6 +295,34 @@ title: ○○画面 仕様書
 
 例: ` ```uivolve height=380 theme=dark `
 
+### 図・表フェンス (mermaid / dbml / echarts / csv ...)
+
+画面モックのほかに、仕様書でよく使う図・チャート・表も **その言語の DSL だけ**をフェンスに
+書けば描画される (uivolve の YAML で包む必要はない)。GitHub と同じく、言語名を書いたフェンスは
+必ず図になる。ソースのまま見せたいときは ` ```text ` などにする。
+
+| フェンス | 本文 | 描画ライブラリ (ライセンス) |
+|---|---|---|
+| ` ```mermaid ` | Mermaid 記法 | Mermaid (MIT) |
+| ` ```dbml ` | DBML (テーブル定義 → ER 図) | @dbml/parse (Apache-2.0) + Mermaid |
+| ` ```dot ` / ` ```graphviz ` | DOT 言語 (meta の `engine=neato` 等でレイアウト切替) | @hpcc-js/wasm-graphviz (Apache-2.0) |
+| ` ```math ` | TeX | KaTeX (MIT、MathML 出力) |
+| ` ```csv ` / ` ```tsv ` | 1 行目が見出しの CSV / TSV | 自前 (並べ替え・絞り込み付き) |
+| ` ```table ` | 行の配列 + 列定義 (`dataIndex` / `text` / `width` / `flex` / `align`) の JSON5 / YAML | 自前 (同上) |
+| ` ```echarts ` | ECharts の option (JSON5 / YAML) | Apache ECharts (Apache-2.0) |
+| ` ```vega-lite ` | Vega-Lite の spec (JSON5 / YAML) | Vega / Vega-Lite (BSD-3-Clause) |
+| ` ```wavedrom ` | WaveJSON (JSON5 / YAML) | WaveDrom (MIT) |
+
+- meta の `height=` / `theme=` は ` ```uivolve ` と同じ (`height` 省略時は中身なり、チャートは 320px)。
+  色は uivolve のテーマ (`--sx-*`) に合わせて切り替わる
+- 描画ライブラリは使うときだけ読み込む (図のないページでは読まれない)
+- 書き間違えるとブロック内にエラー内容と元のソースが出る (ほかのブロックは影響を受けない)
+- `npm run validate -- spec.mdx` はデータ型 (echarts / vega-lite / table / wavedrom) の構文と
+  csv / tsv の列数も検証する
+- デモ: https://6in.github.io/uivolve/mdx/blocks/
+
+remark-mock の `fenceLangs` オプションで対象の言語を絞れる (`false` で無効化)。
+
 ### DSL を別ファイルに置く (`<uivolve src>`)
 
 フェンスに書かず、`.yaml` / `.json5` に分けた DSL ファイルをタグで参照できる (MDX のみ)。
@@ -337,23 +365,31 @@ import { ExtMockup } from '@uivolve/core'
 ### 自分の Astro プロジェクトへの組み込み
 
 仕組みは `@uivolve/remark-mock` (remark プラグイン) が ` ```uivolve ` フェンスを
-`<ExtMockup client:load />` に変換 + import を自動注入するだけなので、
-Astro に限らず MDX パイプラインなら組み込める。
+`<ExtMockup client:load />` に、図・表フェンスを `<FenceBlock client:load />` に変換 +
+import を自動注入するだけなので、Astro に限らず MDX パイプラインなら組み込める。
 
-セットアップ (Astro):
+セットアップ (Astro 7)。Astro 7 の既定の Markdown プロセッサは remark プラグインを実行しないので、
+`@astrojs/markdown-remark` の `unified` プロセッサ経由で渡す (MDX もこの設定を引き継ぐ):
 
 ```js
-// astro.config.mjs
+// astro.config.mjs  (npm i -D @astrojs/markdown-remark)
+import { unified } from '@astrojs/markdown-remark'
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import remarkUivolve from '@uivolve/remark-mock'
 
 export default defineConfig({
-  integrations: [react(), mdx({ remarkPlugins: [remarkUivolve] })],
+  markdown: { processor: unified({ remarkPlugins: [remarkUivolve] }) },
+  integrations: [react(), mdx()],
 })
 ```
 
+Astro 5 以前は `mdx({ remarkPlugins: [remarkUivolve] })` でよい。
+
 レイアウト側で `@uivolve/core/styles.css` (と必要なら Font Awesome) を読み込む。
+
+import を注入しない使い方 (`injectImport: false` でブラウザ内 `evaluate()` する場合など) では、
+`components` に `ExtMockup` と `FenceBlock` の両方を渡す。
 
 ## VSCode 拡張 (uivolve Preview)
 
