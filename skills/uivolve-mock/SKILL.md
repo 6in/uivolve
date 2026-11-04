@@ -68,7 +68,7 @@ uivolve は ExtJS 互換の宣言的 DSL (JSON5 / YAML) で画面モックを描
 ローカルにより強力な検証ツールがある。公開 Playground の代わりにこちらを使う:
 
 ```bash
-npm run validate -- <file>            # 構文 + xtype/layout 照合 + itemId 警告 (MDX は <uivolve src> の参照先も)
+npm run validate -- <file>            # 構文 + xtype/layout 照合 + itemId 警告 (MDX は <uivolve src> の参照先と図・表フェンスも)
 npm run dev                            # dev サーバー起動 (5173)
 node scripts/shot-uivolve.mjs <file>   # Playground に流し込んでスクリーンショット
 ```

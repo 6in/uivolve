@@ -155,8 +155,10 @@ stateDiagram-v2
   CSV から貼りたい場合はフェンスにする
 - グラフは echarts を基本にする (vega-lite は spec が短く書ける集計グラフ向け)
 - 記法の誤りはブロック内にエラーとして出る。`npm run validate -- spec.mdx` は
-  echarts / vega-lite / table / wavedrom の構文と csv / tsv の列数を検証する
+  echarts / vega-lite / table / wavedrom の構文と形、csv / tsv の閉じていない引用符と列数を検証する
   (mermaid / dbml / dot / math は Playground か VSCode 拡張で表示して確認する)
+- 言語名は小文字で書く。` ```Uivolve ` のように大文字を混ぜると画面モックとして描画されない
+  (validate はエラーにする)
 - HTML コメント `<!-- -->` は MDX 本来は不可だが、uivolve の MDX Playground は
   除去してくれる。配布物として残す MDX には書かないのが安全。
 
