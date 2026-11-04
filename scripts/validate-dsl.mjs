@@ -8,6 +8,11 @@
  * 2. xtype / layout が登録済みのものであること (meta.ts と照合)
  * 3. itemId の付与漏れ (警告のみ — 仕様書から部品を参照するための推奨規約)
  *
+ * MDX の図・表フェンス (remark-mock の DEFAULT_FENCE_LANGS) は次を検証する:
+ * - データ型 (echarts / vega-lite / table / wavedrom): JSON5 / YAML の構文とルートの形
+ * - csv / tsv: 閉じていないダブルクォートと、見出し行との列数の不一致
+ * - それ以外 (mermaid / dbml / dot / math など) はブラウザでの描画時に検証されるのでスキップ
+ *
  * 使い方:
  *   npm run validate -- <file...>
  *   node --experimental-strip-types scripts/validate-dsl.mjs <file...>
@@ -17,33 +22,84 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { allLayoutNames, allXtypeNames } from '../packages/core/src/meta.ts'
-import { parseDsl } from '../packages/core/src/parser.ts'
+import { parseCsv } from '../packages/core/src/blocks/csv.ts'
+import { parseData, parseDsl } from '../packages/core/src/parser.ts'
+import { DEFAULT_FENCE_LANGS } from '../packages/remark-mock/index.mjs'
 
 const XTYPES = new Set(allXtypeNames())
 const LAYOUTS = new Set(allLayoutNames())
 // 列専用の xtype (GridPanel / TreePanel 内部で処理されレジストリには載らない)
 const COLUMN_XTYPES = new Set(['checkcolumn', 'actioncolumn', 'widgetcolumn', 'treecolumn'])
-const FENCE_LANGS = new Set(['uivolve', 'extjs', 'sx'])
+const UIVOLVE_LANGS = new Set(['uivolve', 'extjs', 'sx'])
+// 図・表フェンス (FenceBlock に変換されるもの)
+const BLOCK_LANGS = new Set(DEFAULT_FENCE_LANGS)
+// ルートがオブジェクトである必要があるデータ型フェンス (描画側と同じ条件)
+const OBJECT_DATA_LANGS = new Set(['echarts', 'vega-lite', 'wavedrom'])
 // 子コンポーネントを持ちうるキー (columns は checkcolumn など xtype 付きの列のみ検証)
 const CHILD_KEYS = ['items', 'tbar', 'bbar', 'buttons', 'columns']
 
-/** Markdown / MDX から ```uivolve フェンスを抽出する。[{ code, line }] を返す */
+/**
+ * Markdown / MDX から ```uivolve と図・表のフェンスを抽出する。[{ lang, code, line }] を返す。
+ * 対象外のフェンス (````md など) も開閉を追跡し、その中に例示されたフェンスは拾わない
+ */
 function extractFences(source) {
   const fences = []
   const lines = source.split('\n')
-  let open = null // { marker, lang, start, buf }
+  let open = null // { marker, fence, lang, start, buf }
   for (let i = 0; i < lines.length; i++) {
     const m = /^ {0,3}(`{3,}|~{3,})\s*(\S*)/.exec(lines[i])
-    if (!open && m && FENCE_LANGS.has(m[2].split(/\s/)[0])) {
-      open = { marker: m[1][0], start: i + 2, buf: [] }
-    } else if (open && m && m[1][0] === open.marker) {
-      fences.push({ code: open.buf.join('\n'), line: open.start })
+    if (!open && m) {
+      const lang = m[2].split(/\s/)[0].toLowerCase()
+      open = { marker: m[1][0], fence: m[1], lang, start: i + 2, buf: [] }
+    } else if (open && m && m[1][0] === open.marker && m[1].length >= open.fence.length && !m[2]) {
+      if (UIVOLVE_LANGS.has(open.lang) || BLOCK_LANGS.has(open.lang)) {
+        fences.push({ lang: open.lang, code: open.buf.join('\n'), line: open.start })
+      }
       open = null
     } else if (open) {
       open.buf.push(lines[i])
     }
   }
   return fences
+}
+
+/** 図・表フェンスの検証。テキスト型 (mermaid など) は skipped を返す */
+function validateBlock(lang, code, label, lineOffset) {
+  const errors = []
+  if (lang === 'csv' || lang === 'tsv') {
+    let rows
+    try {
+      rows = parseCsv(code, lang === 'tsv' ? '\t' : ',')
+    } catch (e) {
+      return { label, errors: [`構文エラー: フェンス内 ${e.message}`], warnings: [] }
+    }
+    const width = rows[0]?.length ?? 0
+    rows.forEach((row, i) => {
+      if (i > 0 && row.length !== width) {
+        errors.push(`フェンス内 ${i + 1} 行目の列数 (${row.length}) が見出し行 (${width}) と一致しない`)
+      }
+    })
+    return { label, errors, warnings: [] }
+  }
+  if (!['table', ...OBJECT_DATA_LANGS].includes(lang)) {
+    return { label, errors, warnings: [], skipped: true }
+  }
+  let data
+  try {
+    data = parseData(code)
+  } catch (e) {
+    const line = e.line != null ? ` (${e.line + lineOffset} 行目付近)` : ''
+    return { label, errors: [`構文エラー${line}: ${e.message}`], warnings: [] }
+  }
+  const isObject = data !== null && typeof data === 'object' && !Array.isArray(data)
+  if (OBJECT_DATA_LANGS.has(lang) && !isObject) {
+    errors.push(`${lang} の本文はオブジェクト ({ ... } / キー: 値) で書く`)
+  }
+  if (lang === 'table') {
+    const rows = Array.isArray(data) ? data : (data?.data ?? data?.store?.data ?? data?.store)
+    if (!Array.isArray(rows)) errors.push('table には行の配列 (data: [...]) か、行の配列そのものを書く')
+  }
+  return { label, errors, warnings: [] }
 }
 
 /**
@@ -144,9 +200,12 @@ for (const file of files) {
   const source = fs.readFileSync(file, 'utf8')
   const results = /\.(md|mdx|markdown)$/i.test(file)
     ? [
-        ...extractFences(source).map((f, i) =>
-          validateDsl(f.code, `${file} フェンス#${i + 1} (${f.line} 行目〜)`, f.line - 1),
-        ),
+        ...extractFences(source).map((f, i) => {
+          const label = `${file} フェンス#${i + 1} ${f.lang} (${f.line} 行目〜)`
+          return UIVOLVE_LANGS.has(f.lang)
+            ? validateDsl(f.code, label, f.line - 1)
+            : validateBlock(f.lang, f.code, label, f.line - 1)
+        }),
         // <uivolve src> は MDX ファイル相対で参照先を読んで検証する (URL はスキップ)
         ...extractSrcRefs(source).map((r) => {
           const label = `${file} ${r.line} 行目 <uivolve src="${r.src}">`
@@ -163,10 +222,14 @@ for (const file of files) {
     : [validateDsl(source, file)]
 
   if (!results.length) {
-    console.log(`- ${file}: uivolve コードフェンス / <uivolve src> が見つからない`)
+    console.log(`- ${file}: uivolve / 図・表のコードフェンス、<uivolve src> が見つからない`)
     continue
   }
-  for (const { label, errors, warnings } of results) {
+  for (const { label, errors, warnings, skipped } of results) {
+    if (skipped) {
+      console.log(`- ${label}: 検証対象外 (ブラウザでの描画時に検証)`)
+      continue
+    }
     const mark = errors.length ? '✕' : '✓'
     console.log(`${mark} ${label}`)
     for (const e of errors) console.log(`    エラー: ${e}`)

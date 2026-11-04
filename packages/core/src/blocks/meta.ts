@@ -1,7 +1,7 @@
-import JSON5 from 'json5'
-import YAML from 'yaml'
-import { detectFormat, DslParseError } from '../parser'
 import type { FenceOptions } from './registry'
+
+// データ型フェンスの本文の解釈は validate-dsl (Node) からも使うので parser.ts に置く
+export { parseData as parseFenceData } from '../parser'
 
 /**
  * フェンスの meta 文字列を解釈する。
@@ -30,25 +30,4 @@ export function optionFlag(options: FenceOptions, key: string, fallback: boolean
 export function fenceHeight(v: string | number | true | undefined): string | undefined {
   if (v === undefined || v === true) return undefined
   return /^\d+(\.\d+)?$/.test(String(v)) ? `${v}px` : String(v)
-}
-
-/**
- * データ型フェンスの本文を JSON5 / YAML として解釈する (parseDsl と同じ自動判別)。
- * parseDsl と違いルートが配列やスカラーでもよい (`[` で始まる場合も JSON5 とみなす)
- */
-export function parseFenceData(source: string): unknown {
-  if (source.trimStart().startsWith('[') || detectFormat(source) === 'json5') {
-    try {
-      return JSON5.parse(source)
-    } catch (e) {
-      const err = e as { message: string; lineNumber?: number; columnNumber?: number }
-      throw new DslParseError(err.message, err.lineNumber, err.columnNumber)
-    }
-  }
-  try {
-    return YAML.parse(source)
-  } catch (e) {
-    const err = e as { message: string; linePos?: Array<{ line: number; col: number }> }
-    throw new DslParseError(err.message, err.linePos?.[0]?.line, err.linePos?.[0]?.col)
-  }
 }
