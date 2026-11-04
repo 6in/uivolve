@@ -1662,13 +1662,116 @@
     }
   }
 
+  .sx-fence-table {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-block-size: 0;
+  }
+
+  /* 表本体: 行は subgrid で列幅を共有する */
+  .sx-fence-grid {
+    display: grid;
+    font-size: 13px;
+  }
+
+  .sx-fence-grid-row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+
+    & > [role='cell'],
+    & > [role='columnheader'] {
+      padding: 6px 10px;
+      text-align: start;
+      border-block-end: 1px solid color-mix(in srgb, var(--sx-border) 60%, transparent);
+      overflow-wrap: anywhere;
+      white-space: pre-line;
+    }
+
+    &:not(.sx-fence-grid-head):hover > [role='cell'] {
+      background: color-mix(in srgb, var(--sx-accent) 7%, transparent);
+    }
+  }
+
+  .sx-fence-grid-head {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+
+    & > [role='columnheader'] {
+      font-weight: bold;
+      white-space: nowrap;
+      background: color-mix(in srgb, var(--sx-bg) 70%, var(--sx-panel-bg));
+      border-block-end-color: var(--sx-border);
+
+      &.sx-sortable {
+        cursor: pointer;
+        user-select: none;
+
+        &:hover,
+        &:focus-visible {
+          color: var(--sx-accent);
+          outline: none;
+        }
+      }
+    }
+  }
+
+  .sx-fence-table-tools {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sx-fence-table-filter {
+    inline-size: min(240px, 100%);
+    padding: 4px 8px;
+    font: inherit;
+    color: var(--sx-text);
+    background: var(--sx-input-bg);
+    border: 1px solid var(--sx-border);
+    border-radius: var(--sx-radius);
+
+    &:focus {
+      outline: none;
+      border-color: var(--sx-accent);
+    }
+  }
+
+  .sx-fence-table-count {
+    font-size: 12px;
+    color: var(--sx-muted);
+  }
+
+  .sx-fence-table-scroll {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow: auto;
+  }
+
+  .sx-fence-table-sort {
+    display: inline-block;
+    min-inline-size: 1.2em;
+    margin-inline-start: 4px;
+    font-size: 10px;
+    color: var(--sx-accent);
+  }
+
+  .sx-fence-table-empty {
+    grid-column: 1 / -1;
+    color: var(--sx-muted);
+    text-align: center !important;
+  }
+
   .sx-fence-error {
     display: grid;
     gap: 6px;
     font-size: 12px;
     text-align: start;
 
-    & pre {
+    & .sx-fence-error-message,
+    & .sx-fence-error-source {
       margin: 0;
       padding: 8px 10px;
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;

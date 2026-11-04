@@ -17,13 +17,16 @@ export interface FenceBlockProps {
   className?: string
 }
 
-/** 描画失敗の表示: エラー文と元のソースを並べる (他のブロックには波及させない) */
+/**
+ * 描画失敗の表示: エラー文と元のソースを並べる (他のブロックには波及させない)。
+ * <pre> を使わないのは埋め込み先ページの pre / code の CSS に崩されないため
+ */
 function FenceError({ label, message, source }: { label: string; message: string; source: string }) {
   return (
     <div className="sx-fence-error" role="alert">
       <div className="sx-fence-error-head">{label} の描画エラー</div>
-      <pre className="sx-fence-error-message">{message}</pre>
-      <pre className="sx-fence-error-source">{source}</pre>
+      <div className="sx-fence-error-message">{message}</div>
+      <div className="sx-fence-error-source">{source}</div>
     </div>
   )
 }
